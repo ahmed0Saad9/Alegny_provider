@@ -134,7 +134,7 @@ class AppColors {
 
   /// Button
   // Button Title Color
-  static const Color backGroundButtonMain = Color(0xFF023336);
+  static const Color backGroundButtonMain = Color(0xFF4FC5C7);
   static const Color backGroundButtonGrey = Color(0xFFFDFDFD);
 
   // Button BC color
@@ -273,9 +273,10 @@ class TextFieldColors {
   static const Color mainTitle = Color(0xff0B1427);
   static const Color errorBorder = Color(0xffFD0000);
   static const Color cursor = Color(0xff000000);
-  static const Color icon = Color(0xFF677294);
-  static const Color suffixIcon = Color(0xFF677294);
-  static const Color enableBorder = Color(0xffE7E8EE);
+  static const Color activeIcon = Color(0xff6b6b6c);
+  static const Color suffixIcon = Color(0xff6b6b6c);
+  static const Color icon = Color(0xff6b6b6c);
+  static const Color enableBorder = Color(0xff6b6b6c);
   static const Color focusBorder = Color(0xff50C5C8);
   static const Color searchBorder = Color(0xffE6E6E6);
   static const Color disableBorder = Color(0xffE5E5E6);

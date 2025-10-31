@@ -280,8 +280,8 @@ class _TextFieldDefaultState extends State<TextFieldDefault> {
                                   IconSvg(
                                     widget.prefixIconUrl!,
                                     color: _isFocused
-                                        ? AppColors.iconGreen
-                                        : AppColors.iconGray95,
+                                        ? AppColors.main
+                                        : TextFieldColors.icon,
                                   ),
                                   5.ESW(),
                                 ],

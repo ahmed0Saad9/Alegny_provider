@@ -23,6 +23,7 @@ class LoginController extends BaseController<LogInRepository> {
   TextEditingController? emailController;
   TextEditingController? passwordController;
   UserModel? _userModel;
+  var rememberMe = false;
 
   final GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
 
@@ -70,6 +71,11 @@ class LoginController extends BaseController<LogInRepository> {
   /// move To Register
   void moveToRegister() {
     Get.off(() => const RegisterScreen());
+  }
+
+  void toggleRememberMe() {
+    rememberMe = !rememberMe;
+    update();
   }
 
   @override

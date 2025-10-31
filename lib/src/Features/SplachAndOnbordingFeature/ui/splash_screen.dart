@@ -12,7 +12,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<SplashController>(
       init: SplashController(),
-      builder: (splashController) => Container(
+      builder: (controller) => Container(
         height: Get.height,
         width: Get.width,
         decoration: const BoxDecoration(
@@ -22,38 +22,37 @@ class SplashScreen extends StatelessWidget {
               ),
               fit: BoxFit.cover),
         ),
-        child: Stack(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Stack(
-                    children: [
-                      AnimatedAlign(
-                        alignment: splashController.alignmentLogo,
-                        duration: const Duration(seconds: 1),
-                        child: AnimatedContainer(
-                          curve: Curves.easeInOut,
-                          duration: const Duration(seconds: 1),
-                          width: splashController.width.w,
-                          height: splashController.height.h,
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 16),
-                            child: Image.asset(
-                              'assets/images/Logo.png',
-                              fit: BoxFit.contain,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // AnimatedContainer(
+              //   curve: Curves.easeInOut,
+              //   duration: const Duration(seconds: 1),
+              //   width: controller.width.w,
+              //   height: controller.height.h,
+              //   child: Image.asset(
+              //     'assets/images/Logo.png',
+              //     // fit: BoxFit.contain,
+              //   ),
+              // ),
+              AnimatedOpacity(
+                opacity: controller.isWidgetVisible ? 1.0 : 0.0,
+                duration: const Duration(seconds: 1),
+                child: AnimatedContainer(
+                  curve: Curves.easeInOut,
+                  duration: const Duration(seconds: 1),
+                  width: controller.width.w,
+                  height: controller.height.h,
+                  child: Image.asset(
+                    'assets/images/Logo.png',
+                    fit: BoxFit.contain,
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

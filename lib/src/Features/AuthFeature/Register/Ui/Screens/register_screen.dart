@@ -20,12 +20,7 @@ class RegisterScreen extends StatelessWidget {
     return GetBuilder<RegisterController>(
       init: RegisterController(),
       builder: (_) => Container(
-        decoration: const BoxDecoration(
-          color: AppColors.scaffoldBackGround,
-          image: DecorationImage(
-              image: AssetImage('assets/images/Gradiant.png'),
-              fit: BoxFit.cover),
-        ),
+        color: AppColors.scaffoldBackGround,
         child: Form(
           key: _.registerGlobalKey,
           child: ListView(

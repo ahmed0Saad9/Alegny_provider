@@ -23,6 +23,7 @@ const Map<String, String> arAE = {
   "Confirm_Password": "تأكيد كلمة المرور",
   "Confirm_New_Password": "تأكيد كلمة المرور الجديدة",
   "Re_Enter_Password": "تأكيد كلمة المرور",
+  "Remember_me": "تذكرني",
   "College_ID": "الجامعة ID",
   "National_ID": "الرقم القومي",
   "create_pin": "انشاء ال PIN",

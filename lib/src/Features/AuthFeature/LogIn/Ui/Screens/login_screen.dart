@@ -22,8 +22,6 @@ class LoginScreen extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         color: AppColors.scaffoldBackGround,
-        image: DecorationImage(
-            image: AssetImage('assets/images/Gradiant.png'), fit: BoxFit.cover),
       ),
       padding: AppPadding.paddingScreenSH36,
       child: GetBuilder<LoginController>(
@@ -34,11 +32,12 @@ class LoginScreen extends StatelessWidget {
               key: _.loginGlobalKey,
               child: BaseStaggeredColumn(
                 children: [
-                  100.ESH(),
+                  80.ESH(),
                   const CustomTextL('welcome_back', fontWeight: FW.bold),
-                  70.ESH(),
+                  50.ESH(),
                   TextFieldDefault(
                     label: 'Email',
+                    prefixIconUrl: 'Email',
                     controller: _.emailController,
                     validation: emailValidator,
                     keyboardType: TextInputType.emailAddress,
@@ -49,6 +48,7 @@ class LoginScreen extends StatelessWidget {
                   24.ESH(),
                   TextFieldDefault(
                     label: 'Password',
+                    prefixIconUrl: 'Lock',
                     controller: _.passwordController,
                     validation: passwordValidator,
                     secureType: SecureType.toggle,
@@ -57,7 +57,13 @@ class LoginScreen extends StatelessWidget {
                       _.logIn();
                     },
                   ),
-                  ButtonForgetPassword(controller: _),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      RememberMe(controller: _),
+                      ButtonForgetPassword(controller: _),
+                    ],
+                  ),
                   430.ESH(),
                   ButtonDefault.main(
                     onTap: () => _.logIn(),
@@ -72,6 +78,32 @@ class LoginScreen extends StatelessWidget {
           },
         ),
       ),
+    );
+  }
+}
+
+class RememberMe extends StatelessWidget {
+  final LoginController controller;
+  const RememberMe({
+    super.key,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+          value: controller.rememberMe,
+          onChanged: (value) => controller.toggleRememberMe(),
+          activeColor: AppColors.main,
+        ),
+        CustomTextL(
+          'Remember_me',
+          fontSize: 14.sp,
+          fontWeight: FW.medium,
+        )
+      ],
     );
   }
 }
@@ -91,7 +123,7 @@ class _DoNotHaveAccountWidget extends StatelessWidget {
         CustomTextL(
           'dont_have_account_register',
           fontSize: 14.sp,
-          color: AppColors.main,
+          color: AppColors.titleMain,
         ),
         TextButton(
           onPressed: () {
