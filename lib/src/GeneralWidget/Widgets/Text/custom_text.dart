@@ -40,7 +40,7 @@ class CustomTextL extends StatelessWidget {
     Key? key,
     this.color = AppColors.titleMain,
     this.fontSize = 20,
-    this.fontWeight = FW.regular,
+    this.fontWeight = FW.medium,
     this.isBold = false,
     this.isOverFlow = false,
     this.isUpperCase = false,

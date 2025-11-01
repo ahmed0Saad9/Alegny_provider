@@ -109,7 +109,7 @@ class TextFieldDefault extends StatefulWidget {
     this.maxLength,
     this.enable = true,
     this.hintColor = TextFieldColors.hintTitle,
-    this.labelColor = TextFieldColors.mainTitle,
+    this.labelColor = TextFieldColors.hintTitle,
     this.titleColor = TextFieldColors.mainTitle,
     this.errorColor = TextFieldColors.errorText,
     this.fieldColor = TextFieldColors.backGroundWhite,
@@ -249,7 +249,7 @@ class _TextFieldDefaultState extends State<TextFieldDefault> {
                 labelStyle: TextStyle(
                   fontSize: 16.r,
                   color: widget.labelColor,
-                  fontFamily: "Regular",
+                  fontFamily: "Medium",
                 ),
                 // ERROR TEXT STYLE
                 errorStyle: Theme.of(context).textTheme.titleMedium!.copyWith(

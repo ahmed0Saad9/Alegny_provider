@@ -17,41 +17,43 @@ class RegisterController extends BaseController<RegisterRepository> {
   // TODO: implement repository
   get repository => sl<RegisterRepository>();
   final GlobalKey<FormState> registerGlobalKey = GlobalKey<FormState>();
-
-  late TextEditingController nameController;
+  var acceptTermsAndConditions = false;
+  late TextEditingController firstNameController;
+  late TextEditingController familyNameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
-  late TextEditingController idOfCollegeController;
-  late TextEditingController nationalIdController;
+  late TextEditingController phoneController;
 
-  var isApproved = false.obs;
+  // void createAccount() async {
+  //   if (registerGlobalKey.currentState!.validate()) {
+  //     registerGlobalKey.currentState!.save();
+  //     showEasyLoading();
+  //     var result = await repository!.register(
+  //       registerParams: RegisterParams(
+  //         name: firstNameController.text,
+  //         email: emailController.text,
+  //         password: passwordController.text,
+  //         passwordConfirmation: confirmPasswordController.text,
+  //
+  //       ),
+  //     );
+  //     closeEasyLoading();
+  //     result.when(success: (Response response) {
+  //       Get.off(
+  //         () => const PendingScreen(),
+  //       );
+  //
+  //       successEasyLoading(response.data['message'] ?? "success");
+  //     }, failure: (NetworkExceptions error) {
+  //       actionNetworkExceptions(error);
+  //     });
+  //   }
+  // }
 
-  void createAccount() async {
-    if (registerGlobalKey.currentState!.validate()) {
-      registerGlobalKey.currentState!.save();
-      showEasyLoading();
-      var result = await repository!.register(
-        registerParams: RegisterParams(
-          name: nameController.text,
-          email: emailController.text,
-          password: passwordController.text,
-          passwordConfirmation: confirmPasswordController.text,
-          nationalId: nationalIdController.text,
-          idOfCollege: idOfCollegeController.text,
-        ),
-      );
-      closeEasyLoading();
-      result.when(success: (Response response) {
-        Get.off(
-          () => const PendingScreen(),
-        );
-
-        successEasyLoading(response.data['message'] ?? "success");
-      }, failure: (NetworkExceptions error) {
-        actionNetworkExceptions(error);
-      });
-    }
+  void toggleAcceptTermsAndConditions() {
+    acceptTermsAndConditions = !acceptTermsAndConditions;
+    update();
   }
 
   void moveToLogIn() {
@@ -65,11 +67,11 @@ class RegisterController extends BaseController<RegisterRepository> {
   }
 
   void initTextEditingController() {
-    nameController = TextEditingController();
+    firstNameController = TextEditingController();
+    familyNameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
-    idOfCollegeController = TextEditingController();
-    nationalIdController = TextEditingController();
+    phoneController = TextEditingController();
   }
 }

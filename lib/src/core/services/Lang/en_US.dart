@@ -51,6 +51,7 @@ const Map<String, String> enUS = {
   "Nationality": "Nationality",
   "Gender": "Gender",
   "Address": "Address",
+  "Search_country": "Search country",
   "Company_Name": "Company Name",
   "Get_Code": "Get Code",
   "Male": "Male",
@@ -214,6 +215,7 @@ const Map<String, String> enUS = {
 
   "Enter_A_4_Digit_Number_That_Was_Sent_To":
       "Enter A 4 Digit Number That\nWas Sent To",
+  "Phone_number": "Phone number",
   "Change_Phone_Number": "Change Phone Number",
   "Verify": "Verify",
   "Create_Password": "Create_Password",
@@ -320,5 +322,52 @@ const Map<String, String> enUS = {
   "National ID must be 14 digits": "National ID must be 14 digits",
   "National ID must contain numbers only":
       "National ID must contain numbers only",
-  "This field is required": "This field is required"
+  "This field is required": "This field is required",
+  //new
+
+  "terms_conditions_title": "Terms & Conditions",
+  "terms_header_title": "Alegny App Terms & Conditions",
+  "terms_header_subtitle":
+      "Please read the terms and conditions carefully before using the service",
+  "terms_footer_note":
+      "By using the Alegny app, you agree to all the terms and conditions mentioned above. We reserve the right to modify these terms at any time.",
+
+  "term_1":
+      "The service provider is fully responsible for any problems or disputes that arise between them and the client and is responsible for any data uploaded through the Alegny app.",
+
+  "term_2":
+      "The service provider can register on the Alegny app for free for life in exchange for a discount percentage given to the client. The larger the discount percentage, the more clients will be attracted.",
+
+  "term_3":
+      "The service provider must commit to providing the discount percentage specified in the Alegny app. The app has the right to ban the service provider for life if they fail to give the client the previously agreed-upon discount percentage or if there are many client complaints.",
+
+  "term_4":
+      "The service provider's examination or service prices before the discount must be the same as the prices available on other apps or at the location. Prices should not be increased for clients to obtain the discount at any time of the year.",
+
+  "term_5":
+      "Ratings and comments have been removed from the app to help the service provider against any blackmail from clients or competitors in the same activity.",
+
+  "term_6":
+      "The service provider can register under the doctor's name or the center's name and add any number of branches for free.",
+
+  "term_7":
+      "The service provider can upload their photo or logo only, and can also upload links to all their social media pages so that the client can get to know the service provider better before visiting.",
+
+  "term_8":
+      "The client contacts the service provider directly via phone or WhatsApp for communication and booking or to verify the discount percentage before going. The service provider can identify the client affiliated with the app through the digital family card inside the app.",
+
+  "term_9":
+      "The Alegny app provides the client, their spouse, father, mother, children (up to 10 children), and their pets (up to 10 pets) with a digital family card. The family card includes 24 members for one year for only 350 EGP.",
+
+  "term_10":
+      "To attract the largest number of clients to the service provider, the app will be advertised on all social media platforms, radio, and television.",
+
+  "term_11":
+      "A cashback of 100 EGP is offered for each client who sends their promo code from within the app to other clients. When the client who received the promo code pays the annual subscription, 100 EGP will be deposited into the account of the client who sent the code. There is no limit to this, so any client in the app can receive cashback reaching thousands of pounds monthly on an ongoing basis.",
+
+  "term_12":
+      "The client who receives the promo code will get a 100 EGP discount and pay 250 EGP instead of 350 EGP. Additionally, every week, clients who have paid the annual subscription will be randomly selected and will receive cash prizes ranging from 1,000 EGP to 100,000 EGP.",
+
+  "term_13":
+      "The client can obtain the discount percentage in case of delivery or home visits by sending a screenshot of the digital card on the service provider's WhatsApp."
 };

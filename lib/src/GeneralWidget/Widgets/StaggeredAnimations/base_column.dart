@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
@@ -15,7 +14,7 @@ class BaseStaggeredColumn extends StatelessWidget {
     required this.children,
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.mainAxisAlignment = MainAxisAlignment.start,
-    this.mainAxisSize =MainAxisSize.min,
+    this.mainAxisSize = MainAxisSize.min,
   }) : super(key: key);
 
   @override
@@ -26,9 +25,9 @@ class BaseStaggeredColumn extends StatelessWidget {
         child: Column(
           mainAxisSize: mainAxisSize,
           crossAxisAlignment: crossAxisAlignment,
-          mainAxisAlignment:mainAxisAlignment,
+          mainAxisAlignment: mainAxisAlignment,
           children: AnimationConfiguration.toStaggeredList(
-            duration:  AppDuration.animationDuration,
+            duration: AppDuration.animationDuration,
             childAnimationBuilder: (widget) => SlideAnimation(
               verticalOffset: 50.0,
               horizontalOffset: 0,

@@ -168,15 +168,15 @@ flutter:
   fonts:
     - family: Regular
       fonts:
-        - asset: assets/fonts/Rubik-Regular.ttf
+        - asset: assets/fonts/Cairo-Regular.ttf
     - family: Light
       fonts:
-        - asset: assets/fonts/Rubik-Light.ttf
+        - asset: assets/fonts/Cairo-Light.ttf
     - family: Medium
       fonts:
-        - asset: assets/fonts/Rubik-Medium.ttf
+        - asset: assets/fonts/Cairo-Medium.ttf
     - family: Bold
       fonts:
-        - asset: assets/fonts/Rubik-Bold.ttf
+        - asset: assets/fonts/Cairo-Bold.ttf
 
 

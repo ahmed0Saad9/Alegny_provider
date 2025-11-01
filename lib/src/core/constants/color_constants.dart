@@ -84,7 +84,7 @@ class AppColors {
   static const Color titleGray7A = Color(0xFF7A797A);
   static const Color titleGray62 = Color(0xFF626467);
   static const Color titleMain = Color(0xFF000000);
-  static const Color titleSub = Color(0xFF677294);
+  static const Color titleSub = Color(0xFF656B78);
   static const Color titleGray65 = Color(0xFF656B78);
   static const Color titleGray67 = Color(0xFF677F9E);
   static const Color titleGreyC1 = Color(0xFFC1CAD6);
@@ -267,7 +267,7 @@ class TextFieldColors {
   static const Color backGroundWhite = Color(0xffFFFFFF);
   static const Color usedBackGround = Color(0xffF2F2F2);
   static const Color activeBackGround = Color(0xFFF2F2F2);
-  static const Color hintTitle = Color(0xFF677294);
+  static const Color hintTitle = Color(0xff6b6b6c);
   static const Color disableTitle = Color(0xFF9CA2AC);
 
   static const Color mainTitle = Color(0xff0B1427);

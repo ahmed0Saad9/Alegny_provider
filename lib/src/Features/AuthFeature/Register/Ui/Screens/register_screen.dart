@@ -1,3 +1,5 @@
+import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/terms_and_conditions_screen.dart';
+import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_phone.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,7 @@ import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/constants/sizes.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:Alegny_provider/src/core/utils/validator.dart';
+import 'package:lottie/lottie.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({super.key});
@@ -25,7 +28,7 @@ class RegisterScreen extends StatelessWidget {
           key: _.registerGlobalKey,
           child: ListView(
             shrinkWrap: true,
-            padding: AppPadding.paddingScreenSH36,
+            padding: AppPadding.paddingScreenSH16,
             children: [
               _Body(controller: _),
             ],
@@ -38,6 +41,7 @@ class RegisterScreen extends StatelessWidget {
 
 class _Body extends StatelessWidget {
   final RegisterController controller;
+
   const _Body({super.key, required this.controller});
 
   @override
@@ -45,20 +49,57 @@ class _Body extends StatelessWidget {
     var node = FocusScope.of(context);
     return BaseStaggeredColumn(
       children: [
-        100.ESH(),
-        const CustomTextL('Join_us_to_start', fontWeight: FW.bold),
-        70.ESH(),
-        TextFieldDefault(
-          label: 'Full_Name',
-          controller: controller.nameController,
-          validation: nameValidator,
-          onComplete: () {
-            node.nextFocus();
-          },
+        80.ESH(),
+        Row(
+          children: [
+            const CustomTextL('Join_us_to_start', fontWeight: FW.bold),
+            Lottie.asset(
+              'assets/lottie/CreateAccount.json',
+              height: 60.h,
+              fit: BoxFit.contain,
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            CustomTextL.subtitle(
+              'Create_your_account_for_a_better_experience',
+              fontWeight: FW.medium,
+            ),
+          ],
+        ),
+        50.ESH(),
+        Row(
+          children: [
+            Expanded(
+              child: TextFieldDefault(
+                label: 'First_Name',
+                prefixIconUrl: 'Profile',
+                controller: controller.firstNameController,
+                validation: nameValidator,
+                onComplete: () {
+                  node.nextFocus();
+                },
+              ),
+            ),
+            10.ESW(),
+            Expanded(
+              child: TextFieldDefault(
+                label: 'Family_Name',
+                prefixIconUrl: 'Profile',
+                controller: controller.familyNameController,
+                validation: nameValidator,
+                onComplete: () {
+                  node.nextFocus();
+                },
+              ),
+            ),
+          ],
         ),
         24.ESH(),
         TextFieldDefault(
           label: 'Email',
+          prefixIconUrl: 'Email',
           controller: controller.emailController,
           validation: emailValidator,
           keyboardType: TextInputType.emailAddress,
@@ -67,8 +108,16 @@ class _Body extends StatelessWidget {
           },
         ),
         24.ESH(),
+        TextFieldPhone(
+          node: node,
+          controller: controller.phoneController,
+          onCountryChanged: (p0) {},
+          initialCountryCode: '+20',
+        ),
+        10.ESH(),
         TextFieldDefault(
           label: 'Password',
+          prefixIconUrl: 'Lock',
           controller: controller.passwordController,
           validation: passwordValidator,
           secureType: SecureType.toggle,
@@ -79,6 +128,7 @@ class _Body extends StatelessWidget {
         24.ESH(),
         TextFieldDefault(
           label: 'Confirm_Password',
+          prefixIconUrl: 'Lock',
           controller: controller.confirmPasswordController,
           validation: (value) {
             return confirmPasswordValidator(
@@ -89,39 +139,53 @@ class _Body extends StatelessWidget {
             node.nextFocus();
           },
         ),
-        24.ESH(),
-        TextFieldDefault(
-          label: 'College_ID',
-          controller: controller.idOfCollegeController,
-          validation: collegeIdValidator,
-          keyboardType: TextInputType.number,
-          maxLength: 5,
-          onComplete: () {
-            node.nextFocus();
-          },
-        ),
-        24.ESH(),
-        TextFieldDefault(
-          label: 'National_ID',
-          controller: controller.nationalIdController,
-          validation: nationalIdValidator,
-          keyboardType: TextInputType.number,
-          maxLength: 14,
-          onComplete: () {
-            node.unfocus();
-            controller.createAccount();
-          },
-        ),
-        120.ESH(),
+        _AcceptTermsAndConditions(controller: controller),
+        100.ESH(),
         ButtonDefault.main(
           onTap: () {
-            controller.createAccount();
+            // controller.createAccount();
           },
           title: 'Sign_up',
         ),
         _LoginWidget(
           controller: controller,
         )
+      ],
+    );
+  }
+}
+
+class _AcceptTermsAndConditions extends StatelessWidget {
+  const _AcceptTermsAndConditions({
+    super.key,
+    required this.controller,
+  });
+
+  final RegisterController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Checkbox(
+          value: controller.acceptTermsAndConditions,
+          onChanged: (value) => controller.toggleAcceptTermsAndConditions(),
+          activeColor: AppColors.main,
+        ),
+        CustomTextL(
+          'I_agree_on',
+          fontSize: 14.sp,
+          fontWeight: FW.medium,
+        ),
+        TextButton(
+            onPressed: () => Get.to(() => const TermsConditionsScreen()),
+            child: CustomTextL(
+              'Terms_and_conditions',
+              color: AppColors.main,
+              fontSize: 14.sp,
+              fontWeight: FW.bold,
+              decoration: CustomTextDecoration.underLine,
+            ))
       ],
     );
   }
@@ -143,7 +207,7 @@ class _LoginWidget extends StatelessWidget {
         CustomTextL(
           'Have_an_Account',
           fontSize: 14.sp,
-          color: AppColors.main,
+          color: AppColors.titleMain,
         ),
         6.ESW(),
         TextButton(
@@ -155,7 +219,7 @@ class _LoginWidget extends StatelessWidget {
             decoration: CustomTextDecoration.underLine,
             'login',
             fontSize: 14.sp,
-            fontWeight: FW.medium,
+            fontWeight: FW.bold,
             color: AppColors.main,
           ),
         ),

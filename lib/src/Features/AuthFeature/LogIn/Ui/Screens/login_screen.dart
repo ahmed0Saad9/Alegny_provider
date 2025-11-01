@@ -10,6 +10,7 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/buttons/button_default
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/constants/sizes.dart';
 import 'package:Alegny_provider/src/core/utils/validator.dart';
+import 'package:lottie/lottie.dart';
 
 import '/src/core/utils/extensions.dart';
 
@@ -23,7 +24,7 @@ class LoginScreen extends StatelessWidget {
       decoration: const BoxDecoration(
         color: AppColors.scaffoldBackGround,
       ),
-      padding: AppPadding.paddingScreenSH36,
+      padding: AppPadding.paddingScreenSH16,
       child: GetBuilder<LoginController>(
         init: LoginController(),
         builder: (_) => KeyboardVisibilityBuilder(
@@ -33,7 +34,18 @@ class LoginScreen extends StatelessWidget {
               child: BaseStaggeredColumn(
                 children: [
                   80.ESH(),
-                  const CustomTextL('welcome_back', fontWeight: FW.bold),
+                  Row(
+                    children: [
+                      const CustomTextL('welcome_back', fontWeight: FW.bold),
+                      SizedBox(
+                        height: 40.h,
+                        child: Lottie.asset(
+                          'assets/lottie/HandWave.json', // Add your Lottie file
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                    ],
+                  ),
                   50.ESH(),
                   TextFieldDefault(
                     label: 'Email',
@@ -64,7 +76,7 @@ class LoginScreen extends StatelessWidget {
                       ButtonForgetPassword(controller: _),
                     ],
                   ),
-                  430.ESH(),
+                  410.ESH(),
                   ButtonDefault.main(
                     onTap: () => _.logIn(),
                     title: 'login',
