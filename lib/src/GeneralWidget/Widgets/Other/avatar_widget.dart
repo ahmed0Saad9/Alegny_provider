@@ -9,8 +9,8 @@ class AvatarWidget extends StatelessWidget {
     super.key,
     this.image,
     this.imageFile,
-    this.height = 100,
-    this.width = 95,
+    this.height = 200,
+    this.width = 150,
   });
 
   final String? image;
@@ -21,12 +21,13 @@ class AvatarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // radius: radius.r,
-
+      height: height.h,
+      width: width.w,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30.r),
+        borderRadius: BorderRadius.circular(50.r),
         color: Colors.white,
       ),
+      clipBehavior: Clip.antiAlias,
       child: (imageFile == null && (image == null || image!.isEmpty))
           ? Image.asset(
               'assets/images/Profile.png',
@@ -34,24 +35,22 @@ class AvatarWidget extends StatelessWidget {
               width: width.w,
               fit: BoxFit.cover,
             )
-          : ClipRRect(
-              borderRadius: BorderRadius.circular(30.r),
-              child: imageFile == null
-                  ? ImageNetwork(
-                      url: image,
-                      height: height.h,
-                      width: width.w,
-                    )
-                  : Image.file(
-                      imageFile!,
-                      height: height.h,
-                      width: width.w,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => const Icon(
-                        Icons.error_outline,
-                      ),
-                    ),
-            ),
+          : imageFile == null
+              ? ImageNetwork(
+                  url: image,
+                  height: height.h,
+                  width: width.w,
+                  boxFit: BoxFit.cover,
+                )
+              : Image.file(
+                  imageFile!,
+                  height: height.h,
+                  width: width.w,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => const Icon(
+                    Icons.error_outline,
+                  ),
+                ),
     );
   }
 }

@@ -25,7 +25,7 @@ class TermsConditionsScreen extends StatelessWidget {
           onPressed: () => Get.back(),
         ),
         title: Text(
-          'terms_conditions_title'.tr,
+          'terms_conditions'.tr,
           style: TextStyle(
             fontSize: 18.sp,
             fontWeight: FontWeight.w600,

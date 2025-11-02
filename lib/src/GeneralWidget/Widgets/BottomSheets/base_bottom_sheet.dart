@@ -36,7 +36,7 @@ class BaseBottomSheet extends StatelessWidget {
     return Align(
       alignment: Alignment.bottomCenter,
       child: Container(
-        padding: AppPadding.paddingScreenSH36,
+        padding: AppPadding.paddingScreenSH16,
         width: double.infinity,
         height: height.h,
         clipBehavior: Clip.hardEdge,
@@ -66,7 +66,7 @@ class BaseBottomSheet extends StatelessWidget {
                 if (icon != null && image == null)
                   IconSvg(
                     icon!,
-                    size: 24,
+                    size: 32,
                     boxFit: BoxFit.fill,
                   ),
                 if (icon == null && image != null)

@@ -372,5 +372,23 @@ const Map<String, String> enUS = {
       "Every week, clients who have paid the annual subscription will be randomly selected and will receive cash prizes ranging from 1,000 EGP to 100,000 EGP.",
 
   "term_14":
-      "The client can obtain the discount percentage in case of delivery or home visits by sending a screenshot of the digital card on the service provider's WhatsApp."
+      "The client can obtain the discount percentage in case of delivery or home visits by sending a screenshot of the digital card on the service provider's WhatsApp.",
+  "general": "General",
+  "settings": "Settings",
+  "contact_us": "Contact Us",
+  "follow_us": "Follow Us",
+  "logout": "Logout",
+
+  "complaints_suggestions": "Complaints & Suggestions",
+  "app_idea": "App Idea",
+  "language": "Languages",
+  "terms_conditions": "Terms & Conditions",
+  "contact_phone_1": "Contact us via Phone 1",
+  "contact_phone_2": "Contact us via Phone 2",
+  "contact_whatsapp_1": "Contact us via WhatsApp 1",
+  "contact_whatsapp_2": "Contact us via WhatsApp 2",
+  "error": "Error",
+  "cannot_open_phone": "Cannot open phone app",
+  "whatsapp_not_installed": "WhatsApp is not installed on this device",
+  "error_occurred": "An error occurred"
 };
