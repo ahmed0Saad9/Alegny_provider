@@ -6,7 +6,7 @@ import 'package:Alegny_provider/src/core/services/Network/network_services.dart'
 import 'package:Alegny_provider/src/core/services/services_locator.dart';
 import 'package:dio/dio.dart';
 
-class ResetPasswordRepository with ApiKey {
+class ChangePasswordRepository with ApiKey {
   final NetworkService _networkService = sl<NetworkService>();
 
   Future<ApiResult<Response>> postResetPassword(

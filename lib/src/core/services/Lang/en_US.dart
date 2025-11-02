@@ -80,6 +80,9 @@ const Map<String, String> enUS = {
   "Join_us_to_start": "Join us to start",
   "Please_enter_the_code": "Please enter the code",
   "Please_enter_the_new_password": "Please enter the new password",
+  "New_Password": "New Password",
+  "Confirm_New_Password": "Confirm New Password",
+  "Current_Password": "Current Password",
   "send_code": "Send code",
   "Save_change": "Save change",
   "Messages": "Messages",
@@ -218,6 +221,7 @@ const Map<String, String> enUS = {
   "Phone_number": "Phone number",
   "Change_Phone_Number": "Change Phone Number",
   "Verify": "Verify",
+  "edit_account": "Edit account",
   "Create_Password": "Create_Password",
   "change_password": "Change password",
   "Reset_Password": "Reset Password",
@@ -390,5 +394,6 @@ const Map<String, String> enUS = {
   "error": "Error",
   "cannot_open_phone": "Cannot open phone app",
   "whatsapp_not_installed": "WhatsApp is not installed on this device",
-  "error_occurred": "An error occurred"
+  "cannot_open": "Cannot open",
+  "error_occurred": "An error occurred",
 };

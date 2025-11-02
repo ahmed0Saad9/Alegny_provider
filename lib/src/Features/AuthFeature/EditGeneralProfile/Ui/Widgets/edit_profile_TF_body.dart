@@ -1,3 +1,4 @@
+import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_phone.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,17 +37,37 @@ class EditProfileTFBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             50.ESH(),
-            TextFieldDefault(
-              label: 'Full_Name',
-              controller: controller.fullNameController,
-              validation: emptyValidator,
-              onComplete: () {
-                node.nextFocus();
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: TextFieldDefault(
+                    label: 'First_Name',
+                    prefixIconUrl: 'Profile',
+                    controller: controller.firstNameController,
+                    validation: nameValidator,
+                    onComplete: () {
+                      node.nextFocus();
+                    },
+                  ),
+                ),
+                10.ESW(),
+                Expanded(
+                  child: TextFieldDefault(
+                    label: 'Family_Name',
+                    prefixIconUrl: 'Profile',
+                    controller: controller.familyNameController,
+                    validation: nameValidator,
+                    onComplete: () {
+                      node.nextFocus();
+                    },
+                  ),
+                ),
+              ],
             ),
-            16.ESH(),
+            24.ESH(),
             TextFieldDefault(
               label: 'Email',
+              prefixIconUrl: 'Email',
               controller: controller.emailController,
               validation: emailValidator,
               keyboardType: TextInputType.emailAddress,
@@ -54,7 +75,13 @@ class EditProfileTFBody extends StatelessWidget {
                 node.nextFocus();
               },
             ),
-            16.ESH(),
+            24.ESH(),
+            TextFieldPhone(
+              node: node,
+              controller: controller.phoneController!,
+              onCountryChanged: (p0) {},
+              initialCountryCode: '+20',
+            ),
           ],
         ),
       ),

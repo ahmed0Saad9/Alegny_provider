@@ -1,4 +1,4 @@
-import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Repo/reset_password_repo.dart';
+import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Repo/change_password_repo.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/params/reset_password_params.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/UI/widgets/password_updated_dialog.dart';
 import 'package:Alegny_provider/src/core/services/Base/base_controller.dart';
@@ -9,10 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:get_storage/get_storage.dart';
 
-class ResetPasswordController extends BaseController<ResetPasswordRepository> {
+class ChangePasswordController
+    extends BaseController<ChangePasswordRepository> {
   @override
   // TODO: implement repository
-  get repository => sl<ResetPasswordRepository>();
+  get repository => sl<ChangePasswordRepository>();
 
   late TextEditingController currentPasswordController;
 

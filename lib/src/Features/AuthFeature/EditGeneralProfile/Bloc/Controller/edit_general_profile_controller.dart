@@ -25,20 +25,10 @@ class EditProfileController
   @override
   // TODO: implement repository
   get repository => sl<EditGeneralProfileRepository>();
-  TextEditingController? fullNameController;
-  TextEditingController? addressController;
-  TextEditingController? activityController;
-  TextEditingController? countryController;
-  TextEditingController? companyCategoryController;
-  TextEditingController? merchantCategoryController;
-  TextEditingController? merchantCitiesController;
+  TextEditingController? firstNameController;
+  TextEditingController? familyNameController;
   TextEditingController? emailController;
   TextEditingController? phoneController;
-  TextEditingController? cityController;
-  TextEditingController? areaController;
-  TextEditingController? governorateController;
-  TextEditingController? districtController;
-  TextEditingController? descriptionController;
 
   bool dataModifiedSuccessfully = false;
   void modifiesData() {
@@ -46,15 +36,15 @@ class EditProfileController
     update();
   }
 
-  int _cityId = 0;
-
-  int get cityId => _cityId;
-
-  void selectCity(CountryModel country) {
-    cityController!.text = country.title;
-    _cityId = country.id;
-    update();
-  }
+  // int _cityId = 0;
+  //
+  // int get cityId => _cityId;
+  //
+  // void selectCity(CountryModel country) {
+  //   cityController!.text = country.title;
+  //   _cityId = country.id;
+  //   update();
+  // }
 
   String? fileName;
   String? fileExtension;
@@ -98,62 +88,62 @@ class EditProfileController
     update();
   }
 
-  int _countryId = 0;
+  // int _countryId = 0;
+  //
+  // int get countryId => _countryId;
+  //
+  // void selectCountry(CountryModel country) {
+  //   countryController!.text = country.title;
+  //   _countryId = country.id;
+  //   update();
+  // }
+  //
+  // String activitySelected = '';
+  //
+  // void selectActivity(SimpleModel v) {
+  //   activitySelected = v.id;
+  //   activityController!.text = v.title.tr;
+  //
+  //   update();
+  // }
 
-  int get countryId => _countryId;
+  // int _companyCategoryId = 0;
+  //
+  // int get companyCategoryId => _companyCategoryId;
+  //
+  // void selectCompanyCategory(CategoryModel activity) {
+  //   companyCategoryController!.text = activity.name;
+  //   _companyCategoryId = activity.id;
+  //   update();
+  // }
 
-  void selectCountry(CountryModel country) {
-    countryController!.text = country.title;
-    _countryId = country.id;
-    update();
-  }
-
-  String activitySelected = '';
-
-  void selectActivity(SimpleModel v) {
-    activitySelected = v.id;
-    activityController!.text = v.title.tr;
-
-    update();
-  }
-
-  int _companyCategoryId = 0;
-
-  int get companyCategoryId => _companyCategoryId;
-
-  void selectCompanyCategory(CategoryModel activity) {
-    companyCategoryController!.text = activity.name;
-    _companyCategoryId = activity.id;
-    update();
-  }
-
-  // Merchant
-  int _merchantCategory = 0;
-
-  int get merchantCategory => _merchantCategory;
-
-  void selectMerchantCategory(CategoryModel category) {
-    merchantCategoryController!.text = category.name;
-    _merchantCategory = category.id;
-    update();
-  }
-
-  final List<int> _merchantCitiesIds = [];
-
-  List<int> get merchantCitiesIds => _merchantCitiesIds;
-
-  void selectMerchantCitiesIds(List<CountryModel> countries) {
-    _merchantCitiesIds.clear();
-
-    for (var item in countries) {
-      _merchantCitiesIds.add(item.id);
-    }
-    merchantCitiesController!.text =
-        countries.map((e) => e.title).toList().toString();
-    printDM('_merchantCitiesIds is < $countries');
-    printDM('_merchantCitiesIds is $_merchantCitiesIds');
-    update();
-  }
+  // // Merchant
+  // int _merchantCategory = 0;
+  //
+  // int get merchantCategory => _merchantCategory;
+  //
+  // void selectMerchantCategory(CategoryModel category) {
+  //   merchantCategoryController!.text = category.name;
+  //   _merchantCategory = category.id;
+  //   update();
+  // }
+  //
+  // final List<int> _merchantCitiesIds = [];
+  //
+  // List<int> get merchantCitiesIds => _merchantCitiesIds;
+  //
+  // void selectMerchantCitiesIds(List<CountryModel> countries) {
+  //   _merchantCitiesIds.clear();
+  //
+  //   for (var item in countries) {
+  //     _merchantCitiesIds.add(item.id);
+  //   }
+  //   merchantCitiesController!.text =
+  //       countries.map((e) => e.title).toList().toString();
+  //   printDM('_merchantCitiesIds is < $countries');
+  //   printDM('_merchantCitiesIds is $_merchantCitiesIds');
+  //   update();
+  // }
 
   final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
 
@@ -176,37 +166,37 @@ class EditProfileController
     // });
   }
 
-  void editProfile() async {
-    if (globalKey.currentState!.validate()) {
-      globalKey.currentState!.save();
-      showEasyLoading();
-      var result = await repository!.updateProfile(
-        param: EditProfileParam(
-          // image: _image,
-          name: fullNameController!.text,
-          mobile: phoneController!.text,
-          email: emailController!.text,
-          role: activitySelected,
-          cityId: _countryId,
-          address: addressController!.text,
-          description: descriptionController!.text,
-          companyCategoryId: _companyCategoryId,
-          merchantCategoryId: _merchantCategory,
-          merchantCitiesIds: _merchantCitiesIds,
-          deviceToken: '',
-        ),
-      );
-      closeEasyLoading();
-      result.when(success: (Response response) {
-        // _user = UserModel.fromJson(response.data['data'][0]);
-        // LocalStorageCubit().saveItem(key: 'avatar',item: _user!.image);
-        successEasyLoading(response.data['message'] ?? "success");
-        // Get.offAll(() => const BaseBNBScreen());
-      }, failure: (NetworkExceptions error) {
-        actionNetworkExceptions(error);
-      });
-    }
-  }
+  // void editProfile() async {
+  //   if (globalKey.currentState!.validate()) {
+  //     globalKey.currentState!.save();
+  //     showEasyLoading();
+  //     var result = await repository!.updateProfile(
+  //       param: EditProfileParam(
+  //         // image: _image,
+  //         name: fullNameController!.text,
+  //         mobile: phoneController!.text,
+  //         email: emailController!.text,
+  //         role: activitySelected,
+  //         cityId: _countryId,
+  //         address: addressController!.text,
+  //         description: descriptionController!.text,
+  //         companyCategoryId: _companyCategoryId,
+  //         merchantCategoryId: _merchantCategory,
+  //         merchantCitiesIds: _merchantCitiesIds,
+  //         deviceToken: '',
+  //       ),
+  //     );
+  //     closeEasyLoading();
+  //     result.when(success: (Response response) {
+  //       // _user = UserModel.fromJson(response.data['data'][0]);
+  //       // LocalStorageCubit().saveItem(key: 'avatar',item: _user!.image);
+  //       successEasyLoading(response.data['message'] ?? "success");
+  //       // Get.offAll(() => const BaseBNBScreen());
+  //     }, failure: (NetworkExceptions error) {
+  //       actionNetworkExceptions(error);
+  //     });
+  //   }
+  // }
 
   @override
   void onInit() {
@@ -245,18 +235,10 @@ class EditProfileController
   }
 
   void initTextEditingController() {
-    fullNameController = TextEditingController();
-    addressController = TextEditingController();
-    countryController = TextEditingController();
-    companyCategoryController = TextEditingController();
-    merchantCategoryController = TextEditingController();
-    merchantCitiesController = TextEditingController();
-    activityController = TextEditingController();
+    firstNameController = TextEditingController();
+    familyNameController = TextEditingController();
     emailController = TextEditingController();
     phoneController = TextEditingController();
-    descriptionController = TextEditingController();
-    districtController = TextEditingController();
-    governorateController = TextEditingController();
   }
 }
 

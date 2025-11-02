@@ -23,7 +23,7 @@ class EditProfileScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         appBar: AppBars.appBarBack(title: 'edit_account'),
         body: Padding(
-          padding: AppPadding.paddingScreenSH36,
+          padding: AppPadding.paddingScreenSH16,
           child: Column(
             children: [
               EditProfileTFBody(
@@ -33,7 +33,9 @@ class EditProfileScreen extends StatelessWidget {
               ButtonDefault.main(
                 title: 'Confirm',
                 active: _.emailController!.text.isNotEmpty &&
-                    _.fullNameController!.text.isNotEmpty,
+                    _.phoneController!.text.isNotEmpty &&
+                    _.firstNameController!.text.isNotEmpty &&
+                    _.familyNameController!.text.isNotEmpty,
                 onTap: () => _.modifiesData(),
               ),
               24.ESH(),

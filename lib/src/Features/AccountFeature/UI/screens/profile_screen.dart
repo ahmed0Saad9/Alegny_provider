@@ -1,5 +1,7 @@
 import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Controller/profile_controller.dart';
+import 'package:Alegny_provider/src/Features/AccountFeature/UI/screens/change_password_screen.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/UI/widgets/language_select.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Ui/Screen/edit_profile_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/terms_and_conditions_screen.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/BottomSheets/base_bottom_sheet.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
@@ -19,6 +21,14 @@ class ProfileScreen extends StatelessWidget {
   static const String phone2 = '+201031724253';
   static const String whatsapp1 = '+201031726250';
   static const String whatsapp2 = '+201031724253';
+  static const String instagramUrl =
+      'https://www.instagram.com/alligny_app?igsh=MTU3ZGR2cHNsbzdwbw==';
+  static const String tiktokUrl =
+      'https://www.tiktok.com/@alligny?_r=1&_t=ZS-913g30gybzu';
+  static const String youtubeUrl =
+      'https://youtube.com/@alligny?si=pFRYpDddSR42brNW';
+  static const String facebookUrl =
+      'https://www.facebook.com/share/177aXA1NHb/';
 
   // Method to launch phone call
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -67,6 +77,36 @@ class ProfileScreen extends StatelessWidget {
         Get.snackbar(
           'error'.tr,
           'whatsapp_not_installed'.tr,
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'error_occurred'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // Method to open social media
+  Future<void> _openSocialMedia(String url, String platform) async {
+    try {
+      final Uri uri = Uri.parse(url);
+
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        Get.snackbar(
+          'error'.tr,
+          '${'cannot_open'.tr} $platform',
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -213,7 +253,8 @@ class ProfileScreen extends StatelessWidget {
                             ),
                             16.ESH(), // Edit Button
                             ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () =>
+                                  Get.to(() => const EditProfileScreen()),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: AppColors.main,
@@ -269,13 +310,13 @@ class ProfileScreen extends StatelessWidget {
                       _buildMenuItem(
                         icon: Icons.lock_outline,
                         title: 'change_password',
-                        onTap: () {},
+                        onTap: () => Get.to(() => const ChangePasswordScreen()),
                       ),
                       _buildMenuItem(
                         icon: Icons.description_outlined,
                         title: 'terms_conditions',
                         onTap: () => Get.to(
-                          () => TermsConditionsScreen(),
+                          () => const TermsConditionsScreen(),
                         ),
                       ),
 
@@ -295,14 +336,14 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () => _makePhoneCall(phone2),
                       ),
                       _buildMenuItem(
-                        icon: Icons.abc,
+                        iconUrl: 'Whatsapp',
                         iconColor: const Color(0xFF25D366),
                         title: 'contact_whatsapp_1',
                         subtitle: whatsapp1,
                         onTap: () => _openWhatsApp(whatsapp1),
                       ),
                       _buildMenuItem(
-                        icon: Icons.abc,
+                        iconUrl: 'Whatsapp',
                         iconColor: const Color(0xFF25D366),
                         title: 'contact_whatsapp_2',
                         subtitle: whatsapp2,
@@ -323,26 +364,29 @@ class ProfileScreen extends StatelessWidget {
                         children: [
                           _buildSocialButton(
                             color: const Color(0xFFE4405F),
-                            icon: 'assets/icons/instagram.png',
-                            onTap: () {},
+                            icon: 'Instagram',
+                            onTap: () =>
+                                _openSocialMedia(instagramUrl, 'Instagram'),
                           ),
                           16.ESW(),
                           _buildSocialButton(
                             color: Colors.black,
-                            icon: 'assets/icons/tiktok.png',
-                            onTap: () {},
+                            icon: 'Tiktok',
+                            onTap: () => _openSocialMedia(tiktokUrl, 'TikTok'),
                           ),
                           16.ESW(),
                           _buildSocialButton(
                             color: const Color(0xFFFF0000),
-                            icon: 'assets/icons/youtube.png',
-                            onTap: () {},
+                            icon: 'Youtube',
+                            onTap: () =>
+                                _openSocialMedia(youtubeUrl, 'YouTube'),
                           ),
                           16.ESW(),
                           _buildSocialButton(
                             color: const Color(0xFF1877F2),
-                            icon: 'assets/icons/facebook.png',
-                            onTap: () {},
+                            icon: 'Facebook',
+                            onTap: () =>
+                                _openSocialMedia(facebookUrl, 'Facebook'),
                           ),
                         ],
                       ),
@@ -351,6 +395,12 @@ class ProfileScreen extends StatelessWidget {
 
                       // Logout Button
                       Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: Colors.red[700]!,
+                          ),
+                        ),
                         margin: EdgeInsets.symmetric(horizontal: 16.w),
                         width: double.infinity,
                         child: ElevatedButton(
@@ -410,7 +460,8 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildMenuItem({
-    required IconData icon,
+    IconData? icon,
+    String? iconUrl,
     required String title,
     String? subtitle,
     required VoidCallback onTap,
@@ -439,11 +490,17 @@ class ProfileScreen extends StatelessWidget {
             color: (iconColor ?? AppColors.main).withOpacity(0.1),
             borderRadius: BorderRadius.circular(10.r),
           ),
-          child: Icon(
-            icon,
-            color: iconColor ?? AppColors.main,
-            size: 22.sp,
-          ),
+          child: (icon != null)
+              ? Icon(
+                  icon,
+                  color: iconColor ?? AppColors.main,
+                  size: 22.sp,
+                )
+              : IconSvg(
+                  iconUrl!,
+                  size: 22.sp,
+                  color: iconColor ?? AppColors.main,
+                ),
         ),
         title: CustomTextL(
           title,
@@ -493,7 +550,8 @@ class ProfileScreen extends StatelessWidget {
           child: IconSvg(
             icon,
             color: Colors.white,
-            size: 28.sp,
+            size: 36.sp,
+            boxFit: BoxFit.cover,
           ),
         ),
       ),

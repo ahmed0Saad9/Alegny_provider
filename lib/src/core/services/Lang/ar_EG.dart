@@ -262,5 +262,6 @@ const Map<String, String> arAE = {
   "error": "خطأ",
   "cannot_open_phone": "لا يمكن فتح تطبيق الهاتف",
   "whatsapp_not_installed": "الواتساب غير مثبت على هذا الجهاز",
+  "cannot_open": "لا يمكن فتحه",
   "error_occurred": "حدث خطأ ما",
 };
