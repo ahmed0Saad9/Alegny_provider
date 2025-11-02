@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../core/constants/color_constants.dart';
 import '../../../core/services/svg_widget.dart';
@@ -24,29 +24,33 @@ class BaseIconWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => onTap(),
-      child: Container(
-        color: Colors.transparent,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            height: 40.h,
+            width: 40.w,
+            decoration: BoxDecoration(
+                color: active ? AppColors.main : AppColors.transparentColor,
+                borderRadius: BorderRadius.circular(12)),
+            child: Center(
               child: IconSvg(
                 icon,
-                size: 23,
-                color: active ? const Color(0xff28895E) : AppColors.iconBlack,
+                size: 20,
+                color: active ? AppColors.iconWight : AppColors.iconBlack,
                 boxFit: BoxFit.fill,
               ),
             ),
-            6.ESH(),
-            CustomTextL(
-              title,
-              color: active ? const Color(0xff28895E) : AppColors.titleBlack,
-              fontWeight: FW.medium,
-              fontSize: 12,
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
+          ),
+          // 3.ESH(),
+          CustomTextL(
+            title,
+            color: active ? AppColors.main : AppColors.titleBlack,
+            fontWeight: active ? FW.bold : FW.medium,
+            fontSize: 14,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
     );
   }

@@ -357,17 +357,20 @@ const Map<String, String> enUS = {
       "The client contacts the service provider directly via phone or WhatsApp for communication and booking or to verify the discount percentage before going. The service provider can identify the client affiliated with the app through the digital family card inside the app.",
 
   "term_9":
-      "The Alegny app provides the client, their spouse, father, mother, children (up to 10 children), and their pets (up to 10 pets) with a digital family card. The family card includes 24 members for one year for only 350 EGP.",
+      "The Alegny app provides the client, their spouse, father, mother, children (up to 10 children), and their pets (up to 10 pets) with a digital family card. The family card includes 24 members for one year for only 750 EGP.",
 
   "term_10":
       "To attract the largest number of clients to the service provider, the app will be advertised on all social media platforms, radio, and television.",
 
   "term_11":
-      "A cashback of 100 EGP is offered for each client who sends their promo code from within the app to other clients. When the client who received the promo code pays the annual subscription, 100 EGP will be deposited into the account of the client who sent the code. There is no limit to this, so any client in the app can receive cashback reaching thousands of pounds monthly on an ongoing basis.",
+      "A cashback of 250 EGP is offered for each client who sends their promo code from within the app to other clients. When the client who received the promo code pays the annual subscription, 250 EGP will be deposited into the account of the client who sent the code. There is no limit to this, so any client in the app can receive cashback reaching thousands of pounds monthly on an ongoing basis.",
 
   "term_12":
-      "The client who receives the promo code will get a 100 EGP discount and pay 250 EGP instead of 350 EGP. Additionally, every week, clients who have paid the annual subscription will be randomly selected and will receive cash prizes ranging from 1,000 EGP to 100,000 EGP.",
+      "The client who receives the promo code will get a 250 EGP discount and pay 500 EGP instead of 750 EGP.",
 
   "term_13":
+      "Every week, clients who have paid the annual subscription will be randomly selected and will receive cash prizes ranging from 1,000 EGP to 100,000 EGP.",
+
+  "term_14":
       "The client can obtain the discount percentage in case of delivery or home visits by sending a screenshot of the digital card on the service provider's WhatsApp."
 };

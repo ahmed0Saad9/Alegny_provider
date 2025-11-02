@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Alegny_provider/src/Features/NotificationFeature/UI/screens/notifications_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -60,32 +61,31 @@ class AppBars {
     );
   }
 
-  static AppBar appBarBack({
-    bool isBack = true,
-    TabBar? tabBar,
-    String title = '',
-    VoidCallback? onTapBack,
-    Color backgroundColor = AppColors.transparentColor,
-    Widget secondIconImage = const SizedBox(
-      width: 0,
-    ),
-    VoidCallback? onTap,
-    Color? iconcolor,
-    Color? titleColor,
-  }) {
+  static AppBar appBarBack(
+      {bool isBack = true,
+      TabBar? tabBar,
+      String title = '',
+      VoidCallback? onTapBack,
+      Color backgroundColor = AppColors.main,
+      Widget secondIconImage = const SizedBox(
+        width: 0,
+      ),
+      VoidCallback? onTap,
+      Color? iconcolor,
+      Color? titleColor = AppColors.titleWhite}) {
     return AppBar(
       scrolledUnderElevation: 0,
-      title: CustomTextL(
-        title.tr,
-        fontWeight: FW.bold,
-        fontSize: 32,
-        textAlign: TextAlign.center,
-        color: titleColor,
-      ),
       titleSpacing: 8.w,
       backgroundColor: backgroundColor,
       centerTitle: true,
       elevation: 0.0,
+      title: CustomTextL(
+        title.tr,
+        fontWeight: FW.bold,
+        fontSize: 24,
+        textAlign: TextAlign.center,
+        color: titleColor,
+      ),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(0.0),
         child: Container(
@@ -95,22 +95,11 @@ class AppBars {
       leading: isBack == true
           ? IconButton(
               onPressed: () => Get.back(),
-              icon: IconSvg(
-                'Back',
-                boxFit: BoxFit.fill,
-                height: 28.h,
-                width: 15.w,
+              icon: const Icon(
+                Icons.arrow_back_ios,
               ),
             )
-          : IconButton(
-              onPressed: onTap,
-              icon: IconSvg(
-                'Back',
-                boxFit: BoxFit.fill,
-                height: 28.h,
-                width: 15.w,
-              ),
-            ),
+          : 0.0.ESH(),
       actions: [secondIconImage],
     );
   }
@@ -315,17 +304,21 @@ class AppBars {
       title: Padding(
         padding: AppPadding.paddingScreenSH16,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                const CustomTextL(
-                  'Hello',
-                  fontWeight: FW.bold,
-                  color: AppColors.titleWhite,
+                const Column(
+                  children: [
+                    CustomTextL(
+                      'Hello',
+                      fontWeight: FW.bold,
+                      color: AppColors.titleWhite,
+                    ),
+                  ],
                 ),
                 SizedBox(
-                  width: 150.w,
+                  width: 160.w,
                   child: CustomTextR(
                     ", ${sl<GetStorage>().read(
                       "UserName",
@@ -337,32 +330,32 @@ class AppBars {
                 ),
               ],
             ),
-            4.ESH(),
-            const CustomTextL(
-              'lets_start_the_journey',
-              fontSize: 13,
-              fontWeight: FW.medium,
-              color: AppColors.titleWhite,
-            ),
           ],
         ),
       ),
-      backgroundColor: Colors.transparent,
+      backgroundColor: AppColors.main,
       elevation: 0.0,
       actions: [
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 36.w),
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: AppColors.titleWhite,
-          ),
-          child: IconButton(
-            onPressed: () {},
-            icon: Image.asset(
-              'assets/images/Settings.png',
-              height: 30.h,
-              width: 30.w,
-              fit: BoxFit.fill,
+        Padding(
+          padding: AppPadding.paddingScreenSH16SV8,
+          child: InkWell(
+            onTap: () => Get.to(() => const NotificationsScreen()),
+            borderRadius: BorderRadius.circular(555.r),
+            child: Container(
+              // margin: EdgeInsets.symmetric(horizontal: 16.w),
+              width: 35.w,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.titleWhite,
+              ),
+              child: Center(
+                child: IconSvg(
+                  'Notification',
+                  color: AppColors.main,
+                  height: 30.h,
+                  boxFit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
         )
@@ -460,6 +453,7 @@ class NotificationWidget extends StatelessWidget {
     required this.glassy,
     this.endPadding = 16,
   });
+
   final double? endPadding;
   final bool glassy;
 

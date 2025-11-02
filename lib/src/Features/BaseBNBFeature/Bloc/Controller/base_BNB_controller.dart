@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 
 class BaseNBNController extends GetxController {
-  var bottomNavIndex = 1; //default index of a first screen
+  var bottomNavIndex = 0; //default index of a first screen
 
   void updateIndex(int index) {
     bottomNavIndex = index;

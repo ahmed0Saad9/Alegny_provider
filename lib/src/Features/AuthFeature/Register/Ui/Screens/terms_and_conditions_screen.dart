@@ -91,7 +91,7 @@ class TermsConditionsScreen extends StatelessWidget {
           SizedBox(height: 24.h),
 
           // Terms List
-          ...List.generate(13, (index) {
+          ...List.generate(14, (index) {
             return _buildTermCard(index + 1, isArabic);
           }),
 
