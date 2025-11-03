@@ -55,13 +55,6 @@ class LanguageSelect extends StatelessWidget {
               ),
             ],
           ),
-          Spacer(),
-          ButtonDefault(
-            onTap: () => Get.back(),
-            title: 'Confirm',
-            // active: (controller.selectedLanguage != null),
-          ),
-          16.ESH(),
         ],
       ),
     );

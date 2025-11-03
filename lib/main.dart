@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
       builder: (context, child) => GetMaterialApp(
         builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
-        defaultTransition: Transition.native,
-        transitionDuration: const Duration(milliseconds: 200),
+        defaultTransition: Transition.cupertino,
+        transitionDuration: const Duration(milliseconds: 500),
         translations: LocalizationServices(),
         locale: LocalizationServices().getCurrentLocale(),
         title: AppStrings.appName,
@@ -70,8 +70,8 @@ class MyApp extends StatelessWidget {
             : route.isBack!
                 ? kNumOfNav--
                 : kNumOfNav++,
-        // home: const SplashScreen(),
-        home: const BaseBNBScreen(),
+        home: const SplashScreen(),
+        // home: const BaseBNBScreen(),
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:Alegny_provider/src/Features/NotificationFeature/UI/screens/notifications_screen.dart';
+import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -104,158 +105,6 @@ class AppBars {
     );
   }
 
-  static AppBar appBarCompany({
-    bool isBack = true,
-    TabBar? tabBar,
-    String title = '',
-    VoidCallback? onTapBack,
-    Color backgroundColor = AppColors.transparentColor,
-    Widget secondIconImage = const SizedBox(
-      width: 0,
-    ),
-    VoidCallback? onTap,
-    Color? iconcolor,
-    Color? titleColor,
-  }) {
-    return AppBar(
-      title: CustomTextL(
-        title.tr,
-        fontWeight: FW.bold,
-        fontSize: 16,
-        textAlign: TextAlign.start,
-        color: titleColor,
-      ),
-      titleSpacing: 8.w,
-      backgroundColor: backgroundColor,
-      centerTitle: true,
-      elevation: 0.0,
-      leading: isBack == false
-          ? 0.0.ESH()
-          : IconButton(
-              onPressed: () => Get.back(),
-              icon: Container(
-                height: 32.h,
-                width: 32.w,
-                decoration: BoxDecoration(
-                  color: AppColors.iconBlack.withOpacity(0.50),
-                  shape: BoxShape.circle,
-                ),
-                child: const IconSvg(
-                  'back',
-                  size: 15,
-                ),
-              ),
-            ),
-      actions: [secondIconImage],
-      bottom: tabBar,
-    );
-  }
-
-  static AppBar appBarMyPoints({
-    bool isBack = true,
-    TabBar? tabBar,
-    String title = '',
-    VoidCallback? onTapBack,
-    Color backgroundColor = AppColors.transparentColor,
-    Widget secondIconImage = const SizedBox(
-      width: 0,
-    ),
-    VoidCallback? onTap,
-    Color? iconcolor,
-    Color? titleColor,
-  }) {
-    return AppBar(
-      title: CustomTextL(
-        title.tr,
-        fontWeight: FW.bold,
-        fontSize: 16,
-        textAlign: TextAlign.start,
-        color: titleColor,
-      ),
-      titleSpacing: 8.w,
-      backgroundColor: backgroundColor,
-      centerTitle: true,
-      elevation: 0.0,
-      leading: isBack == false
-          ? 0.0.ESH()
-          : IconButton(
-              onPressed: () => Get.back(),
-              icon: Container(
-                height: 42.h,
-                width: 42.w,
-                decoration: BoxDecoration(
-                  color: AppColors.backGroundIconWhite.withOpacity(0.07),
-                  shape: BoxShape.circle,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(555.r),
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                    child: const IconSvg(
-                      'arrow-back',
-                      size: 15,
-                      color: AppColors.iconWight,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-      actions: [secondIconImage],
-      bottom: tabBar,
-    );
-  }
-
-  static AppBar appBarEditProfile({
-    bool isBack = true,
-    TabBar? tabBar,
-    String title = '',
-    VoidCallback? onTapBack,
-    Color backgroundColor = AppColors.transparentColor,
-    Widget secondIconImage = const CustomTextL(
-      padding: EdgeInsetsDirectional.only(end: 16),
-      "save",
-      color: AppColors.titleGold,
-      fontSize: 13,
-    ),
-    VoidCallback? onTap,
-    Color? iconcolor,
-    Color? titleColor,
-  }) {
-    return AppBar(
-      title: CustomTextL(
-        title.tr,
-        fontWeight: FW.bold,
-        fontSize: 16,
-        textAlign: TextAlign.start,
-        color: titleColor,
-      ),
-      titleSpacing: 8.w,
-      backgroundColor: backgroundColor,
-      centerTitle: true,
-      elevation: 0.0,
-      // Remove the default shadow
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(0.0),
-        child: Container(
-          color: AppColors.dividerGrayD0,
-          height: 0.5,
-        ),
-      ),
-      leading: isBack == false
-          ? 0.0.ESH()
-          : IconButton(
-              onPressed: () => Get.back(),
-              icon: const IconSvg(
-                'back',
-                size: 20,
-                color: AppColors.iconGray29,
-                boxFit: BoxFit.fill,
-              ),
-            ),
-      actions: [secondIconImage],
-    );
-  }
-
   static AppBar appBarSkipDefault(
       {bool isBack = true,
       TabBar? tabBar,
@@ -296,71 +145,213 @@ class AppBars {
     );
   }
 
+  // static AppBar appBarHome({
+  //   required int bNBIndex,
+  // }) {
+  //   return AppBar(
+  //     scrolledUnderElevation: 0,
+  //     title: Padding(
+  //       padding: AppPadding.paddingScreenSH16,
+  //       child: Column(
+  //         // crossAxisAlignment: CrossAxisAlignment.start,
+  //         children: [
+  //           Row(
+  //             children: [
+  //               const Column(
+  //                 children: [
+  //                   CustomTextL(
+  //                     'Hello',
+  //                     fontWeight: FW.bold,
+  //                     color: AppColors.titleWhite,
+  //                   ),
+  //                 ],
+  //               ),
+  //               SizedBox(
+  //                 width: 160.w,
+  //                 child: CustomTextR(
+  //                   ", ${sl<GetStorage>().read(
+  //                     "UserName",
+  //                   )}",
+  //                   isOverFlow: true,
+  //                   color: AppColors.titleWhite,
+  //                   fontWeight: FW.bold,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //     backgroundColor: AppColors.main,
+  //     elevation: 0.0,
+  //     actions: [
+  //       Padding(
+  //         padding: AppPadding.paddingScreenSH16SV8,
+  //         child: InkWell(
+  //           onTap: () => Get.to(() => const NotificationsScreen()),
+  //           borderRadius: BorderRadius.circular(555.r),
+  //           child: Container(
+  //             // margin: EdgeInsets.symmetric(horizontal: 16.w),
+  //             width: 35.w,
+  //             decoration: const BoxDecoration(
+  //               shape: BoxShape.circle,
+  //               color: AppColors.titleWhite,
+  //             ),
+  //             child: Center(
+  //               child: IconSvg(
+  //                 'Notification',
+  //                 color: AppColors.main,
+  //                 height: 30.h,
+  //                 boxFit: BoxFit.contain,
+  //               ),
+  //             ),
+  //           ),
+  //         ),
+  //       )
+  //     ],
+  //   );
+  // }
+
   static AppBar appBarHome({
     required int bNBIndex,
+    bool hasUnreadNotifications = true,
   }) {
     return AppBar(
-      scrolledUnderElevation: 0,
-      title: Padding(
-        padding: AppPadding.paddingScreenSH16,
-        child: Column(
-          // crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Column(
-                  children: [
-                    CustomTextL(
-                      'Hello',
-                      fontWeight: FW.bold,
-                      color: AppColors.titleWhite,
+        scrolledUnderElevation: 0,
+        toolbarHeight: 70.h,
+        backgroundColor: AppColors.main,
+        elevation: 0.0,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                AppColors.main,
+                AppColors.main.withOpacity(0.85),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        title: Padding(
+          padding: EdgeInsets.symmetric(vertical: 8.h),
+          child: Row(
+            children: [
+              // Avatar
+              Container(
+                width: 45.w,
+                height: 45.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
-                SizedBox(
-                  width: 160.w,
-                  child: CustomTextR(
-                    ", ${sl<GetStorage>().read(
-                      "UserName",
-                    )}",
-                    isOverFlow: true,
-                    color: AppColors.titleWhite,
-                    fontWeight: FW.bold,
+                child: ClipOval(
+                  child: AvatarWidget(
+                    height: 45,
+                    width: 45,
+                    image: sl<GetStorage>().read("UserImage"),
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-      ),
-      backgroundColor: AppColors.main,
-      elevation: 0.0,
-      actions: [
-        Padding(
-          padding: AppPadding.paddingScreenSH16SV8,
-          child: InkWell(
-            onTap: () => Get.to(() => const NotificationsScreen()),
-            borderRadius: BorderRadius.circular(555.r),
-            child: Container(
-              // margin: EdgeInsets.symmetric(horizontal: 16.w),
-              width: 35.w,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.titleWhite,
               ),
-              child: Center(
-                child: IconSvg(
-                  'Notification',
-                  color: AppColors.main,
-                  height: 30.h,
-                  boxFit: BoxFit.contain,
+              12.ESW(),
+              Expanded(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    CustomTextL(
+                      'Hello',
+                      fontSize: 20.sp,
+                      color: Colors.white.withOpacity(0.9),
+                      fontWeight: FW.regular,
+                    ),
+                    // 2.ESH(),
+                    Expanded(
+                      child: CustomTextL(
+                        ', ${sl<GetStorage>().read("UserName") ?? 'Ahmed Saad'}',
+                        fontSize: 20.sp,
+                        color: AppColors.titleWhite,
+                        fontWeight: FW.bold,
+                        isOverFlow: true,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+            ],
+          ),
+        ),
+        actions: [
+          // Notification Button
+          Padding(
+            padding: EdgeInsetsDirectional.only(end: 16.w, top: 10.h),
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                InkWell(
+                  onTap: () => Get.to(() => const NotificationsScreen()),
+                  borderRadius: BorderRadius.circular(12.r),
+                  child: Container(
+                    width: 45.w,
+                    height: 45.w,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.2),
+                        width: 1,
+                      ),
+                    ),
+                    child: Center(
+                      child: IconSvg(
+                        'Notification',
+                        color: AppColors.iconWight,
+                        height: 22.h,
+                        boxFit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                ),
+                // Notification Dot Indicator
+                if (hasUnreadNotifications)
+                  PositionedDirectional(
+                    top: 5.h,
+                    start: 5.w,
+                    child: Container(
+                      width: 10.w,
+                      height: 10.w,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: AppColors.main,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.red.withOpacity(0.5),
+                            blurRadius: 4,
+                            spreadRadius: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+              ],
             ),
           ),
-        )
-      ],
-    );
+        ]);
   }
 
   static AppBar appBarInvestmentPortfolio({

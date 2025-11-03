@@ -302,7 +302,7 @@ class ProfileScreen extends StatelessWidget {
                             spaceBHeaderAndWidget: 0,
                             icon: 'Translate',
                             title: 'select_language',
-                            height: Get.height * 0.4,
+                            height: Get.height * 0.3,
                             widget: const LanguageSelect(),
                           ),
                         ),

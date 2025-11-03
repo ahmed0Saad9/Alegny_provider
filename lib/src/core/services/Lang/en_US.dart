@@ -396,4 +396,37 @@ const Map<String, String> enUS = {
   "whatsapp_not_installed": "WhatsApp is not installed on this device",
   "cannot_open": "Cannot open",
   "error_occurred": "An error occurred",
+
+  "know": "Know",
+  "discounts": "Discounts",
+  "back": "Back",
+  "next": "Next",
+  "submit": "Submit",
+
+  "let_us_know_about_you": "Let us know about you",
+  "upload_picture": "Upload Picture",
+  "tap_to_upload": "Tap to upload",
+  "specialization": "Specialization",
+  "select_specialization": "Select Specialization",
+  "service_name": "Service Name",
+  "enter_service_name_or_doctor": "Enter service name or doctor",
+  "social_media_links": "Social Media Links",
+  "enter": "Enter",
+  "link": "link",
+
+  "discount_percentage": "Discount Percentage",
+  "enter_discount_percentage": "Enter discount percentage",
+
+  "address": "Address",
+  "enter_address": "Enter address",
+  "city": "City",
+  "enter_city": "Enter city",
+
+  "please_upload_picture": "Please upload a picture",
+  "please_select_specialization": "Please select a specialization",
+  "please_enter_service_name_or_doctor": "Please enter service name or doctor",
+  "please_enter_discount": "Please enter discount percentage",
+  "please_enter_location": "Please enter location details",
+  "service_added_successfully": "Service added successfully",
+  "success": "Success",
 };

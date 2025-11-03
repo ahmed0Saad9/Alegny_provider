@@ -19,7 +19,6 @@ class ChangePasswordScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var node = FocusScope.of(context);
     return BaseScaffold(
-      backgroundColor: Colors.transparent,
       appBar: AppBars.appBarBack(title: 'change_password'),
       body: Padding(
         padding: AppPadding.paddingScreenSH16,

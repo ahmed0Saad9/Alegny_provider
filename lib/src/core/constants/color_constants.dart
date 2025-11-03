@@ -276,7 +276,7 @@ class TextFieldColors {
   static const Color activeIcon = Color(0xff6b6b6c);
   static const Color suffixIcon = Color(0xff6b6b6c);
   static const Color icon = Color(0xff6b6b6c);
-  static const Color enableBorder = Color(0xff6b6b6c);
+  static const Color enableBorder = Color(0xffb7b7b7);
   static const Color focusBorder = Color(0xff50C5C8);
   static const Color searchBorder = Color(0xffE6E6E6);
   static const Color disableBorder = Color(0xffE5E5E6);

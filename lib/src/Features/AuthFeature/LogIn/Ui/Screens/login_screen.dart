@@ -33,7 +33,7 @@ class LoginScreen extends StatelessWidget {
               key: _.loginGlobalKey,
               child: BaseStaggeredColumn(
                 children: [
-                  80.ESH(),
+                  70.ESH(),
                   Row(
                     children: [
                       const CustomTextL('welcome_back', fontWeight: FW.bold),

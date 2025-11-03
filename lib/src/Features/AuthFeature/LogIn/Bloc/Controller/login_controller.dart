@@ -28,23 +28,24 @@ class LoginController extends BaseController<LogInRepository> {
   final GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
 
   Future<void> logIn() async {
-    if (loginGlobalKey.currentState!.validate()) {
-      loginGlobalKey.currentState!.save();
-      showEasyLoading();
-      var result = await repository!.logIn(
-        password: passwordController!.text,
-        email: emailController!.text,
-      );
-      closeEasyLoading();
-      result.when(success: (Response response) {
-        _userModel = UserModel.fromJson(response.data);
-        LocalStorageCubit().storeUserModel(
-            _userModel!); //stores the user data locally by GetStorage
-        _navigatorAfterLogIn(_userModel!);
-      }, failure: (NetworkExceptions error) {
-        actionNetworkExceptions(error);
-      });
-    }
+    Get.off(() => BaseBNBScreen());
+    // if (loginGlobalKey.currentState!.validate()) {
+    //   loginGlobalKey.currentState!.save();
+    //   showEasyLoading();
+    //   var result = await repository!.logIn(
+    //     password: passwordController!.text,
+    //     email: emailController!.text,
+    //   );
+    //   closeEasyLoading();
+    //   result.when(success: (Response response) {
+    //     _userModel = UserModel.fromJson(response.data);
+    //     LocalStorageCubit().storeUserModel(
+    //         _userModel!); //stores the user data locally by GetStorage
+    //     _navigatorAfterLogIn(_userModel!);
+    //   }, failure: (NetworkExceptions error) {
+    //     actionNetworkExceptions(error);
+    //   });
+    // }
   }
 
   void navigatorToBaseBNBScreen() {
