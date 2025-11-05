@@ -7,11 +7,11 @@ enum EnumGetOpportunities {
   final String type;
 }
 
-enum EnumAccountType {
-  investor('investor'),
+enum EnumServiceType {
+  doctor('دكتور بشري'),
   company('company');
 
-  const EnumAccountType(this.type);
+  const EnumServiceType(this.type);
   final String type;
 }
 
