@@ -374,7 +374,8 @@ const Map<String, String> arAE = {
   "enter_price_before_discount": "أدخل السعر قبل الخصم",
   "enter_price_after_discount": "أدخل السعر بعد الخصم",
   "home_visit": "زيارة منزلية",
-  "accept_insurance": "يقبل التأمين",
+  "Can_the_discount_card_be_used_in_the_case_of_a_home_visit":
+      "هل يمكن استخدام كارت الخصومات في حالة الزيارة المنزلية",
   "home_delivery": "توصيل منزلي",
   "home_service": "خدمة منزلية",
   "consultation_price_before_discount": "سعر الكشف قبل الخصم",
@@ -447,5 +448,17 @@ const Map<String, String> arAE = {
   'enter_whatsapp_number': 'أدخل رقم الواتساب',
   "from": "من",
   "to": "إلى",
-  "closed": "مغلق"
+  "closed": "مغلق",
+
+  'pending': 'قيد المراجعة',
+  'approved': 'مقبول',
+  'rejected': 'مرفوض',
+  'suspended': 'موقوف',
+  'under_review': 'قيد المراجعة من قبل الإدارة',
+  'approved_on': 'تم القبول في {date}',
+  'view_details': 'عرض التفاصيل',
+  'delete_service': 'حذف الخدمة',
+  'delete_service_confirmation':
+      'هل أنت متأكد من حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.',
+  'all_branches': 'جميع الفروع',
 };

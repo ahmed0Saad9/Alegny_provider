@@ -7,13 +7,109 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/Appbars/app_bars.dart'
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/base_scaffold.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
+
+import '../Widgets/service_card.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    List<ServiceModel> services = [
+      ServiceModel(
+        id: "1",
+        serviceName: "Dr. Ahmed Cardiology Center",
+        serviceType: "human_doctor",
+        specialization: "Cardiology",
+        imageUrl: "https://example.com/images/cardiology-center.jpg",
+        discount: "15",
+        status: ServiceStatus.approved,
+        createdAt: DateTime(2024, 1, 15),
+        approvedAt: DateTime(2024, 1, 20),
+        branches: [
+          BranchModel(
+            governorate: "القاهرة",
+            city: "المعادي",
+            address: "123 شارع النصر، المعادي، القاهرة",
+            phone: "01234567891",
+            whatsapp: "01234567891",
+            workingHours: {
+              'saturday': '9:00 AM - 5:00 PM',
+              'sunday': '9:00 AM - 5:00 PM',
+              'monday': '9:00 AM - 5:00 PM',
+              'tuesday': '9:00 AM - 5:00 PM',
+              'wednesday': '9:00 AM - 5:00 PM',
+              'thursday': '9:00 AM - 2:00 PM',
+              'friday': 'closed',
+            },
+          ),
+          BranchModel(
+            governorate: "الجيزة",
+            city: "الدقي",
+            address: "45 شارع جامعة القاهرة، الدقي",
+            phone: "01234567892",
+            whatsapp: "01234567892",
+            workingHours: {
+              'saturday': '10:00 AM - 6:00 PM',
+              'sunday': '10:00 AM - 6:00 PM',
+              'monday': '10:00 AM - 6:00 PM',
+              'tuesday': '10:00 AM - 6:00 PM',
+              'wednesday': '10:00 AM - 6:00 PM',
+              'thursday': '10:00 AM - 4:00 PM',
+              'friday': 'closed',
+            },
+          ),
+          BranchModel(
+            // Third branch
+            governorate: "القاهرة",
+            city: "مدينة نصر",
+            address: "78 شارع مكرم عبيد، مدينة نصر",
+            phone: "01234567893",
+            whatsapp: "01234567893",
+            workingHours: {
+              'saturday': '8:00 AM - 8:00 PM',
+              'sunday': '8:00 AM - 8:00 PM',
+              'monday': '8:00 AM - 8:00 PM',
+              'tuesday': '8:00 AM - 8:00 PM',
+              'wednesday': '8:00 AM - 8:00 PM',
+              'thursday': '8:00 AM - 4:00 PM',
+              'friday': '10:00 AM - 2:00 PM',
+            },
+          ),
+        ],
+      ),
+      ServiceModel(
+        id: "4",
+        serviceName: "Advanced Medical Lab",
+        serviceType: "lab",
+        specialization: null,
+        imageUrl: "https://example.com/images/medical-lab.jpg",
+        discount: "25",
+        status: ServiceStatus.rejected, // Can still edit this
+        createdAt: DateTime(2024, 2, 5),
+        rejectionReason: "Incomplete documentation",
+        branches: [
+          BranchModel(
+            governorate: "الدقهلية",
+            city: "المنصورة",
+            address: "شارع الجمهورية، المنصورة",
+            phone: "01234567896",
+            whatsapp: "01234567896",
+            workingHours: {
+              'saturday': '7:00 AM - 10:00 PM',
+              'sunday': '7:00 AM - 10:00 PM',
+              'monday': '7:00 AM - 10:00 PM',
+              'tuesday': '7:00 AM - 10:00 PM',
+              'wednesday': '7:00 AM - 10:00 PM',
+              'thursday': '7:00 AM - 10:00 PM',
+              'friday': '7:00 AM - 10:00 PM',
+            },
+          ),
+        ],
+      ),
+    ];
     return BaseScaffold(
       appBar: AppBars.appBarHome(
         bNBIndex: 0,
@@ -22,9 +118,36 @@ class HomeScreen extends StatelessWidget {
         padding: AppPadding.paddingScreenSH16SV16,
         child: Stack(
           children: [
-            ListView(
-              children: [],
-            ),
+            services.isEmpty
+                ? _buildEmptyState()
+                : ListView.builder(
+                    padding: EdgeInsets.zero,
+                    itemCount: services.length,
+                    itemBuilder: (context, index) {
+                      return ServiceCard(
+                        service: services[index],
+                        onEdit: () {
+                          // Navigate to edit service screen
+                          print('Edit service: ${services[index].id}');
+                          // Get.to(() => EditServiceScreen(service: services[index]));
+                        },
+                        onDelete: () {
+                          // Call delete API
+                          print('Delete service: ${services[index].id}');
+                          // Your delete logic here
+                          Get.snackbar(
+                            'success'.tr,
+                            'service_deleted_successfully'.tr,
+                            backgroundColor: Colors.green,
+                            colorText: Colors.white,
+                          );
+                        },
+                        onViewDetails: () {
+                          print('View details: ${services[index].serviceName}');
+                        },
+                      );
+                    },
+                  ),
             Align(
               alignment: AlignmentDirectional.bottomStart,
               child: Row(
@@ -56,4 +179,32 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildEmptyState() {
+  return Center(
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.medical_services_outlined,
+          size: 80.sp,
+          color: Colors.grey[400],
+        ),
+        20.ESH(),
+        CustomTextL(
+          'no_services_yet',
+          fontSize: 18.sp,
+          fontWeight: FW.medium,
+          color: Colors.grey[600],
+        ),
+        8.ESH(),
+        CustomTextR(
+          'tap_add_to_create_service',
+          fontSize: 14.sp,
+          color: Colors.grey[500],
+        ),
+      ],
+    ),
+  );
 }

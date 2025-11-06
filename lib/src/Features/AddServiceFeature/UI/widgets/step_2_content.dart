@@ -81,24 +81,22 @@ class _Step2Content extends StatelessWidget {
           hint: 'enter_surgeries_other_services_discount'.tr,
         ),
         24.ESH(),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('home_visit', fontSize: 14.sp),
-                    value: controller.humanDoctorIsHome.value,
-                    onChanged: (value) =>
-                        controller.humanDoctorIsHome.value = value!,
-                  )),
-            ),
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('accept_insurance', fontSize: 14.sp),
-                    value: controller.humanDoctorIsCard.value,
-                    onChanged: (value) =>
-                        controller.humanDoctorIsCard.value = value!,
-                  )),
-            ),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL('home_visit', fontSize: 14.sp),
+                  value: controller.humanDoctorIsHome.value,
+                  onChanged: (value) =>
+                      controller.humanDoctorIsHome.value = value!,
+                )),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL(
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      fontSize: 14.sp),
+                  value: controller.humanDoctorIsCard.value,
+                  onChanged: (value) =>
+                      controller.humanDoctorIsCard.value = value!,
+                )),
           ],
         ),
       ],
@@ -181,24 +179,22 @@ class _Step2Content extends StatelessWidget {
           hint: 'enter_medical_supplies_discount',
         ),
         24.ESH(),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('home_delivery', fontSize: 14.sp),
-                    value: controller.humanPharmacyIsHome.value,
-                    onChanged: (value) =>
-                        controller.humanPharmacyIsHome.value = value!,
-                  )),
-            ),
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('accept_insurance', fontSize: 14.sp),
-                    value: controller.humanPharmacyIsCard.value,
-                    onChanged: (value) =>
-                        controller.humanPharmacyIsCard.value = value!,
-                  )),
-            ),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL('home_delivery', fontSize: 14.sp),
+                  value: controller.humanPharmacyIsHome.value,
+                  onChanged: (value) =>
+                      controller.humanPharmacyIsHome.value = value!,
+                )),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL(
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      fontSize: 14.sp),
+                  value: controller.humanPharmacyIsCard.value,
+                  onChanged: (value) =>
+                      controller.humanPharmacyIsCard.value = value!,
+                )),
           ],
         ),
       ],
@@ -217,24 +213,20 @@ class _Step2Content extends StatelessWidget {
           hint: 'enter_all_tests_discount',
         ),
         24.ESH(),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('home_service', fontSize: 14.sp),
-                    value: controller.labTestIsHome.value,
-                    onChanged: (value) =>
-                        controller.labTestIsHome.value = value!,
-                  )),
-            ),
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('accept_insurance', fontSize: 14.sp),
-                    value: controller.labTestIsCard.value,
-                    onChanged: (value) =>
-                        controller.labTestIsCard.value = value!,
-                  )),
-            ),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL('home_service', fontSize: 14.sp),
+                  value: controller.labTestIsHome.value,
+                  onChanged: (value) => controller.labTestIsHome.value = value!,
+                )),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL(
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      fontSize: 14.sp),
+                  value: controller.labTestIsCard.value,
+                  onChanged: (value) => controller.labTestIsCard.value = value!,
+                )),
           ],
         ),
       ],
@@ -292,24 +284,21 @@ class _Step2Content extends StatelessWidget {
           hint: 'enter_eye_exam_discount',
         ),
         24.ESH(),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('home_delivery', fontSize: 14.sp),
-                    value: controller.eyeCareIsDelivery.value,
-                    onChanged: (value) =>
-                        controller.eyeCareIsDelivery.value = value!,
-                  )),
-            ),
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('accept_insurance', fontSize: 14.sp),
-                    value: controller.eyeCareIsCard.value,
-                    onChanged: (value) =>
-                        controller.eyeCareIsCard.value = value!,
-                  )),
-            ),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL('home_delivery', fontSize: 14.sp),
+                  value: controller.eyeCareIsDelivery.value,
+                  onChanged: (value) =>
+                      controller.eyeCareIsDelivery.value = value!,
+                )),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL(
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      fontSize: 14.sp),
+                  value: controller.eyeCareIsCard.value,
+                  onChanged: (value) => controller.eyeCareIsCard.value = value!,
+                )),
           ],
         ),
       ],
@@ -447,24 +436,22 @@ class _Step2Content extends StatelessWidget {
           hint: 'enter_surgeries_other_services_discount'.tr,
         ),
         24.ESH(),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('home_visit', fontSize: 14.sp),
-                    value: controller.veterinaryDoctorIsHome.value,
-                    onChanged: (value) =>
-                        controller.veterinaryDoctorIsHome.value = value!,
-                  )),
-            ),
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('accept_insurance', fontSize: 14.sp),
-                    value: controller.veterinaryDoctorIsCard.value,
-                    onChanged: (value) =>
-                        controller.veterinaryDoctorIsCard.value = value!,
-                  )),
-            ),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL('home_visit', fontSize: 14.sp),
+                  value: controller.veterinaryDoctorIsHome.value,
+                  onChanged: (value) =>
+                      controller.veterinaryDoctorIsHome.value = value!,
+                )),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL(
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      fontSize: 14.sp),
+                  value: controller.veterinaryDoctorIsCard.value,
+                  onChanged: (value) =>
+                      controller.veterinaryDoctorIsCard.value = value!,
+                )),
           ],
         ),
       ],
@@ -546,24 +533,22 @@ class _Step2Content extends StatelessWidget {
           hint: 'enter_medical_supplies_discount',
         ),
         24.ESH(),
-        Row(
+        Column(
           children: [
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('home_delivery', fontSize: 14.sp),
-                    value: controller.veterinaryPharmacyIsHome.value,
-                    onChanged: (value) =>
-                        controller.veterinaryPharmacyIsHome.value = value!,
-                  )),
-            ),
-            Expanded(
-              child: Obx(() => CheckboxListTile(
-                    title: CustomTextL('accept_insurance', fontSize: 14.sp),
-                    value: controller.veterinaryPharmacyIsCard.value,
-                    onChanged: (value) =>
-                        controller.veterinaryPharmacyIsCard.value = value!,
-                  )),
-            ),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL('home_delivery', fontSize: 14.sp),
+                  value: controller.veterinaryPharmacyIsHome.value,
+                  onChanged: (value) =>
+                      controller.veterinaryPharmacyIsHome.value = value!,
+                )),
+            Obx(() => CheckboxListTile(
+                  title: CustomTextL(
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      fontSize: 14.sp),
+                  value: controller.veterinaryPharmacyIsCard.value,
+                  onChanged: (value) =>
+                      controller.veterinaryPharmacyIsCard.value = value!,
+                )),
           ],
         ),
       ],

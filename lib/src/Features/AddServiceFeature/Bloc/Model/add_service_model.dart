@@ -22,7 +22,7 @@ class ServiceData {
   final String? consultationPriceBefore;
   final String? consultationPriceAfter;
   final bool? isHomeVisit;
-  final bool? acceptInsurance;
+  final bool? homeDiscount;
 
   // Hospital fields (Human & Veterinary)
   final String? examinationsDiscount;
@@ -89,7 +89,7 @@ class ServiceData {
     this.consultationPriceBefore,
     this.consultationPriceAfter,
     this.isHomeVisit,
-    this.acceptInsurance,
+    this.homeDiscount,
 
     // Hospital fields
     this.examinationsDiscount,
@@ -156,7 +156,7 @@ class ServiceData {
         'consultation_price_before': consultationPriceBefore,
         'consultation_price_after': consultationPriceAfter,
         'is_home_visit': isHomeVisit,
-        'accept_insurance': acceptInsurance,
+        'homeDiscount': homeDiscount,
 
         // Hospital fields
         'examinations_discount': examinationsDiscount,

@@ -1,44 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 class Branch {
-  // 1. Use controllers for your TextFields
-  //    This is what _Step3Content is expecting
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController whatsappController = TextEditingController();
+  final String address;
+  final String phoneNumber;
+  final String whatsAppNumber;
+  final String selectedGovernorate;
+  final String selectedCity;
+  final Map<String, String> workingHours;
 
-  // 2. State for your Dropdowns
-  final RxString selectedGovernorate = ''.obs;
-  final RxString selectedCity = ''.obs;
-
-  // 3. State for your working hours (make it observable)
-  final Map<String, String> workingHours = <String, String>{
-    'saturday': '9:00 AM - 5:00 PM',
-    'sunday': '9:00 AM - 5:00 PM',
-    'monday': '9:00 AM - 5:00 PM',
-    'tuesday': '9:00 AM - 5:00 PM',
-    'wednesday': '9:00 AM - 5:00 PM',
-    'thursday': '9:00 AM - 5:00 PM',
-    'friday': 'closed'.tr,
-  };
-
-  // 4. Dispose method to clean up controllers
-  void dispose() {
-    addressController.dispose();
-    phoneController.dispose();
-    whatsappController.dispose();
-  }
-
-  // 5. toJson reads directly from the controllers
   Map<String, dynamic> toJson() {
     return {
-      'address': addressController.text.trim(),
-      'phone': phoneController.text.trim(),
-      'whatsapp': whatsappController.text.trim(),
-      'governorate': selectedGovernorate.value,
-      'city': selectedCity.value,
-      'workingHours': workingHours, // Convert RxMap to regular Map
+      'address': address,
+      'phone': phoneNumber,
+      'whatsapp': whatsAppNumber,
+      'governorate': selectedGovernorate,
+      'city': selectedCity,
+      'workingHours': workingHours,
     };
   }
+
+  const Branch({
+    required this.address,
+    required this.phoneNumber,
+    required this.whatsAppNumber,
+    required this.selectedGovernorate,
+    required this.selectedCity,
+    required this.workingHours,
+  });
 }

@@ -570,4 +570,15 @@ const Map<String, String> enUS = {
   "from": "From",
   "to": "To",
   "closed": "Closed",
+  'pending': 'Under Review',
+  'approved': 'Approved',
+  'rejected': 'Rejected',
+  'suspended': 'Suspended',
+  'under_review': 'Under Admin Review',
+  'approved_on': 'Approved on {date}',
+  'view_details': 'View Details',
+  'delete_service': 'Delete Service',
+  'delete_service_confirmation':
+      'Are you sure you want to delete this service? This action cannot be undone.',
+  'all_branches': 'All Branches',
 };

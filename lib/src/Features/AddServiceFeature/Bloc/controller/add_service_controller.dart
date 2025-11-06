@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/Model/add_service_model.dart';
 import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/Model/branch_model.dart';
+import 'package:Alegny_provider/src/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -19,13 +20,18 @@ class AddServiceController extends GetxController {
   final TextEditingController instagramController = TextEditingController();
   final TextEditingController tiktokController = TextEditingController();
   final TextEditingController youtubeController = TextEditingController();
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController cityController = TextEditingController();
-  final TextEditingController whatsappController =
-      TextEditingController(); // Main WhatsApp
   final Rxn<String> selectedSpecialization = Rxn<String>();
   final Rxn<String> selectedService = Rxn<String>();
   final Rxn<File> serviceImage = Rxn<File>();
+
+  final List<Branch> branches = <Branch>[].obs;
+
+  final List<TextEditingController> branchAddressControllers = [];
+  final List<TextEditingController> branchPhoneControllers = [];
+  final List<TextEditingController> branchWhatsappControllers = [];
+  final List<RxString> branchSelectedCities = [];
+  final List<RxString> branchSelectedGovernorates = [];
+  final List<Map<String, String>> branchWorkingHours = [];
 
   //second step controllers
   /// xRay
@@ -179,9 +185,6 @@ class AddServiceController extends GetxController {
     update();
   }
 
-  // Step 3 - Branches
-  final List<Branch> branches = <Branch>[].obs;
-
   // Egyptian governorates and cities data
   static const List<String> governorates = [
     'القاهرة',
@@ -252,16 +255,81 @@ class AddServiceController extends GetxController {
   };
 
   void addBranch() {
-    final newBranch = Branch();
+    // Create new controllers and data for this branch
+    final addressController = TextEditingController();
+    final phoneController = TextEditingController();
+    final whatsappController = TextEditingController();
+    final selectedCity = ''.obs;
+    final selectedGovernorate = ''.obs;
+    final workingHours = <String, String>{
+      'saturday': '',
+      'sunday': '',
+      'monday': '',
+      'tuesday': '',
+      'wednesday': '',
+      'thursday': '',
+      'friday': 'closed'.tr,
+    };
+
+    // Store them in the lists
+    branchAddressControllers.add(addressController);
+    branchPhoneControllers.add(phoneController);
+    branchWhatsappControllers.add(whatsappController);
+    branchSelectedCities.add(selectedCity);
+    branchSelectedGovernorates.add(selectedGovernorate);
+    branchWorkingHours.add(workingHours);
+
+    // Create the branch (initially empty)
+    final newBranch = Branch(
+      address: '',
+      phoneNumber: '',
+      whatsAppNumber: '',
+      workingHours: workingHours,
+      selectedCity: selectedCity.value,
+      selectedGovernorate: selectedGovernorate.value,
+    );
+
     branches.add(newBranch);
     update();
   }
 
   void removeBranch(int index) {
     if (branches.length > 1) {
-      branches[index].dispose();
+      // Dispose controllers and remove from lists
+      branchAddressControllers[index].dispose();
+      branchPhoneControllers[index].dispose();
+      branchWhatsappControllers[index].dispose();
+
+      branchAddressControllers.removeAt(index);
+      branchPhoneControllers.removeAt(index);
+      branchWhatsappControllers.removeAt(index);
+      branchSelectedCities.removeAt(index);
+      branchSelectedGovernorates.removeAt(index);
+      branchWorkingHours.removeAt(index);
+
       branches.removeAt(index);
       update();
+    }
+  }
+
+  void updateBranchData(int index) {
+    if (index < branches.length) {
+      final updatedBranch = Branch(
+        address: branchAddressControllers[index].text,
+        phoneNumber: branchPhoneControllers[index].text,
+        whatsAppNumber: branchWhatsappControllers[index].text,
+        selectedGovernorate: branchSelectedGovernorates[index].value,
+        selectedCity: branchSelectedCities[index].value,
+        workingHours: Map.from(branchWorkingHours[index]), // Create a copy
+      );
+
+      branches[index] = updatedBranch;
+    }
+  }
+
+  void updateAllBranches() {
+    for (int i = 0; i < branches.length; i++) {
+      updateBranchData(i);
     }
   }
 
@@ -307,27 +375,35 @@ class AddServiceController extends GetxController {
   }
 
   bool _validateStep3() {
-    // <-- DELETED: No longer need to call updateBranchData
+    for (int i = 0; i < branches.length; i++) {
+      // Validate using the branch-specific controllers and Rx values
+      if (branchSelectedGovernorates[i].value.isEmpty) {
+        _showError(
+            '${'please_select_governorate'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
 
-    // Validate each branch
-    for (var branch in branches) {
-      if (branch.selectedGovernorate.value.isEmpty) {
-        _showError('please_select_governorate'.tr);
+      if (branchSelectedCities[i].value.isEmpty) {
+        _showError('${'please_select_city'.tr} ${'for_branch'.tr} ${i + 1}');
         return false;
       }
-      if (branch.selectedCity.value.isEmpty) {
-        _showError('please_select_city'.tr);
+
+      if (branchAddressControllers[i].text.trim().isEmpty) {
+        _showError('${'please_enter_address'.tr} ${'for_branch'.tr} ${i + 1}');
         return false;
       }
-      // <-- CHANGED: Validate directly from the branch's controller
-      if (branch.addressController.text.trim().isEmpty) {
-        _showError('please_enter_address'.tr);
+
+      if (branchPhoneControllers[i].text.trim().isEmpty) {
+        _showError(
+            '${'please_enter_phone_number'.tr} ${'for_branch'.tr} ${i + 1}');
         return false;
       }
-      if (branch.phoneController.text.trim().isEmpty) {
-        _showError('please_enter_phone_number'.tr);
-        return false;
-      }
+
+      // Optional: Validate WhatsApp
+      // if (branchWhatsappControllers[i].text.trim().isEmpty) {
+      //   _showError('${'please_enter_whatsapp_number'.tr} ${'for_branch'.tr} ${i + 1}');
+      //   return false;
+      // }
     }
     return true;
   }
@@ -400,10 +476,7 @@ class AddServiceController extends GetxController {
 
   void submitService() {
     final branchesData = branches.map((branch) => branch.toJson()).toList();
-
-    // Debug: Print branches data
-    print('Branches to send: $branchesData');
-
+    updateAllBranches();
     final serviceData = ServiceData(
       // Basic info
       serviceName: serviceNameController.text.trim(),
@@ -418,10 +491,6 @@ class AddServiceController extends GetxController {
       tiktok: tiktokController.text.trim(),
       youtube: youtubeController.text.trim(),
 
-      // Location & Contact
-      address: addressController.text.trim(),
-      city: cityController.text.trim(),
-
       // Doctor fields
       consultationPriceBefore: humanDoctorPriceBefore.text.trim().isNotEmpty
           ? humanDoctorPriceBefore.text.trim()
@@ -434,7 +503,7 @@ class AddServiceController extends GetxController {
           : (selectedService.value == 'veterinarian'
               ? veterinaryDoctorIsHome.value
               : null),
-      acceptInsurance: selectedService.value == 'human_doctor'
+      homeDiscount: selectedService.value == 'human_doctor'
           ? humanDoctorIsCard.value
           : (selectedService.value == 'veterinarian'
               ? veterinaryDoctorIsCard.value
@@ -514,7 +583,7 @@ class AddServiceController extends GetxController {
 
   void _sendToBackend(ServiceData serviceData) {
     // TODO: Implement actual backend integration
-    print('Service Data with Branches: ${serviceData.toJson()}');
+    printDM('Service Data with Branches: ${serviceData.toJson()}');
 
     Get.snackbar(
       'success'.tr,
@@ -534,12 +603,15 @@ class AddServiceController extends GetxController {
     instagramController.dispose();
     tiktokController.dispose();
     youtubeController.dispose();
-    addressController.dispose();
-    cityController.dispose();
-    whatsappController.dispose();
 
-    for (var branch in branches) {
-      branch.dispose();
+    for (var controller in branchAddressControllers) {
+      controller.dispose();
+    }
+    for (var controller in branchPhoneControllers) {
+      controller.dispose();
+    }
+    for (var controller in branchWhatsappControllers) {
+      controller.dispose();
     }
 
     // xRay controllers

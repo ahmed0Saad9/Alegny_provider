@@ -36,12 +36,12 @@ class _Step3Content extends StatelessWidget {
     return controller.branches.asMap().entries.map((entry) {
       final index = entry.key;
       final branch = entry.value;
-      return _buildBranchCard(controller, branch, index, context);
+      return _buildBranchCard(controller, index, context);
     }).toList();
   }
 
-  Widget _buildBranchCard(AddServiceController controller, Branch branch,
-      int index, BuildContext context) {
+  Widget _buildBranchCard(
+      AddServiceController controller, int index, BuildContext context) {
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -75,14 +75,14 @@ class _Step3Content extends StatelessWidget {
           // Governorate Dropdown
           _buildSectionLabel('governorate'.tr, true),
           12.ESH(),
-          _buildGovernorateDropdown(branch, controller),
+          _buildGovernorateDropdown(controller, index),
           24.ESH(),
 
           // City Dropdown (only show if governorate is selected)
-          if (branch.selectedGovernorate.value.isNotEmpty) ...[
+          if (controller.branchSelectedGovernorates[index].isNotEmpty) ...[
             _buildSectionLabel('city'.tr, true),
             12.ESH(),
-            _buildCityDropdown(branch, controller),
+            _buildCityDropdown(controller, index),
             24.ESH(),
           ],
 
@@ -90,7 +90,7 @@ class _Step3Content extends StatelessWidget {
           _buildSectionLabel('address'.tr, true),
           12.ESH(),
           TextFieldDefault(
-            controller: branch.addressController,
+            controller: controller.branchAddressControllers[index],
             hint: 'enter_address'.tr,
             maxLines: 3,
           ),
@@ -100,7 +100,7 @@ class _Step3Content extends StatelessWidget {
           _buildSectionLabel('phone_number'.tr, true),
           12.ESH(),
           TextFieldDefault(
-            controller: branch.phoneController,
+            controller: controller.branchPhoneControllers[index],
             keyboardType: TextInputType.phone,
             hint: 'enter_phone_number'.tr,
           ),
@@ -110,7 +110,7 @@ class _Step3Content extends StatelessWidget {
           _buildSectionLabel('whatsapp_number'.tr, false),
           12.ESH(),
           TextFieldDefault(
-            controller: branch.whatsappController,
+            controller: controller.branchWhatsappControllers[index],
             keyboardType: TextInputType.phone,
             hint: 'enter_whatsapp_number'.tr,
           ),
@@ -119,18 +119,18 @@ class _Step3Content extends StatelessWidget {
           // Working Hours
           _buildSectionLabel('working_hours'.tr, false),
           12.ESH(),
-          _buildWorkingHours(branch, context, controller),
+          _buildWorkingHours(
+              controller.branchWorkingHours[index], context, controller, index),
         ],
       ),
     );
   }
 
-  Widget _buildGovernorateDropdown(
-      Branch branch, AddServiceController controller) {
+  Widget _buildGovernorateDropdown(AddServiceController controller, int index) {
     return DropdownButtonFormField<String>(
-      value: branch.selectedGovernorate.value.isEmpty
+      value: controller.branchSelectedGovernorates[index].value.isEmpty
           ? null
-          : branch.selectedGovernorate.value,
+          : controller.branchSelectedGovernorates[index].value,
       decoration: _dropdownDecoration(),
       hint: CustomTextL('select_governorate'.tr,
           color: Colors.grey[600], fontSize: 16.sp),
@@ -141,21 +141,23 @@ class _Step3Content extends StatelessWidget {
         );
       }).toList(),
       onChanged: (value) {
-        branch.selectedGovernorate.value = value!;
-        branch.selectedCity.value = ''; // Reset city when governorate changes
+        controller.branchSelectedGovernorates[index].value = value!;
+        controller.branchSelectedCities[index].value =
+            ''; // Reset city when governorate changes
         controller.update();
       },
     );
   }
 
-  Widget _buildCityDropdown(Branch branch, AddServiceController controller) {
-    final cities = AddServiceController
-            .citiesByGovernorate[branch.selectedGovernorate.value] ??
+  Widget _buildCityDropdown(AddServiceController controller, int index) {
+    final cities = AddServiceController.citiesByGovernorate[
+            controller.branchSelectedGovernorates[index].value] ??
         [];
 
     return DropdownButtonFormField<String>(
-      value:
-          branch.selectedCity.value.isEmpty ? null : branch.selectedCity.value,
+      value: controller.branchSelectedCities[index].value.isEmpty
+          ? null
+          : controller.branchSelectedCities[index].value,
       decoration: _dropdownDecoration(),
       hint: CustomTextL('select_city'.tr,
           color: Colors.grey[600], fontSize: 16.sp),
@@ -166,14 +168,14 @@ class _Step3Content extends StatelessWidget {
         );
       }).toList(),
       onChanged: (value) {
-        branch.selectedCity.value = value!;
+        controller.branchSelectedCities[index].value = value!;
         controller.update();
       },
     );
   }
 
-  Widget _buildWorkingHours(
-      Branch branch, BuildContext context, AddServiceController controller) {
+  Widget _buildWorkingHours(Map<String, String> workingHours,
+      BuildContext context, AddServiceController controller, int branchIndex) {
     final days = {
       'saturday': 'saturday'.tr,
       'sunday': 'sunday'.tr,
@@ -187,14 +189,19 @@ class _Step3Content extends StatelessWidget {
     return Column(
       children: days.entries.map((day) {
         return _buildWorkingHoursField(
-            context, branch, day.key, day.value, controller);
+            context, workingHours, day.key, day.value, controller, branchIndex);
       }).toList(),
     );
   }
 
-  Widget _buildWorkingHoursField(BuildContext context, Branch branch,
-      String dayKey, String dayLabel, AddServiceController controller) {
-    final currentHours = branch.workingHours[dayKey] ?? '';
+  Widget _buildWorkingHoursField(
+      BuildContext context,
+      Map<String, String> workingHours,
+      String dayKey,
+      String dayLabel,
+      AddServiceController controller,
+      int branchIndex) {
+    final currentHours = workingHours[dayKey] ?? '';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
     String fromTime = '';
@@ -239,9 +246,9 @@ class _Step3Content extends StatelessWidget {
                       activeColor: AppColors.main,
                       onChanged: (value) {
                         if (value) {
-                          branch.workingHours[dayKey] = 'closed'.tr;
+                          workingHours[dayKey] = 'closed'.tr;
                         } else {
-                          branch.workingHours[dayKey] = '';
+                          workingHours[dayKey] = '';
                         }
                         controller.update();
                       },
@@ -266,8 +273,15 @@ class _Step3Content extends StatelessWidget {
                       // From Time Picker
                       Expanded(
                         child: InkWell(
-                          onTap: () => _showTimePicker(context, true, branch,
-                              dayKey, fromTime, toTime, controller),
+                          onTap: () => _showTimePicker(
+                              context,
+                              true,
+                              workingHours,
+                              dayKey,
+                              fromTime,
+                              toTime,
+                              controller,
+                              branchIndex),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20.w,
@@ -304,8 +318,15 @@ class _Step3Content extends StatelessWidget {
                       // To Time Picker
                       Expanded(
                         child: InkWell(
-                          onTap: () => _showTimePicker(context, false, branch,
-                              dayKey, fromTime, toTime, controller),
+                          onTap: () => _showTimePicker(
+                              context,
+                              false,
+                              workingHours,
+                              dayKey,
+                              fromTime,
+                              toTime,
+                              controller,
+                              branchIndex),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                                 horizontal: 20.w,
@@ -347,15 +368,17 @@ class _Step3Content extends StatelessWidget {
   }
 
   Future<void> _showTimePicker(
-      BuildContext context,
-      bool isFromTime,
-      Branch branch,
-      String dayKey,
-      String currentFromTime,
-      String currentToTime,
-      AddServiceController controller) async {
+    BuildContext context,
+    bool isFromTime,
+    Map<String, String> workingHours,
+    String dayKey,
+    String currentFromTime,
+    String currentToTime,
+    AddServiceController controller,
+    int branchIndex,
+  ) async {
     // Get current hours for this day
-    final currentHours = branch.workingHours[dayKey] ?? '';
+    final currentHours = workingHours[dayKey] ?? '';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
     // If closed, don't show time picker
@@ -414,7 +437,7 @@ class _Step3Content extends StatelessWidget {
       final formattedTime = _formatTimeOfDay(picked);
 
       // Get current values again in case they changed
-      final updatedCurrentHours = branch.workingHours[dayKey] ?? '';
+      final updatedCurrentHours = workingHours[dayKey] ?? '';
       String updatedFromTime = '';
       String updatedToTime = '';
 
@@ -446,12 +469,11 @@ class _Step3Content extends StatelessWidget {
       }
 
       // Update working hours
-      branch.workingHours[dayKey] = finalTimeString;
+      workingHours[dayKey] = finalTimeString;
       controller.update();
 
       // Debug print to verify saving
-      print(
-          'Updated working hours for $dayKey: ${branch.workingHours[dayKey]}');
+      print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
     }
   }
 
