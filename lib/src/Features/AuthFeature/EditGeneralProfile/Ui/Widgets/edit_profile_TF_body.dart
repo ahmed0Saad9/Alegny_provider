@@ -1,3 +1,4 @@
+import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_phone.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,6 @@ import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/constants/sizes.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:Alegny_provider/src/core/utils/validator.dart';
-
-import '../../../../../core/services/svg_widget.dart';
 
 class EditProfileTFBody extends StatelessWidget {
   final EditProfileController controller;
@@ -37,6 +36,64 @@ class EditProfileTFBody extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             50.ESH(),
+            Center(
+              child: Stack(
+                children: [
+                  Container(
+                      width: 100.w,
+                      height: 100.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white,
+                          width: 4,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: AvatarWidget(
+                          imageFile: controller.image?.media,
+                          height: 100,
+                          width: 100,
+                        ),
+                      )),
+                  Positioned(
+                    bottom: 0.h,
+                    right: 0.w,
+                    child: InkWell(
+                      onTap: () {
+                        controller.setImageFromGallery();
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(8.w),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          shape: BoxShape.circle,
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 5,
+                            ),
+                          ],
+                        ),
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 16.sp,
+                          color: AppColors.main,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            32.ESH(),
             Row(
               children: [
                 Expanded(

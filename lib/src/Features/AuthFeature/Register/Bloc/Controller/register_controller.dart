@@ -1,3 +1,4 @@
+import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -6,7 +7,6 @@ import 'package:get/route_manager.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Ui/Screens/login_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Params/register_params.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Repo/register_repo.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/pending_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Controller/send_otp_controller.dart';
 import 'package:Alegny_provider/src/core/services/Base/base_controller.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_exceptions.dart';
@@ -19,37 +19,37 @@ class RegisterController extends BaseController<RegisterRepository> {
   final GlobalKey<FormState> registerGlobalKey = GlobalKey<FormState>();
   var acceptTermsAndConditions = false;
   late TextEditingController firstNameController;
-  late TextEditingController familyNameController;
+  late TextEditingController lastNameController;
   late TextEditingController emailController;
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
   late TextEditingController phoneController;
 
-  // void createAccount() async {
-  //   if (registerGlobalKey.currentState!.validate()) {
-  //     registerGlobalKey.currentState!.save();
-  //     showEasyLoading();
-  //     var result = await repository!.register(
-  //       registerParams: RegisterParams(
-  //         name: firstNameController.text,
-  //         email: emailController.text,
-  //         password: passwordController.text,
-  //         passwordConfirmation: confirmPasswordController.text,
-  //
-  //       ),
-  //     );
-  //     closeEasyLoading();
-  //     result.when(success: (Response response) {
-  //       Get.off(
-  //         () => const PendingScreen(),
-  //       );
-  //
-  //       successEasyLoading(response.data['message'] ?? "success");
-  //     }, failure: (NetworkExceptions error) {
-  //       actionNetworkExceptions(error);
-  //     });
-  //   }
-  // }
+  void createAccount() async {
+    if (registerGlobalKey.currentState!.validate()) {
+      registerGlobalKey.currentState!.save();
+      showEasyLoading();
+      var result = await repository!.register(
+        registerParams: RegisterParams(
+          firstName: firstNameController.text,
+          lastName: lastNameController.text,
+          email: emailController.text,
+          password: passwordController.text,
+          phoneNumber: phoneController.text,
+        ),
+      );
+      closeEasyLoading();
+      result.when(success: (Response response) {
+        Get.off(
+          () => const BaseBNBScreen(),
+        );
+
+        successEasyLoading(response.data['message'] ?? "success");
+      }, failure: (NetworkExceptions error) {
+        actionNetworkExceptions(error);
+      });
+    }
+  }
 
   void toggleAcceptTermsAndConditions() {
     acceptTermsAndConditions = !acceptTermsAndConditions;
@@ -68,7 +68,7 @@ class RegisterController extends BaseController<RegisterRepository> {
 
   void initTextEditingController() {
     firstNameController = TextEditingController();
-    familyNameController = TextEditingController();
+    lastNameController = TextEditingController();
     emailController = TextEditingController();
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();

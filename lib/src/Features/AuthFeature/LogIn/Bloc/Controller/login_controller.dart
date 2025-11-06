@@ -1,13 +1,11 @@
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/forget_password_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Model/user_model.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/account_approved_screen.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/account_denied_screen.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/pending_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/register_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Controller/send_otp_controller.dart';
 import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
@@ -28,24 +26,24 @@ class LoginController extends BaseController<LogInRepository> {
   final GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
 
   Future<void> logIn() async {
-    Get.off(() => BaseBNBScreen());
-    // if (loginGlobalKey.currentState!.validate()) {
-    //   loginGlobalKey.currentState!.save();
-    //   showEasyLoading();
-    //   var result = await repository!.logIn(
-    //     password: passwordController!.text,
-    //     email: emailController!.text,
-    //   );
-    //   closeEasyLoading();
-    //   result.when(success: (Response response) {
-    //     _userModel = UserModel.fromJson(response.data);
-    //     LocalStorageCubit().storeUserModel(
-    //         _userModel!); //stores the user data locally by GetStorage
-    //     _navigatorAfterLogIn(_userModel!);
-    //   }, failure: (NetworkExceptions error) {
-    //     actionNetworkExceptions(error);
-    //   });
-    // }
+    // Get.off(() => BaseBNBScreen());
+    if (loginGlobalKey.currentState!.validate()) {
+      loginGlobalKey.currentState!.save();
+      showEasyLoading();
+      var result = await repository!.logIn(
+        password: passwordController!.text,
+        email: emailController!.text,
+      );
+      closeEasyLoading();
+      result.when(success: (Response response) {
+        _userModel = UserModel.fromJson(response.data);
+        LocalStorageCubit().storeUserModel(
+            _userModel!); //stores the user data locally by GetStorage
+        _navigatorAfterLogIn(_userModel!);
+      }, failure: (NetworkExceptions error) {
+        actionNetworkExceptions(error);
+      });
+    }
   }
 
   void navigatorToBaseBNBScreen() {
@@ -56,11 +54,8 @@ class LoginController extends BaseController<LogInRepository> {
   final SendOTPController _sendOTPController = sl<SendOTPController>();
 
   void _navigatorAfterLogIn(UserModel user) async {
-    if (user.student.isApproved) {
-      Get.offAll(() => const AccountApprovedScreen());
-    }
-    // navigatorToBaseBNBScreen();
-    successEasyLoading('Welcome to Alegny_provider');
+    navigatorToBaseBNBScreen();
+    successEasyLoading('Welcome_to_Alegny'.tr);
     // }
   }
 

@@ -10,9 +10,8 @@ void showToast(String msg, {bool isError = false}) {
     toastLength: Toast.LENGTH_LONG,
     gravity: ToastGravity.BOTTOM,
     timeInSecForIosWeb: 2,
-    backgroundColor:
-        isError ? AppColors.errorSnackBar : AppColors.backGroundGreyD9,
-    textColor: AppColors.main,
+    backgroundColor: isError ? AppColors.errorSnackBar : AppColors.doneSnackBar,
+    textColor: AppColors.titleWhite,
     fontSize: 16.0,
   );
 }

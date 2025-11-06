@@ -4,7 +4,6 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/base_scaffold.da
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_default.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/buttons/button_default.dart';
-import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/constants/sizes.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:Alegny_provider/src/core/utils/validator.dart';
@@ -82,7 +81,7 @@ class ChangePasswordScreen extends StatelessWidget {
                           active: _.currentPasswordController.text.isNotEmpty &&
                               _.newPasswordController.text.isNotEmpty &&
                               _.confirmPasswordController.text.isNotEmpty,
-                          onTap: () => _.resetPassword(),
+                          onTap: () => _.changePassword(),
                         ),
                         24.ESH(),
                       ],

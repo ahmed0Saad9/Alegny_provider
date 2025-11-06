@@ -36,43 +36,6 @@ class EditProfileController
     update();
   }
 
-  // int _cityId = 0;
-  //
-  // int get cityId => _cityId;
-  //
-  // void selectCity(CountryModel country) {
-  //   cityController!.text = country.title;
-  //   _cityId = country.id;
-  //   update();
-  // }
-
-  String? fileName;
-  String? fileExtension;
-  double? fileSize;
-  Future<void> pickImage() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (result != null) {
-      PlatformFile file = result.files.first;
-
-      fileName = file.name;
-      fileExtension = file.extension;
-      fileSize = file.size / 1024; // Extract the file size in bytes
-      update();
-    }
-  }
-
-  // Clear the file data from GetStorage (if needed)
-  void clearFile() {
-    fileName = null;
-    fileExtension = null;
-    fileSize = null;
-    update();
-  }
-
   String? _imageLocal;
 
   String? get imageLocal => _imageLocal;
@@ -87,63 +50,6 @@ class EditProfileController
     }
     update();
   }
-
-  // int _countryId = 0;
-  //
-  // int get countryId => _countryId;
-  //
-  // void selectCountry(CountryModel country) {
-  //   countryController!.text = country.title;
-  //   _countryId = country.id;
-  //   update();
-  // }
-  //
-  // String activitySelected = '';
-  //
-  // void selectActivity(SimpleModel v) {
-  //   activitySelected = v.id;
-  //   activityController!.text = v.title.tr;
-  //
-  //   update();
-  // }
-
-  // int _companyCategoryId = 0;
-  //
-  // int get companyCategoryId => _companyCategoryId;
-  //
-  // void selectCompanyCategory(CategoryModel activity) {
-  //   companyCategoryController!.text = activity.name;
-  //   _companyCategoryId = activity.id;
-  //   update();
-  // }
-
-  // // Merchant
-  // int _merchantCategory = 0;
-  //
-  // int get merchantCategory => _merchantCategory;
-  //
-  // void selectMerchantCategory(CategoryModel category) {
-  //   merchantCategoryController!.text = category.name;
-  //   _merchantCategory = category.id;
-  //   update();
-  // }
-  //
-  // final List<int> _merchantCitiesIds = [];
-  //
-  // List<int> get merchantCitiesIds => _merchantCitiesIds;
-  //
-  // void selectMerchantCitiesIds(List<CountryModel> countries) {
-  //   _merchantCitiesIds.clear();
-  //
-  //   for (var item in countries) {
-  //     _merchantCitiesIds.add(item.id);
-  //   }
-  //   merchantCitiesController!.text =
-  //       countries.map((e) => e.title).toList().toString();
-  //   printDM('_merchantCitiesIds is < $countries');
-  //   printDM('_merchantCitiesIds is $_merchantCitiesIds');
-  //   update();
-  // }
 
   final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
 

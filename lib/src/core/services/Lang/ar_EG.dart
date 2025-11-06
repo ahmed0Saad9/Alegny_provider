@@ -3,6 +3,7 @@
 const Map<String, String> arAE = {
   "MyProfileScreen": "الصفحه الشخصيه",
   "welcome_back": "اهلا بك من جديد",
+  "Welcome_to_Alegny": "مرحبا بك في عالجني",
   "please_enter_data": "من فضلك ادخل البيانات التالية لتسجيل دخولك",
   "description": "الوصف",
   "validation_empty_field": "يجب عليك ملء هذا الحقل",

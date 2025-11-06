@@ -87,7 +87,7 @@ class _Body extends StatelessWidget {
               child: TextFieldDefault(
                 label: 'Family_Name',
                 prefixIconUrl: 'Profile',
-                controller: controller.familyNameController,
+                controller: controller.lastNameController,
                 validation: nameValidator,
                 onComplete: () {
                   node.nextFocus();
@@ -143,7 +143,7 @@ class _Body extends StatelessWidget {
         100.ESH(),
         ButtonDefault.main(
           onTap: () {
-            // controller.createAccount();
+            controller.createAccount();
           },
           title: 'Sign_up',
         ),

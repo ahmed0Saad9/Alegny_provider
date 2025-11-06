@@ -36,16 +36,16 @@ class ChangePasswordController
 
   final GlobalKey<FormState> resetPasswordKey = GlobalKey<FormState>();
 
-  Future<void> resetPassword() async {
+  Future<void> changePassword() async {
     if (resetPasswordKey.currentState!.validate()) {
       resetPasswordKey.currentState!.save();
       showEasyLoading();
-      var result = await repository!.postResetPassword(
+      var result = await repository!.postChangePassword(
         resetPasswordParams: ResetPasswordParams(
-            currentPassword: currentPasswordController.text,
-            newPassword: newPasswordController.text,
-            confirmNewPassword: confirmPasswordController.text,
-            universityIDCard: sl<GetStorage>().read('universityIDCard')),
+          currentPassword: currentPasswordController.text,
+          newPassword: newPasswordController.text,
+          confirmNewPassword: confirmPasswordController.text,
+        ),
       );
       closeEasyLoading();
       result.when(success: (Response response) {

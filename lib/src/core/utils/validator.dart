@@ -9,11 +9,6 @@ String? nameValidator(String? text) {
   if (!regex.hasMatch(text)) {
     return 'Please enter alphabets only'.tr;
   }
-
-  if (text.length < 6) {
-    return 'Minimum 6 characters required'.tr;
-  }
-
   if (text.length > 50) {
     return 'Maximum 50 characters allowed'.tr;
   }

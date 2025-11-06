@@ -148,8 +148,8 @@ class AppColors {
   static Color shimmerHighlightColor = const Color(0xFFEBEBEB);
 
   // Shimmer colors
-  static Color errorSnackBar = Colors.red.shade900;
-  static Color doneSnackBar = Colors.green.shade900;
+  static Color errorSnackBar = Colors.red.shade500;
+  static Color doneSnackBar = Colors.green.shade500;
 
   static const Color correctAnswer = Color(0xFF76C499);
   static Color incorrectAnswer = const Color(0xFFD50012);

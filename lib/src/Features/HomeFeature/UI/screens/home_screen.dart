@@ -120,33 +120,37 @@ class HomeScreen extends StatelessWidget {
           children: [
             services.isEmpty
                 ? _buildEmptyState()
-                : ListView.builder(
-                    padding: EdgeInsets.zero,
-                    itemCount: services.length,
-                    itemBuilder: (context, index) {
-                      return ServiceCard(
-                        service: services[index],
-                        onEdit: () {
-                          // Navigate to edit service screen
-                          print('Edit service: ${services[index].id}');
-                          // Get.to(() => EditServiceScreen(service: services[index]));
-                        },
-                        onDelete: () {
-                          // Call delete API
-                          print('Delete service: ${services[index].id}');
-                          // Your delete logic here
-                          Get.snackbar(
-                            'success'.tr,
-                            'service_deleted_successfully'.tr,
-                            backgroundColor: Colors.green,
-                            colorText: Colors.white,
-                          );
-                        },
-                        onViewDetails: () {
-                          print('View details: ${services[index].serviceName}');
-                        },
-                      );
-                    },
+                : Padding(
+                    padding: EdgeInsets.only(bottom: 60.h),
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      itemCount: services.length,
+                      itemBuilder: (context, index) {
+                        return ServiceCard(
+                          service: services[index],
+                          onEdit: () {
+                            // Navigate to edit service screen
+                            print('Edit service: ${services[index].id}');
+                            // Get.to(() => EditServiceScreen(service: services[index]));
+                          },
+                          onDelete: () {
+                            // Call delete API
+                            print('Delete service: ${services[index].id}');
+                            // Your delete logic here
+                            Get.snackbar(
+                              'success'.tr,
+                              'service_deleted_successfully'.tr,
+                              backgroundColor: Colors.green,
+                              colorText: Colors.white,
+                            );
+                          },
+                          onViewDetails: () {
+                            print(
+                                'View details: ${services[index].serviceName}');
+                          },
+                        );
+                      },
+                    ),
                   ),
             Align(
               alignment: AlignmentDirectional.bottomStart,

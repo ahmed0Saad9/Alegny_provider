@@ -2,6 +2,7 @@ import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Controller/prof
 import 'package:Alegny_provider/src/Features/AccountFeature/UI/screens/change_password_screen.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/UI/widgets/language_select.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Ui/Screen/edit_profile_screen.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/LogOut/Bloc/Controller/log_out_controller.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/terms_and_conditions_screen.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/BottomSheets/base_bottom_sheet.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
@@ -157,62 +158,31 @@ class ProfileScreen extends StatelessWidget {
                         child: Column(
                           children: [
                             // Avatar
-                            Stack(
-                              children: [
-                                Container(
-                                    width: 100.w,
-                                    height: 100.w,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Colors.white,
-                                        width: 4,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 10,
-                                          offset: const Offset(0, 4),
-                                        ),
-                                      ],
-                                    ),
-                                    child: ClipOval(
-                                      child: AvatarWidget(
-                                        imageFile: controller.image?.media,
-                                        height: 100,
-                                        width: 100,
-                                      ),
-                                    )),
-                                Positioned(
-                                  bottom: 0,
-                                  right: 0,
-                                  child: InkWell(
-                                    onTap: () {
-                                      controller.setImageFromGallery();
-                                    },
-                                    child: Container(
-                                      padding: EdgeInsets.all(8.w),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 5,
-                                          ),
-                                        ],
-                                      ),
-                                      child: Icon(
-                                        Icons.camera_alt,
-                                        size: 16.sp,
-                                        color: AppColors.main,
-                                      ),
-                                    ),
+                            Container(
+                                width: 100.w,
+                                height: 100.w,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 4,
                                   ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withOpacity(0.2),
+                                      blurRadius: 10,
+                                      offset: const Offset(0, 4),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                                child: ClipOval(
+                                  child: AvatarWidget(
+                                    imageFile: controller.image?.media,
+                                    height: 100,
+                                    width: 100,
+                                  ),
+                                )),
+
                             16.ESH(),
                             CustomTextR(
                               'Ahmed Saad',
@@ -394,40 +364,42 @@ class ProfileScreen extends StatelessWidget {
                       32.ESH(),
 
                       // Logout Button
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12.r),
-                          border: Border.all(
-                            color: Colors.red[700]!,
-                          ),
-                        ),
-                        margin: EdgeInsets.symmetric(horizontal: 16.w),
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red[50],
-                            foregroundColor: Colors.red[700],
-                            padding: EdgeInsets.symmetric(vertical: 16.h),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.r),
+                      GetBuilder<LogOutController>(
+                        init: LogOutController(),
+                        builder: (controller) => Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12.r),
+                            border: Border.all(
+                              color: Colors.red[700]!,
                             ),
-                            elevation: 0,
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(Icons.logout, size: 20.sp),
-                              SizedBox(width: 8.w),
-                              Text(
-                                'logout'.tr,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: "SemiBold",
-                                ),
+                          margin: EdgeInsets.symmetric(horizontal: 16.w),
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              controller.logOut();
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.red[50],
+                              foregroundColor: Colors.red[700],
+                              padding: EdgeInsets.symmetric(vertical: 16.h),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.r),
                               ),
-                            ],
+                              elevation: 0,
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.logout, size: 20.sp),
+                                SizedBox(width: 8.w),
+                                CustomTextL(
+                                  'logout'.tr,
+                                  fontSize: 16.sp,
+                                  fontWeight: FW.medium,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),

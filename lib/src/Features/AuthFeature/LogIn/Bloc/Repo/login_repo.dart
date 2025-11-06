@@ -27,10 +27,6 @@ class LogInRepository with ApiKey {
       Response response = await _networkService.post(url: uRLLogin, body: {
         'email': email,
         'password': password,
-        // 'login_type': 'phone',
-        // 'device_key': token,
-        // 'device_id':deviceId,
-        // 'device_type':deviceType,
       });
       return ApiResult.success(response);
     } catch (e) {

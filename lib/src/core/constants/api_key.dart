@@ -1,16 +1,18 @@
 mixin ApiKey {
-  static const String apiBaseUrl = '';
+  static const String apiBaseUrl =
+      'https://alegny-provider.premiumasp.net/api/v1/';
 
   static const String account = 'account/';
+  static const String providerAuth = 'provider-auth/';
   static const String general = 'General/';
   static const String student = 'Student/';
 
   /// Auth
   final String uRLSetting = "${apiBaseUrl}setting";
-  final String uRLLogin = "$apiBaseUrl${student}login";
-  final String uRLRegister = "$apiBaseUrl${student}register";
-  final String uRLLogout = "$apiBaseUrl${student}logout";
-  final String uRLResetPassword = "$apiBaseUrl${student}ChangePassword";
+  final String uRLLogin = "$apiBaseUrl${providerAuth}login";
+  final String uRLRegister = "$apiBaseUrl${providerAuth}register";
+  final String uRLLogout = "$apiBaseUrl${providerAuth}logout";
+  final String uRLChangePassword = "$apiBaseUrl${providerAuth}change-password";
   final String uRLGetMyAccountData = "$apiBaseUrl${account}my-account";
   final String uRLUpdateMyAccountData =
       "$apiBaseUrl${account}my-account/update";

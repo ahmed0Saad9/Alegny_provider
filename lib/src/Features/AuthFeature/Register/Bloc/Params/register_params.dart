@@ -8,20 +8,18 @@ enum GenderType {
 }
 
 class RegisterParams {
-  final String name;
+  final String firstName;
+  final String lastName;
   final String email;
+  final String phoneNumber;
   final String password;
-  final String passwordConfirmation;
-  final String nationalId;
-  final String idOfCollege;
 
   RegisterParams({
-    required this.name,
+    required this.firstName,
+    required this.lastName,
     required this.email,
+    required this.phoneNumber,
     required this.password,
-    required this.passwordConfirmation,
-    required this.nationalId,
-    required this.idOfCollege,
   });
 
   // final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -35,13 +33,11 @@ class RegisterParams {
     //   printDM('an error occur in fetch token');
     // }
     return {
-      'fullName': name,
+      'firstName': firstName,
+      'lastName': lastName,
       'email': email,
+      'phoneNumber': phoneNumber,
       'password': password,
-      'password_confirmation': passwordConfirmation,
-      'nationalIDCard': nationalId,
-      'universityIDCard': idOfCollege,
-      'device_key': 'token',
     };
   }
 
