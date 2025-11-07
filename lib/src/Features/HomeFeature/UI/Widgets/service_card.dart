@@ -1,100 +1,11 @@
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_model.dart';
+import 'package:Alegny_provider/src/core/services/svg_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
-
-// Enhanced Service Model with Status
-class ServiceModel {
-  final String id;
-  final String serviceName;
-  final String? serviceType;
-  final String? specialization;
-  final String? imageUrl;
-  final String discount;
-  final List<BranchModel> branches;
-  final ServiceStatus status;
-  final DateTime? createdAt;
-  final DateTime? approvedAt;
-  final String? rejectionReason;
-
-  ServiceModel({
-    required this.id,
-    required this.serviceName,
-    this.serviceType,
-    this.specialization,
-    this.imageUrl,
-    required this.discount,
-    required this.branches,
-    required this.status,
-    this.createdAt,
-    this.approvedAt,
-    this.rejectionReason,
-  });
-}
-
-// Service Status Enum
-enum ServiceStatus {
-  pending('pending', 'under_review', Colors.orange, Icons.hourglass_empty),
-  approved('approved', 'approved', Colors.green, Icons.verified),
-  rejected('rejected', 'rejected', Colors.red, Icons.cancel);
-
-  final String value;
-  final String translationKey;
-  final Color color;
-  final IconData icon;
-
-  const ServiceStatus(this.value, this.translationKey, this.color, this.icon);
-}
-
-// Enhanced Branch Model
-class BranchModel {
-  final String governorate;
-  final String city;
-  final String address;
-  final String phone;
-  final String whatsapp;
-  final Map<String, String> workingHours;
-
-  BranchModel({
-    required this.governorate,
-    required this.city,
-    required this.address,
-    required this.phone,
-    required this.whatsapp,
-    required this.workingHours,
-  });
-
-  // Get working hours for a specific day
-  String getWorkingHoursForDay(String dayKey) {
-    final hours = workingHours[dayKey] ?? '';
-    if (hours.isEmpty || hours.toLowerCase() == 'closed') {
-      return 'closed'.tr;
-    }
-    return hours;
-  }
-
-  // Get today's working hours
-  String get todaysWorkingHours {
-    final today = _getTodayKey();
-    return getWorkingHoursForDay(today);
-  }
-
-  String _getTodayKey() {
-    final now = DateTime.now();
-    final days = [
-      'monday',
-      'tuesday',
-      'wednesday',
-      'thursday',
-      'friday',
-      'saturday',
-      'sunday'
-    ];
-    return days[now.weekday - 1];
-  }
-}
 
 // Enhanced Service Card Widget
 class ServiceCard extends StatelessWidget {
@@ -142,12 +53,6 @@ class ServiceCard extends StatelessWidget {
                 colors: _getHeaderGradientColors(),
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-              ),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(
-                    service.status == ServiceStatus.pending ? 0 : 20.r),
-                topRight: Radius.circular(
-                    service.status == ServiceStatus.pending ? 0 : 20.r),
               ),
             ),
             child: Row(
@@ -223,33 +128,11 @@ class ServiceCard extends StatelessWidget {
                               isOverFlow: true,
                             ),
                           ),
-                          if (service.discount.isNotEmpty) ...[
-                            8.ESW(),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
-                                vertical: 4.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.green[50],
-                                borderRadius: BorderRadius.circular(6.r),
-                                border: Border.all(
-                                  color: Colors.green[200]!,
-                                ),
-                              ),
-                              child: CustomTextR(
-                                '${service.discount}%',
-                                fontSize: 12.sp,
-                                color: Colors.green[800],
-                                fontWeight: FW.bold,
-                              ),
-                            ),
-                          ],
                         ],
                       ),
                       6.ESH(),
 
-                      if (service.specialization != null) ...[
+                      if (service.serviceType != null) ...[
                         Row(
                           children: [
                             Container(
@@ -262,8 +145,8 @@ class ServiceCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: CustomTextR(
-                                service.specialization!,
-                                fontSize: 11.sp,
+                                service.serviceType!,
+                                fontSize: 14.sp,
                                 color: AppColors.main,
                                 fontWeight: FW.medium,
                               ),
@@ -274,41 +157,53 @@ class ServiceCard extends StatelessWidget {
                       ],
 
                       // Service Type
-                      if (service.serviceType != null)
+                      if (service.specialization != null)
                         CustomTextR(
-                          service.serviceType!,
-                          fontSize: 12.sp,
+                          service.specialization!,
+                          fontSize: 13.sp,
                           color: Colors.grey[600],
                         ),
 
                       4.ESH(),
-
-                      // Approval Date
-                      if (service.status == ServiceStatus.approved &&
-                          service.approvedAt != null)
-                        Row(
-                          children: [
-                            Icon(
-                              Icons.verified_outlined,
-                              size: 12.sp,
-                              color: Colors.green[600],
-                            ),
-                            4.ESW(),
-                            CustomTextR(
-                              'approved_on'.trParams(
-                                  {'date': _formatDate(service.approvedAt!)}),
-                              fontSize: 11.sp,
-                              color: Colors.green[600],
-                            ),
-                          ],
-                        ),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-
+          // discounts section
+          if (service.discounts.isNotEmpty)
+            Container(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.discount_outlined,
+                        size: 20.sp,
+                        color: AppColors.main,
+                      ),
+                      6.ESW(),
+                      CustomTextL(
+                        'Discounts',
+                        fontSize: 14.sp,
+                        fontWeight: FW.bold,
+                        color: Colors.grey[800],
+                      ),
+                    ],
+                  ),
+                  6.ESH(),
+                  ...service.discounts.entries.map(
+                    (e) => ListTile(
+                      title: Text(e.key),
+                      trailing: Text(e.value),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           // Branches Section
           Container(
             padding: EdgeInsets.all(16.w),
@@ -319,7 +214,7 @@ class ServiceCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.location_on_outlined,
-                      size: 18.sp,
+                      size: 20.sp,
                       color: AppColors.main,
                     ),
                     6.ESW(),
@@ -329,7 +224,7 @@ class ServiceCard extends StatelessWidget {
                       fontWeight: FW.bold,
                       color: Colors.grey[800],
                     ),
-                    4.ESW(),
+                    6.ESW(),
                     Container(
                       padding: EdgeInsets.symmetric(
                         horizontal: 8.w,
@@ -341,7 +236,7 @@ class ServiceCard extends StatelessWidget {
                       ),
                       child: CustomTextR(
                         '${service.branches.length}',
-                        fontSize: 11.sp,
+                        fontSize: 13.sp,
                         color: Colors.white,
                         fontWeight: FW.bold,
                       ),
@@ -433,10 +328,65 @@ class ServiceCard extends StatelessWidget {
                 color: service.status.color,
               ),
             ),
+          ],
+        ),
+      );
+    } else if (service.status == ServiceStatus.approved) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: service.status.color.withOpacity(0.1),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
+          ),
+        ),
+        child: Row(
+          children: [
             Icon(
-              Icons.hourglass_empty,
-              size: 16.sp,
+              service.status.icon,
+              size: 18.sp,
               color: service.status.color,
+            ),
+            8.ESW(),
+            Expanded(
+              child: CustomTextL(
+                service.status.translationKey.tr,
+                fontSize: 14.sp,
+                fontWeight: FW.medium,
+                color: service.status.color,
+              ),
+            ),
+          ],
+        ),
+      );
+    } else if (service.status == ServiceStatus.rejected) {
+      return Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+        decoration: BoxDecoration(
+          color: service.status.color.withOpacity(0.1),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20.r),
+            topRight: Radius.circular(20.r),
+          ),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              service.status.icon,
+              size: 18.sp,
+              color: service.status.color,
+            ),
+            8.ESW(),
+            Expanded(
+              child: CustomTextL(
+                service.status.translationKey.tr,
+                fontSize: 14.sp,
+                fontWeight: FW.medium,
+                color: service.status.color,
+              ),
             ),
           ],
         ),
@@ -450,7 +400,7 @@ class ServiceCard extends StatelessWidget {
     switch (service.status) {
       case ServiceStatus.pending:
         return [
-          Colors.orange.withOpacity(0.05),
+          Colors.orange.withOpacity(0.07),
           Colors.orange.withOpacity(0.02)
         ];
       case ServiceStatus.approved:
@@ -507,17 +457,17 @@ class ServiceCard extends StatelessWidget {
             children: [
               Icon(
                 Icons.location_city,
-                size: 14.sp,
+                size: 20.sp,
                 color: AppColors.main,
               ),
               6.ESW(),
               Expanded(
                 child: CustomTextR(
                   '${branch.governorate} - ${branch.city}',
-                  fontSize: 13.sp,
+                  fontSize: 14.sp,
                   fontWeight: FW.medium,
                   color: Colors.grey[800],
-                  maxLines: 1,
+                  maxLines: 2,
                   isOverFlow: true,
                 ),
               ),
@@ -533,7 +483,7 @@ class ServiceCard extends StatelessWidget {
                 padding: EdgeInsets.only(top: 2.h),
                 child: Icon(
                   Icons.home_outlined,
-                  size: 14.sp,
+                  size: 20.sp,
                   color: Colors.grey[600],
                 ),
               ),
@@ -541,9 +491,9 @@ class ServiceCard extends StatelessWidget {
               Expanded(
                 child: CustomTextR(
                   branch.address,
-                  fontSize: 12.sp,
+                  fontSize: 14.sp,
                   color: Colors.grey[600],
-                  maxLines: 2,
+                  maxLines: 3,
                   isOverFlow: true,
                 ),
               ),
@@ -560,14 +510,14 @@ class ServiceCard extends StatelessWidget {
                   children: [
                     Icon(
                       Icons.phone_outlined,
-                      size: 14.sp,
+                      size: 20.sp,
                       color: Colors.grey[600],
                     ),
                     4.ESW(),
                     Expanded(
                       child: CustomTextR(
                         branch.phone,
-                        fontSize: 12.sp,
+                        fontSize: 14.sp,
                         color: Colors.grey[600],
                         maxLines: 1,
                         isOverFlow: true,
@@ -584,16 +534,17 @@ class ServiceCard extends StatelessWidget {
                 Expanded(
                   child: Row(
                     children: [
-                      Icon(
-                        Icons.abc,
-                        size: 14.sp,
+                      IconSvg(
+                        'Whatsapp',
+                        size: 20.sp,
+                        boxFit: BoxFit.contain,
                         color: Colors.green[600],
                       ),
                       4.ESW(),
                       Expanded(
                         child: CustomTextR(
                           branch.whatsapp,
-                          fontSize: 12.sp,
+                          fontSize: 14.sp,
                           color: Colors.green[600],
                           maxLines: 1,
                           isOverFlow: true,
@@ -608,67 +559,26 @@ class ServiceCard extends StatelessWidget {
           8.ESH(),
 
           // Working Hours Section
-          Column(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
                   Icon(
                     Icons.access_time,
-                    size: 14.sp,
+                    size: 20.sp,
                     color: AppColors.main,
                   ),
                   6.ESW(),
                   CustomTextL(
                     'working_hours'.tr,
-                    fontSize: 13.sp,
+                    fontSize: 14.sp,
                     fontWeight: FW.medium,
                     color: Colors.grey[800],
                   ),
                 ],
               ),
-              6.ESH(),
-
-              // Today's hours
-              Container(
-                width: double.infinity,
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: Colors.grey[300]!),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.today,
-                      size: 12.sp,
-                      color: AppColors.main,
-                    ),
-                    6.ESW(),
-                    CustomTextR(
-                      'today'.tr,
-                      fontSize: 11.sp,
-                      fontWeight: FW.medium,
-                      color: Colors.grey[700],
-                    ),
-                    8.ESW(),
-                    Expanded(
-                      child: CustomTextR(
-                        branch.todaysWorkingHours,
-                        fontSize: 11.sp,
-                        color: Colors.grey[600],
-                        maxLines: 1,
-                        isOverFlow: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              8.ESH(),
-
-              // Show all days working hours in a compact way
+              const Spacer(),
               InkWell(
                 onTap: () => _showBranchWorkingHours(branch, days),
                 child: Container(
@@ -681,9 +591,9 @@ class ServiceCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      CustomTextR(
-                        'view_all_hours'.tr,
-                        fontSize: 11.sp,
+                      CustomTextL(
+                        'View_all_hours',
+                        fontSize: 12.sp,
                         color: AppColors.main,
                         fontWeight: FW.medium,
                       ),

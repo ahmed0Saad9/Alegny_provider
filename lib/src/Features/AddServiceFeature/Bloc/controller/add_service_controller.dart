@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/Model/add_service_model.dart';
-import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/Model/branch_model.dart';
 import 'package:Alegny_provider/src/core/constants/app_assets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -32,6 +31,8 @@ class AddServiceController extends GetxController {
   final List<RxString> branchSelectedCities = [];
   final List<RxString> branchSelectedGovernorates = [];
   final List<Map<String, String>> branchWorkingHours = [];
+  final List<Rxn<double>> branchLatitudes = [];
+  final List<Rxn<double>> branchLongitudes = [];
 
   //second step controllers
   /// xRay
@@ -253,9 +254,7 @@ class AddServiceController extends GetxController {
     'شمال سيناء': ['العريش', 'الشيخ زويد', 'رفح'],
     'سوهاج': ['سوهاج', 'جرجا', 'أخميم'],
   };
-
   void addBranch() {
-    // Create new controllers and data for this branch
     final addressController = TextEditingController();
     final phoneController = TextEditingController();
     final whatsappController = TextEditingController();
@@ -271,15 +270,15 @@ class AddServiceController extends GetxController {
       'friday': 'closed'.tr,
     };
 
-    // Store them in the lists
     branchAddressControllers.add(addressController);
     branchPhoneControllers.add(phoneController);
     branchWhatsappControllers.add(whatsappController);
     branchSelectedCities.add(selectedCity);
     branchSelectedGovernorates.add(selectedGovernorate);
     branchWorkingHours.add(workingHours);
+    branchLatitudes.add(Rxn<double>());
+    branchLongitudes.add(Rxn<double>());
 
-    // Create the branch (initially empty)
     final newBranch = Branch(
       address: '',
       phoneNumber: '',
@@ -287,6 +286,8 @@ class AddServiceController extends GetxController {
       workingHours: workingHours,
       selectedCity: selectedCity.value,
       selectedGovernorate: selectedGovernorate.value,
+      latitude: null,
+      longitude: null,
     );
 
     branches.add(newBranch);
@@ -306,6 +307,8 @@ class AddServiceController extends GetxController {
       branchSelectedCities.removeAt(index);
       branchSelectedGovernorates.removeAt(index);
       branchWorkingHours.removeAt(index);
+      branchLatitudes.removeAt(index);
+      branchLongitudes.removeAt(index);
 
       branches.removeAt(index);
       update();
@@ -320,10 +323,22 @@ class AddServiceController extends GetxController {
         whatsAppNumber: branchWhatsappControllers[index].text,
         selectedGovernorate: branchSelectedGovernorates[index].value,
         selectedCity: branchSelectedCities[index].value,
-        workingHours: Map.from(branchWorkingHours[index]), // Create a copy
+        workingHours: Map.from(branchWorkingHours[index]),
+        latitude: branchLatitudes[index].value,
+        longitude: branchLongitudes[index].value,
       );
 
       branches[index] = updatedBranch;
+    }
+  }
+
+  // Method to set location for a specific branch
+  void setBranchLocation(int branchIndex, double latitude, double longitude) {
+    if (branchIndex < branchLatitudes.length) {
+      branchLatitudes[branchIndex].value = latitude;
+      branchLongitudes[branchIndex].value = longitude;
+      updateBranchData(branchIndex);
+      update();
     }
   }
 
@@ -399,11 +414,11 @@ class AddServiceController extends GetxController {
         return false;
       }
 
-      // Optional: Validate WhatsApp
-      // if (branchWhatsappControllers[i].text.trim().isEmpty) {
-      //   _showError('${'please_enter_whatsapp_number'.tr} ${'for_branch'.tr} ${i + 1}');
-      //   return false;
-      // }
+      if (branchWhatsappControllers[i].text.trim().isEmpty) {
+        _showError(
+            '${'please_enter_whatsapp_number'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
     }
     return true;
   }

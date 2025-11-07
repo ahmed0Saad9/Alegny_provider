@@ -88,7 +88,7 @@ dependencies:
   linear_timer:
   flutter_screenutil: ^5.5.4
   video_player: ^2.7.1
-  geolocator: 9.0.2
+  geolocator: ^11.1.0
   cached_network_image: ^3.2.2
   lottie: ^2.2.0
   image_picker: ^0.8.6
@@ -123,6 +123,7 @@ dependencies:
   bottom_navy_bar: ^6.1.0
   circular_bottom_navigation: ^2.4.0
   bloc: ^9.0.0
+  google_maps_flutter: ^2.5.3
 
 
 dev_dependencies:

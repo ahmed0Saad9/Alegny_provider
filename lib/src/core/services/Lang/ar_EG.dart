@@ -462,4 +462,11 @@ const Map<String, String> arAE = {
   'delete_service_confirmation':
       'هل أنت متأكد من حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.',
   'all_branches': 'جميع الفروع',
+  'View_all_hours': 'عرض جميع الساعات',
+  'Discounts': 'خصومات',
+  'No_services_yet': 'لا يوجد خدمات حتى الآن',
+  'Tap_add_service_to_create_services': 'اضغط إضافة خدمة لإنشاء خدمات',
+  'Select_location': 'حدد الموقع',
+  'selected_location': 'الموقع المحدد',
+  'Location_selected': 'تم تحديد موقع',
 };

@@ -42,6 +42,8 @@ class _Step3Content extends StatelessWidget {
 
   Widget _buildBranchCard(
       AddServiceController controller, int index, BuildContext context) {
+    final hasLocation = controller.branchLatitudes[index].value != null &&
+        controller.branchLongitudes[index].value != null;
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -94,6 +96,12 @@ class _Step3Content extends StatelessWidget {
             hint: 'enter_address'.tr,
             maxLines: 3,
           ),
+          24.ESH(),
+
+          // Location Selection Button
+          _buildSectionLabel('location'.tr, true),
+          12.ESH(),
+          _buildLocationSelector(controller, index, hasLocation),
           24.ESH(),
 
           // Phone Number Field
@@ -171,6 +179,46 @@ class _Step3Content extends StatelessWidget {
         controller.branchSelectedCities[index].value = value!;
         controller.update();
       },
+    );
+  }
+
+  Widget _buildLocationSelector(
+      AddServiceController controller, int index, bool hasLocation) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          Get.to(() => MapsLocationPickerScreen(
+                branchIndex: index,
+                initialLat: controller.branchLatitudes[index].value,
+                initialLng: controller.branchLongitudes[index].value,
+              ));
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: hasLocation ? Colors.green : AppColors.main,
+          foregroundColor: Colors.white,
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              hasLocation ? Icons.location_on : Icons.my_location_outlined,
+              size: 20.sp,
+            ),
+            8.ESW(),
+            CustomTextL(
+              hasLocation ? 'Location_selected' : 'Select_location',
+              fontSize: 16.sp,
+              color: AppColors.titleWhite,
+              fontWeight: FW.medium,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -552,7 +600,7 @@ class _Step3Content extends StatelessWidget {
   }
 
   Widget _buildAddBranchButton(AddServiceController controller) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
         onPressed: controller.addBranch,
