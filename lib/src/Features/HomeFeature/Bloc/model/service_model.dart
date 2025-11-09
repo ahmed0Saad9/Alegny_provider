@@ -35,7 +35,7 @@ class BranchModel {
   final String governorate;
   final String city;
   final String address;
-  final String phone;
+  final String phoneNumber;
   final String whatsapp;
   final Map<String, dynamic> workingHours;
 
@@ -43,7 +43,7 @@ class BranchModel {
     required this.governorate,
     required this.city,
     required this.address,
-    required this.phone,
+    required this.phoneNumber,
     required this.whatsapp,
     required this.workingHours,
   });
@@ -53,7 +53,7 @@ class BranchModel {
       governorate: json['governorate'] ?? '',
       city: json['city'] ?? '',
       address: json['address'] ?? '',
-      phone: json['phone']?.toString() ?? '',
+      phoneNumber: json['phoneNumber']?.toString() ?? '',
       whatsapp: json['whatsapp']?.toString() ?? '',
       workingHours: (json['workingHours'] as Map?)?.map(
             (key, value) => MapEntry(key.toString(), value),
@@ -136,7 +136,7 @@ class BranchModel {
         'governorate': governorate,
         'city': city,
         'address': address,
-        'phone': phone,
+        'phoneNumber': phoneNumber,
         'whatsapp': whatsapp,
         'workingHours': workingHours,
       };

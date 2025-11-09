@@ -13,6 +13,8 @@ mixin ApiKey {
   final String uRLRegister = "$apiBaseUrl${providerAuth}register";
   final String uRLLogout = "$apiBaseUrl${providerAuth}logout";
   final String uRLChangePassword = "$apiBaseUrl${providerAuth}change-password";
+  final String uRLResetPassword = "$apiBaseUrl${providerAuth}reset-password";
+  final String uRLForgetPassword = "$apiBaseUrl${providerAuth}forgot-password";
   final String uRLGetMyAccountData = "$apiBaseUrl${providerAuth}profile";
   final String uRLUpdateMyAccountData = "$apiBaseUrl${providerAuth}profile";
   final String uRLVerifyAccount =
@@ -20,8 +22,6 @@ mixin ApiKey {
   final String uRLSendOTP = "$apiBaseUrl${account}send-verify-otp";
   final String uRLVerifyAccountOtp =
       "$apiBaseUrl${account}validate-otp-and-verify-account";
-  // final String uRLCities = "$apiBaseUrl${public}cities";
-  // final String uRLDistricts = "$apiBaseUrl${public}districts";
 
   final String uRLCheckPhoneAndSendOtp = "${apiBaseUrl}forgot-password";
   final String uRLValidateOtpAndChangePassword =
@@ -42,19 +42,10 @@ mixin ApiKey {
   final String uRLGetServices = "${apiBaseUrl}services/";
   String uRLDeleteService({required String serviceId}) =>
       "${apiBaseUrl}services/$serviceId";
-  // String uRLGetAllSubjects(
-  //         {required int academicYear, required String search}) =>
-  //     "$apiBaseUrl${general}subjects?academicYear=$academicYear&search=$search";
-  //
-  // String uRLGetChapters({required int? subjectID}) =>
-  //     "${apiBaseUrl}upload/subjects/$subjectID/chapters";
-  //
-  // String uRLGetQuestions({required int? chaptersID}) =>
-  //     "${apiBaseUrl}upload/chapters/$chaptersID/questions";
-  //
-  // String uRLUploadedPdfs({required String status, required int studentID}) =>
-  //     "${apiBaseUrl}StudentQuiz/$student$studentID/pdfs?status=$status";
-  // String uRLGetCustomQuestions({required int fileId, required int studentId}) =>
-  //     "${apiBaseUrl}StudentQuiz/student/$studentId/uploads/$fileId/quizzes";
-  // final String uRLUploadPdf = "${apiBaseUrl}UploadStudent/upload-pdf";
+  String uRLEditService({required String serviceId}) =>
+      "${apiBaseUrl}services/$serviceId";
+  String uRLGetServiceDetailsService({required String serviceId}) =>
+      "${apiBaseUrl}services/$serviceId";
+  String uRLUpdateServiceService({required String serviceId}) =>
+      "${apiBaseUrl}services/$serviceId";
 }

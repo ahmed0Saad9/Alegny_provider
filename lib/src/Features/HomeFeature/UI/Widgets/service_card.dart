@@ -533,7 +533,7 @@ class ServiceCard extends StatelessWidget {
                         6.ESW(),
                         Expanded(
                           child: CustomTextR(
-                            branch.phone,
+                            branch.phoneNumber,
                             fontSize: 13.sp,
                             color: Colors.grey[600],
                             maxLines: 1,
@@ -687,21 +687,23 @@ class ServiceCard extends StatelessWidget {
             ),
 
             // Contact info in the header
-            if (branch.phone.isNotEmpty || branch.whatsapp.isNotEmpty) ...[
+            if (branch.phoneNumber.isNotEmpty ||
+                branch.whatsapp.isNotEmpty) ...[
               8.ESH(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (branch.phone.isNotEmpty) ...[
+                  if (branch.phoneNumber.isNotEmpty) ...[
                     Icon(Icons.phone, size: 16.sp, color: Colors.grey[600]),
                     4.ESW(),
                     CustomTextR(
-                      branch.phone,
+                      branch.phoneNumber,
                       fontSize: 12.sp,
                       color: Colors.grey[600],
                     ),
                   ],
-                  if (branch.phone.isNotEmpty && branch.whatsapp.isNotEmpty)
+                  if (branch.phoneNumber.isNotEmpty &&
+                      branch.whatsapp.isNotEmpty)
                     Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.w),
                       child: Container(

@@ -14,8 +14,15 @@ import 'package:Alegny_provider/src/core/utils/extensions.dart';
 
 class PinCodeScreen extends StatelessWidget {
   final String title;
+  final String token;
+  final String email;
 
-  const PinCodeScreen({super.key, required this.title});
+  const PinCodeScreen({
+    super.key,
+    required this.title,
+    required this.token,
+    required this.email,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,35 +39,37 @@ class PinCodeScreen extends StatelessWidget {
           title: title,
         ),
         body: GetBuilder<ForgetPasswordController>(
-          builder: (_) =>
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            50.ESH(),
-            const CustomTextL(
-              'Enter_code',
-              fontSize: 28,
-              fontWeight: FW.bold,
-              textAlign: TextAlign.center,
-            ),
-            8.ESH(),
-            CustomTextL.subtitle(
-              'Enter_code_subtitle',
-              fontWeight: FW.medium,
-            ),
-            40.ESH(),
-            PinCodeServices.pinCodeWidget(
-                context: context,
-                pinCodeController: _.pinCodeController,
-                errorController: _.errorController),
-            40.ESH(),
-            const Spacer(),
-            ButtonDefault.main(
-              title: 'Continue',
-              onTap: () {
-                _.checkCode();
-              },
-            ),
-            33.ESH(),
-          ]),
+          builder: (_) => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              50.ESH(),
+              const CustomTextL(
+                'Enter_code',
+                fontSize: 28,
+                fontWeight: FW.bold,
+                textAlign: TextAlign.center,
+              ),
+              8.ESH(),
+              CustomTextL.subtitle(
+                'Enter_code_subtitle',
+                fontWeight: FW.medium,
+              ),
+              40.ESH(),
+              PinCodeServices.pinCodeWidget(
+                  context: context,
+                  pinCodeController: _.pinCodeController,
+                  errorController: _.errorController),
+              40.ESH(),
+              const Spacer(),
+              ButtonDefault.main(
+                title: 'Continue',
+                onTap: () {
+                  _.checkCode();
+                },
+              ),
+              33.ESH(),
+            ],
+          ),
         ),
       ),
     );

@@ -7,9 +7,7 @@ import 'package:Alegny_provider/src/core/services/Network/network_services.dart'
 import 'package:dio/dio.dart';
 import 'package:get/instance_manager.dart';
 
-import 'package:path/path.dart' as path;
 import '../../../../core/constants/api_key.dart';
-import '../../../../core/services/services_locator.dart';
 
 class CreateServiceRepository with ApiKey {
   final NetworkService _networkService = Get.find();
@@ -125,7 +123,8 @@ class CreateServiceRepository with ApiKey {
         });
 
         final response = await _networkService.put(
-          url: '$uRLGetServices/$serviceId', // Use your actual update endpoint
+          url: uRLUpdateServiceService(
+              serviceId: serviceId), // Use your actual update endpoint
           bodyFormData: formData,
           auth: true,
         );
@@ -133,7 +132,7 @@ class CreateServiceRepository with ApiKey {
         return ApiResult.success(response);
       } else {
         final response = await _networkService.put(
-          url: '$uRLGetServices/$serviceId',
+          url: uRLUpdateServiceService(serviceId: serviceId),
           body: serviceData.toJson(),
           auth: true,
         );

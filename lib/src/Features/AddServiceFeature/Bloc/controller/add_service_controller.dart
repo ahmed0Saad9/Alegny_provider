@@ -476,7 +476,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
   void _addBranchFromModel(BranchModel branchModel) {
     final addressController = TextEditingController(text: branchModel.address);
-    final phoneController = TextEditingController(text: branchModel.phone);
+    final phoneController =
+        TextEditingController(text: branchModel.phoneNumber);
     final whatsappController =
         TextEditingController(text: branchModel.whatsapp);
     final selectedCity = branchModel.city.obs;
@@ -494,13 +495,13 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
     final newBranch = Branch(
       address: branchModel.address,
-      phoneNumber: branchModel.phone,
+      phoneNumber: branchModel.phoneNumber,
       whatsAppNumber: branchModel.whatsapp,
       workingHours: workingHours,
       selectedCity: branchModel.city,
       selectedGovernorate: branchModel.governorate,
-      latitude: null, // You might want to store these in your BranchModel
-      longitude: null,
+      latitude: latitude.value,
+      longitude: longitude.value,
     );
 
     branches.add(newBranch);
@@ -605,24 +606,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         discounts['surgeries_other_services_discount']?.toString() ?? '';
   }
 
-  // Modify the submitService method to handle both create and update
   void submitService() {
     updateAllBranches();
 
     final branchesData = branches.map((branch) => branch.toJson()).toList();
-
-    print('=== DEBUG BRANCH DATA BEFORE SENDING ===');
-    for (int i = 0; i < branches.length; i++) {
-      print('Branch ${i + 1}:');
-      print('  Phone: "${branches[i].phoneNumber}"');
-      print('  WhatsApp: "${branches[i].whatsAppNumber}"');
-      print('  Address: "${branches[i].address}"');
-      print('  City: "${branches[i].selectedCity}"');
-      print('  Governorate: "${branches[i].selectedGovernorate}"');
-      print('  Working Hours: ${branches[i].workingHours}');
-      print('---');
-    }
-    print('========================================');
 
     final serviceData = ServiceData(
       // Basic info
@@ -723,119 +710,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
       branches: branchesData,
     );
-    _debugAllData(serviceData, branchesData);
     if (isEditingMode) {
       _updateService(serviceData);
     } else {
       _createService(serviceData);
-    }
-  }
-
-  void _debugAllData(
-      ServiceData serviceData, List<Map<String, dynamic>> branchesData) {
-    print('=== COMPREHENSIVE DEBUG DATA ===');
-
-    // 1. Debug ServiceData object
-    print('1. SERVICE DATA OBJECT:');
-    print('   serviceName: ${serviceData.serviceName}');
-    print('   serviceType: ${serviceData.serviceType}');
-    print('   specialization: ${serviceData.specialization}');
-    print(
-        '   isHomeService: ${serviceData.isHomeService} (type: ${serviceData.isHomeService.runtimeType})');
-    print(
-        '   isHomeVisit: ${serviceData.isHomeVisit} (type: ${serviceData.isHomeVisit.runtimeType})');
-    print(
-        '   homeDiscount: ${serviceData.homeDiscount} (type: ${serviceData.homeDiscount.runtimeType})');
-    print(
-        '   isHomeDelivery: ${serviceData.isHomeDelivery} (type: ${serviceData.isHomeDelivery.runtimeType})');
-    print(
-        '   isDelivery: ${serviceData.isDelivery} (type: ${serviceData.isDelivery.runtimeType})');
-
-    // 2. Debug Branches
-    print('2. BRANCHES DATA:');
-    for (int i = 0; i < branchesData.length; i++) {
-      print('   Branch ${i + 1}:');
-      print('     phone: ${branchesData[i]['phone']}');
-      print('     whatsapp: ${branchesData[i]['whatsapp']}');
-      print('     address: ${branchesData[i]['address']}');
-      print('     city: ${branchesData[i]['city']}');
-      print('     governorate: ${branchesData[i]['governorate']}');
-      print('     workingHours: ${branchesData[i]['workingHours']}');
-    }
-
-    // 3. Debug ServiceData.toJson() output
-    print('3. SERVICE DATA TO JSON:');
-    try {
-      final serviceJson = serviceData.toJson();
-      print('   Raw JSON map: $serviceJson');
-
-      // Try to encode to JSON string
-      final jsonString = jsonEncode(serviceJson);
-      print('   JSON encoded successfully!');
-      print('   JSON string length: ${jsonString.length}');
-
-      // Print formatted JSON for better readability
-      final formattedJson = JsonEncoder.withIndent('  ').convert(serviceJson);
-      print('   Formatted JSON:');
-      print(formattedJson);
-    } catch (e, stackTrace) {
-      print('   JSON ENCODE ERROR: $e');
-      print('   Error type: ${e.runtimeType}');
-      print('   Stack trace: $stackTrace');
-
-      // Debug individual problematic fields
-      _debugProblematicFields(serviceData);
-    }
-
-    print('================================');
-  }
-
-  void _debugProblematicFields(ServiceData serviceData) {
-    print('4. DEBUG INDIVIDUAL FIELDS FOR JSON:');
-
-    final testMap = <String, dynamic>{};
-
-    // Test basic fields first
-    testMap['service_name'] = serviceData.serviceName;
-    testMap['service_type'] = serviceData.serviceType;
-    testMap['specialization'] = serviceData.specialization;
-
-    // Test boolean fields one by one
-    try {
-      testMap['is_home_service'] = serviceData.isHomeService ?? false;
-      print('   ✓ is_home_service: OK');
-    } catch (e) {
-      print('   ✗ is_home_service ERROR: $e');
-    }
-
-    try {
-      testMap['is_home_visit'] = serviceData.isHomeVisit ?? false;
-      print('   ✓ is_home_visit: OK');
-    } catch (e) {
-      print('   ✗ is_home_visit ERROR: $e');
-    }
-
-    try {
-      testMap['home_discount'] = serviceData.homeDiscount ?? false;
-      print('   ✓ home_discount: OK');
-    } catch (e) {
-      print('   ✗ home_discount ERROR: $e');
-    }
-
-    // Test branches
-    try {
-      testMap['branches'] = serviceData.branches;
-      print('   ✓ branches: OK');
-    } catch (e) {
-      print('   ✗ branches ERROR: $e');
-    }
-
-    // Try to encode the test map
-    try {
-      final testJson = jsonEncode(testMap);
-      print('   Test JSON encode: SUCCESS');
-    } catch (e) {
-      print('   Test JSON encode ERROR: $e');
     }
   }
 
@@ -850,8 +728,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       success: (response) {
         print('DEBUG createService response: ${response.runtimeType}');
         print(response.data);
-        successEasyLoading(
-            response.data['message'] ?? 'Service created successfully');
+        successEasyLoading(response.data['message'] ??
+            (isEditingMode
+                ? 'service_updated_successfully'.tr
+                : 'service_created_successfully'.tr));
         printDM('✅ Service Created: ${response.data}');
         printDM('result ${serviceData.toJson()}');
         Get.offAll(const BaseBNBScreen());
@@ -876,8 +756,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
     result.when(
       success: (response) {
-        successEasyLoading(
-            response.data['message'] ?? 'Service updated successfully');
+        successEasyLoading(response.data['message'] ??
+            (isEditingMode
+                ? 'service_updated_successfully'.tr
+                : 'service_created_successfully'.tr));
         printDM('✅ Service Updated: ${response.data}');
 
         // Navigate back and refresh the services list
@@ -930,7 +812,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
   bool _validateStep3() {
     for (int i = 0; i < branches.length; i++) {
-      // Validate using the branch-specific controllers and Rx values
       if (branchSelectedGovernorates[i].value.isEmpty) {
         _showError(
             '${'please_select_governorate'.tr} ${'for_branch'.tr} ${i + 1}');
@@ -952,25 +833,11 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
             '${'please_enter_phone_number'.tr} ${'for_branch'.tr} ${i + 1}');
         return false;
       }
+      if (branchWhatsappControllers[i].text.trim().isEmpty) {
+        _showError('${'please_enter_whatsapp'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
 
-      // Validate phone number format (Egyptian numbers)
-      // final phone = branchPhoneControllers[i].text.trim();
-      // if (!RegExp(r'^01[0-2,5]{1}[0-9]{8}$').hasMatch(phone)) {
-      //   _showError(
-      //       '${'please_enter_valid_phone'.tr} ${'for_branch'.tr} ${i + 1}');
-      //   return false;
-      // }
-
-      // WhatsApp is now optional based on Postman (can be null)
-      // final whatsapp = branchWhatsappControllers[i].text.trim();
-      // if (whatsapp.isNotEmpty &&
-      //     !RegExp(r'^01[0-2,5]{1}[0-9]{8}$').hasMatch(whatsapp)) {
-      //   _showError(
-      //       '${'please_enter_valid_whatsapp'.tr} ${'for_branch'.tr} ${i + 1}');
-      //   return false;
-      // }
-
-      // Validate working hours - at least one day must have proper opening hours
       if (!_validateWorkingHours(branchWorkingHours[i])) {
         _showError(
             '${'please_set_proper_working_hours'.tr} ${'for_branch'.tr} ${i + 1}');
@@ -982,7 +849,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
   bool _validateWorkingHours(Map<String, String> workingHours) {
     bool hasAtLeastOneOpenDay = false;
-    bool allOpenDaysHaveValidTimes = true;
 
     final days = [
       'saturday',
@@ -1000,21 +866,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       if (hours.isNotEmpty &&
           hours.toLowerCase() != 'closed'.tr.toLowerCase()) {
         hasAtLeastOneOpenDay = true;
-
-        // Check if the hours are in proper format "HH:MM AM/PM - HH:MM AM/PM"
-        // if (!_isValidTimeFormat(hours)) {
-        //   allOpenDaysHaveValidTimes = false;
-        //   _showError('${'invalid_time_format_for'.tr} ${_getDayName(day)}');
-        //   break;
-        // }
-
-        // Additional validation: ensure from time is before to time
-        // if (!_isFromTimeBeforeToTime(hours)) {
-        //   allOpenDaysHaveValidTimes = false;
-        //   _showError(
-        //       '${'closing_time_must_be_after_opening_time_for'.tr} ${_getDayName(day)}');
-        //   break;
-        // }
       }
     }
 
@@ -1024,79 +875,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       return false;
     }
 
-    // if (!allOpenDaysHaveValidTimes) {
-    //   return false;
-    // }
-
     return true;
   }
-
-  // bool _isValidTimeFormat(String timeString) {
-  //   // Valid format: "9:00 AM - 5:00 PM" or "08:30 AM - 11:30 PM"
-  //   final timeFormatRegex = RegExp(
-  //       r'^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] [AP]M - ([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] [AP]M$',
-  //       caseSensitive: false);
-  //
-  //   return timeFormatRegex.hasMatch(timeString);
-  // }
-
-  // bool _isFromTimeBeforeToTime(String timeString) {
-  //   try {
-  //     final parts = timeString.split(' - ');
-  //     if (parts.length != 2) return false;
-  //
-  //     final fromTime = parts[0].trim();
-  //     final toTime = parts[1].trim();
-  //
-  //     final fromTimeOfDay = _parseTimeString(fromTime);
-  //     final toTimeOfDay = _parseTimeString(toTime);
-  //
-  //     // Convert to minutes for comparison
-  //     final fromMinutes = fromTimeOfDay.hour * 60 + fromTimeOfDay.minute;
-  //     final toMinutes = toTimeOfDay.hour * 60 + toTimeOfDay.minute;
-  //
-  //     return fromMinutes < toMinutes;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
-  // String _getDayName(String dayKey) {
-  //   final dayNames = {
-  //     'saturday': 'saturday'.tr,
-  //     'sunday': 'sunday'.tr,
-  //     'monday': 'monday'.tr,
-  //     'tuesday': 'tuesday'.tr,
-  //     'wednesday': 'wednesday'.tr,
-  //     'thursday': 'thursday'.tr,
-  //     'friday': 'friday'.tr,
-  //   };
-  //
-  //   return dayNames[dayKey] ?? dayKey;
-  // }
-  //
-  // TimeOfDay _parseTimeString(String timeString) {
-  //   try {
-  //     final cleanedString = timeString.trim().toLowerCase();
-  //     final parts = cleanedString.split(' ');
-  //     final timeParts = parts[0].split(':');
-  //
-  //     if (timeParts.length < 2) return TimeOfDay(hour: 9, minute: 0);
-  //
-  //     int hour = int.parse(timeParts[0]);
-  //     int minute = int.parse(timeParts[1]);
-  //
-  //     // Handle AM/PM conversion
-  //     if (cleanedString.contains('pm') && hour < 12) {
-  //       hour += 12;
-  //     } else if (cleanedString.contains('am') && hour == 12) {
-  //       hour = 0;
-  //     }
-  //
-  //     return TimeOfDay(hour: hour, minute: minute);
-  //   } catch (e) {
-  //     return TimeOfDay(hour: 9, minute: 0);
-  //   }
-  // }
 
   void _showError(String message) {
     Get.snackbar(
@@ -1164,147 +944,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         colorText: Colors.white,
       );
     }
-  }
-
-  // void submitService() {
-  //   updateAllBranches();
-  //
-  //   final branchesData = branches.map((branch) => branch.toJson()).toList();
-  //   print('=== BRANCH DATA BEING SENT ===');
-  //   for (int i = 0; i < branches.length; i++) {
-  //     print('Branch ${i + 1}:');
-  //     print('  Phone: ${branches[i].phoneNumber}');
-  //     print('  WhatsApp: ${branches[i].whatsAppNumber}');
-  //     print('  Working Hours: ${branches[i].workingHours}');
-  //     print('  Address: ${branches[i].address}');
-  //     print('  City: ${branches[i].selectedCity}');
-  //     print('  Governorate: ${branches[i].selectedGovernorate}');
-  //
-  //     print('==============================');
-  //   }
-  //   final serviceData = ServiceData(
-  //     // Basic info
-  //     serviceName: serviceNameController.text.trim(),
-  //     serviceDescription: serviceDescriptionController.text.trim(),
-  //     serviceType: selectedService.value,
-  //     specialization: selectedSpecialization.value,
-  //     serviceImage: serviceImage.value,
-  //
-  //     // Social media
-  //     facebook: facebookController.text.trim(),
-  //     instagram: instagramController.text.trim(),
-  //     tiktok: tiktokController.text.trim(),
-  //     youtube: youtubeController.text.trim(),
-  //
-  //     // Doctor fields
-  //     consultationPriceBefore: humanDoctorPriceBefore.text.trim().isNotEmpty
-  //         ? humanDoctorPriceBefore.text.trim()
-  //         : veterinaryDoctorPriceBefore.text.trim(),
-  //     consultationPriceAfter: humanDoctorPriceAfter.text.trim().isNotEmpty
-  //         ? humanDoctorPriceAfter.text.trim()
-  //         : veterinaryDoctorPriceAfter.text.trim(),
-  //     isHomeVisit: selectedService.value == 'human_doctor'
-  //         ? humanDoctorIsHome.value
-  //         : (selectedService.value == 'veterinarian'
-  //             ? veterinaryDoctorIsHome.value
-  //             : null),
-  //     homeDiscount: selectedService.value == 'human_doctor'
-  //         ? humanDoctorIsCard.value
-  //         : (selectedService.value == 'veterinarian'
-  //             ? veterinaryDoctorIsCard.value
-  //             : null),
-  //
-  //     // Hospital fields
-  //     examinationsDiscount:
-  //         humanHospitalDiscountExaminations.text.trim().isNotEmpty
-  //             ? humanHospitalDiscountExaminations.text.trim()
-  //             : veterinaryHospitalDiscountExaminations.text.trim(),
-  //     medicalTestsDiscount:
-  //         humanHospitalDiscountMedicalTest.text.trim().isNotEmpty
-  //             ? humanHospitalDiscountMedicalTest.text.trim()
-  //             : veterinaryHospitalDiscountMedicalTest.text.trim(),
-  //     xrayDiscount: humanHospitalDiscountXRay.text.trim().isNotEmpty
-  //         ? humanHospitalDiscountXRay.text.trim()
-  //         : veterinaryHospitalDiscountXRay.text.trim(),
-  //     medicinesDiscount: humanHospitalDiscountMedicines.text.trim().isNotEmpty
-  //         ? humanHospitalDiscountMedicines.text.trim()
-  //         : veterinaryHospitalDiscountMedicines.text.trim(),
-  //
-  //     // Shared
-  //     surgeriesOtherServicesDiscount:
-  //         surgeriesOtherServicesDiscount.text.trim(),
-  //
-  //     // Pharmacy fields
-  //     localMedicinesDiscount:
-  //         humanPharmacyDiscountLocalMedicine.text.trim().isNotEmpty
-  //             ? humanPharmacyDiscountLocalMedicine.text.trim()
-  //             : veterinaryPharmacyDiscountLocalMedicine.text.trim(),
-  //     importedMedicinesDiscount:
-  //         humanPharmacyDiscountImportedMedicine.text.trim().isNotEmpty
-  //             ? humanPharmacyDiscountImportedMedicine.text.trim()
-  //             : veterinaryPharmacyDiscountImportedMedicine.text.trim(),
-  //     medicalSuppliesDiscount:
-  //         humanPharmacyDiscountMedicalSupplies.text.trim().isNotEmpty
-  //             ? humanPharmacyDiscountMedicalSupplies.text.trim()
-  //             : veterinaryPharmacyDiscountMedicalSupplies.text.trim(),
-  //     isHomeDelivery: selectedService.value == 'human_pharmacy'
-  //         ? humanPharmacyIsHome.value
-  //         : (selectedService.value == 'veterinary_pharmacy'
-  //             ? veterinaryPharmacyIsHome.value
-  //             : null),
-  //
-  //     // Lab Test fields
-  //     allTestsDiscount: labTestDiscountAllTypes.text.trim(),
-  //     isHomeService: labTestIsHome.value,
-  //
-  //     // Radiology fields
-  //     xRayDiscount: xRayDiscount.text.trim(),
-  //
-  //     // Eye Care fields
-  //     glassesDiscount: eyeCareDiscountGlasses.text.trim(),
-  //     sunglassesDiscount: eyeCareDiscountSunGlasses.text.trim(),
-  //     contactLensesDiscount: contactLensesController.text.trim(),
-  //     eyeExamDiscount: eyeCareDiscountEyeExam.text.trim(),
-  //     isDelivery: eyeCareIsDelivery.value,
-  //
-  //     // Gym fields
-  //     gymMonthSubPriceB: gymMonthSubPriceB.text.trim(),
-  //     gymMonthSubPriceA: gymMonthSubPriceA.text.trim(),
-  //     gymMonth3SubPriceB: gymMonth3SubPriceB.text.trim(),
-  //     gymMonth3SubPriceA: gymMonth3SubPriceA.text.trim(),
-  //     gymMonth6SubPriceB: gymMonth6SubPriceB.text.trim(),
-  //     gymMonth6SubPriceA: gymMonth6SubPriceA.text.trim(),
-  //     gymMonth12SubPriceB: gymMonth12SubPriceB.text.trim(),
-  //     gymMonth12SubPriceA: gymMonth12SubPriceA.text.trim(),
-  //
-  //     otherDiscount: discountOther.text.trim(),
-  //
-  //     branches: branchesData,
-  //   );
-  //
-  //   // Send to backend
-  //   _sendToBackend(serviceData);
-  // }
-
-  void _sendToBackend(ServiceData serviceData) async {
-    showEasyLoading();
-
-    final result = await repository!.createService(serviceData);
-
-    closeEasyLoading();
-
-    result.when(
-      success: (response) {
-        successEasyLoading(
-            response.data['message'] ?? 'Service created successfully');
-        printDM('✅ Service Created: ${response.data}');
-        printDM('result ${serviceData.toJson()}');
-        Get.off(() => const BaseBNBScreen());
-      },
-      failure: (error) {
-        actionNetworkExceptions(error);
-      },
-    );
   }
 
   @override

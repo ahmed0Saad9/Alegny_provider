@@ -45,7 +45,6 @@ class ServicesLocator {
     sl.registerLazySingleton(() => SendOTPRepository());
     sl.registerLazySingleton(() => VerifyOTPRepository());
     sl.registerLazySingleton(() => GetCompanyCategoriesRepository());
-    sl.registerLazySingleton(() => CheckEmailAndSendOtpRepo());
     sl.registerLazySingleton(() => ValidateOtpAndChangePasswordRepo());
     sl.registerLazySingleton(() => EditGeneralProfileRepository());
     // sl.registerLazySingleton(() => ChangePasswordRepository());

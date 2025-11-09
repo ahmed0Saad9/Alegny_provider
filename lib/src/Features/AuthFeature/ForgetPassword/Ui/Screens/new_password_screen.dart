@@ -16,7 +16,16 @@ import '../../../../../core/services/svg_widget.dart';
 import '../../../../../core/utils/validator.dart';
 
 class NewPasswordScreen extends StatelessWidget {
-  const NewPasswordScreen({super.key});
+  final String token;
+  final String email;
+  final String code;
+
+  const NewPasswordScreen({
+    super.key,
+    required this.token,
+    required this.email,
+    required this.code,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,83 +40,62 @@ class NewPasswordScreen extends StatelessWidget {
       child: BaseScaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBars.appBarBack(title: 'change_password'),
-        body: Form(
-          // key: _.resetPasswordGlobalKey,
-          child: GetBuilder<ForgetPasswordController>(
-            builder: (_) =>
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              40.ESH(),
-              const CustomTextL(
-                'Reset_Password',
-                fontSize: 28,
-                fontWeight: FW.bold,
-              ),
-              8.ESH(),
-              CustomTextL.subtitle(
-                'Reset_Password_subtitle',
-                fontWeight: FW.medium,
-              ),
-              40.ESH(),
-              TextFieldDefault(
-                label: 'new_Password',
-                controller: _.newPasswordController,
-                validation: passwordValidator,
-                secureType: SecureType.toggle,
-                onComplete: () {
-                  node.nextFocus();
-                },
-              ),
-              24.ESH(),
-              TextFieldDefault(
-                label: 'Re_Enter_Password',
-                controller: _.confirmPasswordController,
-                validation: (value) {
-                  return confirmPasswordValidator(
-                      value, _.newPasswordController.text);
-                },
-                secureType: SecureType.toggle,
-                onComplete: () {
-                  node.unfocus();
-                },
-              ),
-              const Spacer(),
-              ButtonDefault.main(
-                title: 'Continue',
-                onTap: () {
-                  _.validateOtpAndChangePassword();
-                },
-              ),
-              33.ESH(),
-            ]),
+        body: GetBuilder<ForgetPasswordController>(
+          builder: (_) => Form(
+            key: _.resetPasswordGlobalKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                40.ESH(),
+                const CustomTextL(
+                  'Reset_Password',
+                  fontSize: 28,
+                  fontWeight: FW.bold,
+                ),
+                8.ESH(),
+                CustomTextL.subtitle(
+                  'Reset_Password_subtitle',
+                  fontWeight: FW.medium,
+                ),
+                40.ESH(),
+                TextFieldDefault(
+                  label: 'new_Password',
+                  controller: _.newPasswordController,
+                  validation: passwordValidator,
+                  secureType: SecureType.toggle,
+                  onComplete: () {
+                    node.nextFocus();
+                  },
+                ),
+                24.ESH(),
+                TextFieldDefault(
+                  label: 'Re_Enter_Password',
+                  controller: _.confirmPasswordController,
+                  validation: (value) {
+                    return confirmPasswordValidator(
+                        value, _.newPasswordController.text);
+                  },
+                  secureType: SecureType.toggle,
+                  onComplete: () {
+                    node.unfocus();
+                  },
+                ),
+                const Spacer(),
+                ButtonDefault.main(
+                  title: 'Continue',
+                  onTap: () {
+                    _.resetPassword(
+                      token: token,
+                      email: email,
+                      code: code,
+                    );
+                  },
+                ),
+                33.ESH(),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class PasswordCheck extends StatelessWidget {
-  const PasswordCheck({
-    super.key,
-    required this.label,
-  });
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10),
-      child: Row(
-        children: [
-          const IconSvg('check'),
-          CustomTextL(
-            label,
-            color: AppColors.titleGrayAF,
-            fontSize: 12,
-            textAlign: TextAlign.right,
-          )
-        ],
       ),
     );
   }

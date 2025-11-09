@@ -9,19 +9,19 @@ class ValidateOtpAndChangePasswordRepo with ApiKey {
   final NetworkService _networkService = Get.find();
 
   Future<ApiResult<Response>> validateOtpAndChangePassword({
-    required String verifyToken,
-    required String otp,
-    required String password,
-    required String passwordConfirmation,
+    required String email,
+    required String code,
+    required String newPassword,
+    required String confirmNewPassword,
   }) async {
     try {
       final response = await _networkService.post(
-        url: uRLValidateOtpAndChangePassword,
+        url: uRLResetPassword, // Make sure this URL is correct
         body: {
-          "verify_token": verifyToken,
-          "otp": otp,
-          "password": password,
-          "password_confirmation": passwordConfirmation,
+          "email": email,
+          "code": code,
+          "newPassword": newPassword,
+          "confirmNewPassword": confirmNewPassword,
         },
       );
       return ApiResult.success(response);

@@ -12,7 +12,7 @@ class CheckEmailAndSendOtpRepo with ApiKey {
       {required String email}) async {
     try {
       final response = await _networkService.post(
-        // url: uRLCheckEmailAndSendOtp,
+        url: uRLForgetPassword,
         body: {
           "email": email,
         },

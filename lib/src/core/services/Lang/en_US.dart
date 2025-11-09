@@ -581,7 +581,6 @@ const Map<String, String> enUS = {
   'delete_service_confirmation':
       'Are you sure you want to delete this service? This action cannot be undone.',
   'all_branches': 'All Branches',
-  "is_home_visit": "Home Visit",
   "is_home_delivery": "Home Delivery",
   "is_home_service": "Home Visit",
   'no_address_available': 'No address available',
@@ -590,4 +589,42 @@ const Map<String, String> enUS = {
   'cancel': 'Cancel',
   'service_deleted_successfully': 'Service deleted successfully',
   'failed_to_delete_service': 'Failed to delete service',
+  "service_type": "Service Type",
+  "service_description": "Service Description",
+  "service_image": "Service Image",
+
+  "facebook": "Facebook",
+  "instagram": "Instagram",
+  "tiktok": "TikTok",
+  "youtube": "YouTube",
+
+  "consultation_price_before": "Consultation Price Before Discount",
+  "consultation_price_after": "Consultation Price After Discount",
+  "is_home_visit": "Home Visit Available",
+  "home_discount": "Home Visit Discount",
+
+  "is_delivery": "Delivery Available",
+
+  "gym_month_sub_price_b": "1 Month Subscription Price Before Discount",
+  "gym_month_sub_price_a": "1 Month Subscription Price After Discount",
+  "gym_month_3_sub_price_b": "3 Months Subscription Price Before Discount",
+  "gym_month_3_sub_price_a": "3 Months Subscription Price After Discount",
+  "gym_month_6_sub_price_b": "6 Months Subscription Price Before Discount",
+  "gym_month_6_sub_price_a": "6 Months Subscription Price After Discount",
+  "gym_month_12_sub_price_b": "12 Months Subscription Price Before Discount",
+  "gym_month_12_sub_price_a": "12 Months Subscription Price After Discount",
+
+  // Validation messages
+  "please_select_service": "Please select service type",
+  "please_enter_service_name": "Please enter service name",
+
+  // Branch validation messages
+  "please_enter_whatsapp": "Please enter WhatsApp number",
+  "please_set_proper_working_hours": "Please set proper working hours",
+  "at_least_one_open_day_required": "At least one open day is required",
+  "for_branch": "for branch",
+
+  // Success messages
+  "service_created_successfully": "Service created successfully",
+  "service_updated_successfully": "Service updated successfully",
 };

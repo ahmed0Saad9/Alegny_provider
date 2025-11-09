@@ -24,21 +24,21 @@ class ForgetPasswordScreen extends StatefulWidget {
 }
 
 class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
+  final ForgetPasswordController controller =
+      Get.put(ForgetPasswordController());
+
   @override
   void dispose() {
-    // TODO: implement dispose
     Get.delete<ForgetPasswordController>();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    Get.put(ForgetPasswordController());
     var node = FocusScope.of(context);
     return BaseScaffold(
         appBar: AppBars.appBarBack(title: 'Forget_password'),
         body: GetBuilder<ForgetPasswordController>(
-          init: ForgetPasswordController(),
           builder: (_) => Form(
             key: _.globalKey,
             child: Padding(
@@ -66,8 +66,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   title: 'Continue',
                   active: _.emailController.text.isNotEmpty,
                   onTap: () {
-                    _.checkEmailAndSendOtp();
-                    // Get.bottomSheet(BottomSheetSendOTP(), isScrollControlled: true);
+                    _.sendOtp(); // Using the corrected method name
                   },
                 ),
                 33.ESH(),

@@ -266,6 +266,7 @@ const Map<String, String> arAE = {
   "cannot_open": "لا يمكن فتحه",
   "error_occurred": "حدث خطأ ما",
   "Add_Service": "اضافة خدمة",
+  "edit_service": "تعديل خدمة",
   "know": "التعريف",
   "discounts": "الخصومات",
   "location": "الموقع",
@@ -276,7 +277,6 @@ const Map<String, String> arAE = {
   "TikTok": "تيك توك",
   "YouTube": "يوتيوب",
   "Website": "موقع إلكتروني",
-
   "let_us_know_about_you": "دعنا نتعرف عليك",
   "upload_picture": "رفع صورة",
   "tap_to_upload": "اضغط للرفع",
@@ -483,4 +483,41 @@ const Map<String, String> arAE = {
   'service_deleted_successfully': 'تم حذف الخدمة بنجاح',
   'failed_to_delete_service': 'فشل في حذف الخدمة',
   'my_services': 'خدماتي',
+  "service_type": "نوع الخدمة",
+  "service_description": "وصف الخدمة",
+  "service_image": "صورة الخدمة",
+
+  "facebook": "فيسبوك",
+  "instagram": "انستجرام",
+  "tiktok": "تيك توك",
+  "youtube": "يوتيوب",
+
+  "consultation_price_before": "سعر الاستشارة قبل الخصم",
+  "consultation_price_after": "سعر الاستشارة بعد الخصم",
+  "home_discount": "خصم الزيارة المنزلية",
+
+  "is_delivery": "توصيل متاح",
+
+  "gym_month_sub_price_b": "سعر الاشتراك الشهري قبل الخصم",
+  "gym_month_sub_price_a": "سعر الاشتراك الشهري بعد الخصم",
+  "gym_month_3_sub_price_b": "سعر اشتراك 3 أشهر قبل الخصم",
+  "gym_month_3_sub_price_a": "سعر اشتراك 3 أشهر بعد الخصم",
+  "gym_month_6_sub_price_b": "سعر اشتراك 6 أشهر قبل الخصم",
+  "gym_month_6_sub_price_a": "سعر اشتراك 6 أشهر بعد الخصم",
+  "gym_month_12_sub_price_b": "سعر اشتراك 12 شهر قبل الخصم",
+  "gym_month_12_sub_price_a": "سعر اشتراك 12 شهر بعد الخصم",
+
+  // Validation messages
+  "please_select_service": "يرجى اختيار نوع الخدمة",
+
+  // Branch validation messages
+
+  "please_enter_whatsapp": "يرجى إدخال رقم الواتساب",
+  "please_set_proper_working_hours": "يرجى تحديد أوقات العمل بشكل صحيح",
+  "at_least_one_open_day_required": "يجب تحديد يوم عمل واحد على الأقل",
+  "for_branch": "للفرع",
+
+  // Success messages
+  "service_created_successfully": "تم إنشاء الخدمة بنجاح",
+  "service_updated_successfully": "تم تحديث الخدمة بنجاح",
 };

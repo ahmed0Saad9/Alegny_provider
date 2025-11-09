@@ -17,124 +17,120 @@ import 'package:Alegny_provider/src/core/services/services_locator.dart';
 class ForgetPasswordController
     extends BaseController<CheckEmailAndSendOtpRepo> {
   @override
-  // TODO: implement repository
   get repository => sl<CheckEmailAndSendOtpRepo>();
+
   TextEditingController pinCodeController = TextEditingController();
   TextEditingController newPasswordController = TextEditingController();
-  TextEditingController currentPasswordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
   StreamController<ErrorAnimationType> errorController =
       StreamController<ErrorAnimationType>();
   final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> resetPasswordGlobalKey = GlobalKey<FormState>();
 
   String _token = '';
-  // String _code = '';
-  String _code = '1111';
-
-  Future<void> sendOtp({bool isResendCode = false}) async {
-    if (globalKey.currentState!.validate()) {
-      globalKey.currentState!.save();
-      showEasyLoading();
-      var result =
-          await repository!.checkEmailAndSendOtp(email: emailController.text);
-      closeEasyLoading();
-      result.when(success: (Response response) {
-        _token = response.data['data']['verify_token'];
-        _code = response.data['data']['code'];
-        if (!isResendCode) {
-          Get.to(() => VerificationForgetPasswordScreen(
-                token: _token,
-                email: emailController.text,
-              ));
-        }
-        successEasyLoading(response.data["message"] ?? "Success");
-      }, failure: (NetworkExceptions error) {
-        actionNetworkExceptions(error);
-      });
-    }
-  }
-
-  void checkCode() {
-    if (pinCodeController.text.length == 4) {
-      // if (_code == pinCodeController.text) {
-      Get.to(() => const NewPasswordScreen());
-      // } else {
-      //   errorEasyLoading("كود خاطء");
-      // }
-    }
-  }
-
-  final GlobalKey<FormState> resetPasswordGlobalKey = GlobalKey<FormState>();
+  String _email = '';
 
   final ValidateOtpAndChangePasswordRepo _validateOtpAndChangePasswordRepo =
       sl<ValidateOtpAndChangePasswordRepo>();
 
-  Future<void> validateOtpAndChangePassword() async {
-    if (resetPasswordGlobalKey.currentState!.validate() &&
-        pinCodeController.text.length == 4) {
-      resetPasswordGlobalKey.currentState!.save();
+  // Send OTP for password reset - FIXED METHOD NAME
+  Future<void> sendOtp({bool isResendCode = false}) async {
+    if (globalKey.currentState!.validate()) {
+      globalKey.currentState!.save();
       showEasyLoading();
-      var result =
-          await _validateOtpAndChangePasswordRepo.validateOtpAndChangePassword(
-        verifyToken: _token,
-        otp: pinCodeController.text,
-        password: newPasswordController.text,
-        passwordConfirmation: confirmPasswordController.text,
-      );
+
+      var result = await repository!.checkEmailAndSendOtp(
+          email: emailController.text); // FIXED: checkEmailAndSendOtp
       closeEasyLoading();
+
       result.when(success: (Response response) {
-        Get.offAll(() => const LoginScreen());
-        successEasyLoading(response.data["message"] ?? "Success");
+        _token = response.data['data']['verify_token'] ?? '';
+        _email = emailController.text;
+
+        if (!isResendCode) {
+          Get.to(() => VerificationForgetPasswordScreen(
+                token: _token,
+                email: _email,
+              ));
+        }
+        successEasyLoading(response.data["message"] ?? "OTP sent successfully");
       }, failure: (NetworkExceptions error) {
         actionNetworkExceptions(error);
       });
     }
   }
 
-  Future<void> checkEmailAndSendOtp({bool isResendCode = false}) async {
-    if (globalKey.currentState!.validate()) {
-      globalKey.currentState!.save();
-      showEasyLoading();
-      // var result =
-      //     await repository!.checkEmailAndSendOtp(email: emailController.text);
-      closeEasyLoading();
-      // result.when(success: (Response response) {
-      // _token = response.data['data']['verify_token'];
-      // _code = response.data['data']['code'];
-      if (!isResendCode) {
-        Get.to(() => const PinCodeScreen(
-              title: 'OTP',
-            ));
-      }
-      // successEasyLoading(response.data["message"] ?? "Success");
-      // showToast(_code);
-      // }, failure: (NetworkExceptions error) {
-      //   actionNetworkExceptions(error);
-      // });
+  // Verify OTP code
+  void checkCode() {
+    if (pinCodeController.text.length == 4) {
+      Get.to(() => NewPasswordScreen(
+            token: _token,
+            email: _email,
+            code: pinCodeController.text,
+          ));
+    } else {
+      errorEasyLoading("Please enter complete OTP code");
     }
   }
 
-  int _duration = 1;
+  // Reset password with OTP - FIXED METHOD CALL
+  Future<void> resetPassword({
+    required String token,
+    required String email,
+    required String code,
+  }) async {
+    if (resetPasswordGlobalKey.currentState!.validate() &&
+        newPasswordController.text == confirmPasswordController.text) {
+      resetPasswordGlobalKey.currentState!.save();
+      showEasyLoading();
 
-  int get duration => _duration;
+      var result =
+          await _validateOtpAndChangePasswordRepo.validateOtpAndChangePassword(
+        email: email,
+        code: code,
+        newPassword: newPasswordController.text,
+        confirmNewPassword: confirmPasswordController.text,
+      );
+
+      closeEasyLoading();
+
+      result.when(success: (Response response) {
+        Get.offAll(() => const LoginScreen());
+        successEasyLoading(
+            response.data["message"] ?? "Password reset successfully");
+      }, failure: (NetworkExceptions error) {
+        actionNetworkExceptions(error);
+      });
+    } else {
+      errorEasyLoading("Passwords do not match");
+    }
+  }
+
+  // Alternative method name that matches your original call
+  Future<void> checkEmailAndSendOtp({bool isResendCode = false}) async {
+    await sendOtp(isResendCode: isResendCode);
+  }
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     _initTextEditing();
   }
 
   void _initTextEditing() {
     pinCodeController = TextEditingController();
-    errorController = StreamController<ErrorAnimationType>();
     newPasswordController = TextEditingController();
-    // passwordController = TextEditingController(text: "123456789");
     confirmPasswordController = TextEditingController();
-    // confirmPasswordController = TextEditingController(text: "123456789");
     emailController = TextEditingController();
-    // emailController = TextEditingController(text: 'api@test.com');
+    errorController = StreamController<ErrorAnimationType>();
+  }
+
+  @override
+  void onClose() {
+    _disposeTextEditing();
+    super.onClose();
   }
 
   void _disposeTextEditing() {
@@ -142,5 +138,6 @@ class ForgetPasswordController
     newPasswordController.dispose();
     confirmPasswordController.dispose();
     emailController.dispose();
+    errorController.close();
   }
 }

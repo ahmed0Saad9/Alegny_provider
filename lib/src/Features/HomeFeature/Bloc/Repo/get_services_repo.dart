@@ -45,7 +45,7 @@ class ServicesRepository with ApiKey {
   Future<ApiResult<ServiceModel>> getServiceDetails(String serviceId) async {
     try {
       final response = await _networkService.get(
-        url: '$uRLGetServices/$serviceId', // Adjust URL based on your API
+        url: uRLEditService(serviceId: serviceId),
         auth: true,
       );
 
@@ -71,7 +71,8 @@ class ServicesRepository with ApiKey {
         });
 
         final response = await _networkService.put(
-          url: '$uRLGetServices/$serviceId', // Adjust URL based on your API
+          url: uRLUpdateServiceService(
+              serviceId: serviceId), // Adjust URL based on your API
           bodyFormData: formData,
           auth: true,
         );
@@ -79,7 +80,7 @@ class ServicesRepository with ApiKey {
         return ApiResult.success(response);
       } else {
         final response = await _networkService.put(
-          url: '$uRLGetServices/$serviceId',
+          url: uRLGetServiceDetailsService(serviceId: serviceId),
           body: serviceData,
           auth: true,
         );
