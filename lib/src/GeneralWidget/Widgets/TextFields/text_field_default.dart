@@ -71,6 +71,7 @@ class TextFieldDefault extends StatefulWidget {
   final double borderWidth;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final Iterable<String>? autoFillHints;
   final SecureType secureType;
 
   final double outerVerticalPadding;
@@ -135,6 +136,7 @@ class TextFieldDefault extends StatefulWidget {
     this.borderWidth = 1.0,
     this.keyboardType,
     this.textInputAction,
+    this.autoFillHints,
     this.secureType = SecureType.never,
     this.outerVerticalPadding = 0.0,
     this.outerHorizontalPadding = 0.0,
@@ -200,6 +202,7 @@ class _TextFieldDefaultState extends State<TextFieldDefault> {
                       : secureState,
 
               keyboardType: widget.keyboardType,
+              autofillHints: widget.autoFillHints,
               textInputAction: widget.textInputAction,
               focusNode: _focusNode,
               onEditingComplete: widget.onComplete,

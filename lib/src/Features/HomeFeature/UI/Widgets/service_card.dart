@@ -7,19 +7,16 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart'
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 
-// Enhanced Service Card Widget
 class ServiceCard extends StatelessWidget {
   final ServiceModel service;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
-  final VoidCallback? onViewDetails;
 
   const ServiceCard({
     super.key,
     required this.service,
     required this.onEdit,
     required this.onDelete,
-    this.onViewDetails,
   });
 
   @override
@@ -132,7 +129,7 @@ class ServiceCard extends StatelessWidget {
                       ),
                       6.ESH(),
 
-                      if (service.serviceType != null) ...[
+                      ...[
                         Row(
                           children: [
                             Container(
@@ -145,10 +142,12 @@ class ServiceCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(8.r),
                               ),
                               child: CustomTextR(
-                                service.serviceType!,
+                                service.serviceType.tr,
                                 fontSize: 14.sp,
                                 color: AppColors.main,
                                 fontWeight: FW.medium,
+                                maxLines: 2,
+                                isOverFlow: true,
                               ),
                             ),
                           ],
@@ -159,7 +158,7 @@ class ServiceCard extends StatelessWidget {
                       // Service Type
                       if (service.specialization != null)
                         CustomTextR(
-                          service.specialization!,
+                          service.specialization!.tr,
                           fontSize: 13.sp,
                           color: Colors.grey[600],
                         ),
@@ -196,9 +195,33 @@ class ServiceCard extends StatelessWidget {
                   ),
                   6.ESH(),
                   ...service.discounts.entries.map(
-                    (e) => ListTile(
-                      title: Text(e.key),
-                      trailing: Text(e.value),
+                    (e) => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomTextL(e.key, fontSize: 14.sp),
+                        if (e.value == true || e.value == 'true')
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                              vertical: 4.h,
+                            ),
+                            padding: EdgeInsets.all(4.sp),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.green,
+                            ),
+                            child: Center(
+                                child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 20.sp,
+                            )),
+                          )
+                        else
+                          CustomTextR(
+                            '${e.value}',
+                            fontSize: 14.sp,
+                          ),
+                      ],
                     ),
                   ),
                 ],
@@ -267,9 +290,9 @@ class ServiceCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          CustomTextR(
-                            '${'view'.tr} ${service.branches.length - 2} ${'more_branches'.tr}',
-                            fontSize: 12.sp,
+                          CustomTextL(
+                            'View_all_branches',
+                            fontSize: 14.sp,
                             color: AppColors.main,
                             fontWeight: FW.medium,
                           ),
@@ -429,16 +452,6 @@ class ServiceCard extends StatelessWidget {
   }
 
   Widget _buildBranchItem(BranchModel branch, bool isArabic) {
-    final days = {
-      'saturday': 'saturday'.tr,
-      'sunday': 'sunday'.tr,
-      'monday': 'monday'.tr,
-      'tuesday': 'tuesday'.tr,
-      'wednesday': 'wednesday'.tr,
-      'thursday': 'thursday'.tr,
-      'friday': 'friday'.tr,
-    };
-
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       padding: EdgeInsets.all(12.w),
@@ -490,7 +503,9 @@ class ServiceCard extends StatelessWidget {
               6.ESW(),
               Expanded(
                 child: CustomTextR(
-                  branch.address,
+                  branch.address.isNotEmpty
+                      ? branch.address
+                      : 'no_address_available'.tr,
                   fontSize: 14.sp,
                   color: Colors.grey[600],
                   maxLines: 3,
@@ -502,49 +517,52 @@ class ServiceCard extends StatelessWidget {
           8.ESH(),
 
           // Contact Info
-          Row(
-            children: [
-              // Phone
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.phone_outlined,
-                      size: 20.sp,
-                      color: Colors.grey[600],
+          ...[
+            Row(
+              children: [
+                // Phone
+                ...[
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.phone_outlined,
+                          size: 18.sp,
+                          color: Colors.grey[600],
+                        ),
+                        6.ESW(),
+                        Expanded(
+                          child: CustomTextR(
+                            branch.phone,
+                            fontSize: 13.sp,
+                            color: Colors.grey[600],
+                            maxLines: 1,
+                            isOverFlow: true,
+                          ),
+                        ),
+                      ],
                     ),
-                    4.ESW(),
-                    Expanded(
-                      child: CustomTextR(
-                        branch.phone,
-                        fontSize: 14.sp,
-                        color: Colors.grey[600],
-                        maxLines: 1,
-                        isOverFlow: true,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  ),
+                ],
 
-              8.ESW(),
+                12.ESW(),
 
-              // WhatsApp (if available)
-              if (branch.whatsapp.isNotEmpty)
+                // WhatsApp
+
                 Expanded(
                   child: Row(
                     children: [
                       IconSvg(
                         'Whatsapp',
-                        size: 20.sp,
+                        size: 18.sp,
                         boxFit: BoxFit.contain,
                         color: Colors.green[600],
                       ),
-                      4.ESW(),
+                      6.ESW(),
                       Expanded(
                         child: CustomTextR(
                           branch.whatsapp,
-                          fontSize: 14.sp,
+                          fontSize: 13.sp,
                           color: Colors.green[600],
                           maxLines: 1,
                           isOverFlow: true,
@@ -553,34 +571,37 @@ class ServiceCard extends StatelessWidget {
                     ],
                   ),
                 ),
-            ],
-          ),
+              ],
+            ),
+            8.ESH(),
+          ],
 
-          8.ESH(),
-
-          // Working Hours Section
+          // Working Hours Section (Simplified - no today's hours preview)
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    size: 20.sp,
-                    color: AppColors.main,
-                  ),
-                  6.ESW(),
-                  CustomTextL(
-                    'working_hours'.tr,
-                    fontSize: 14.sp,
-                    fontWeight: FW.medium,
-                    color: Colors.grey[800],
-                  ),
-                ],
+              Icon(
+                Icons.access_time,
+                size: 18.sp,
+                color: AppColors.main,
+              ),
+              6.ESW(),
+              CustomTextL(
+                'working_hours'.tr,
+                fontSize: 13.sp,
+                fontWeight: FW.medium,
+                color: Colors.grey[800],
               ),
               const Spacer(),
               InkWell(
-                onTap: () => _showBranchWorkingHours(branch, days),
+                onTap: () => _showBranchWorkingHours(branch, {
+                  'saturday': 'saturday'.tr,
+                  'sunday': 'sunday'.tr,
+                  'monday': 'monday'.tr,
+                  'tuesday': 'tuesday'.tr,
+                  'wednesday': 'wednesday'.tr,
+                  'thursday': 'thursday'.tr,
+                  'friday': 'friday'.tr,
+                }),
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
@@ -592,7 +613,7 @@ class ServiceCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       CustomTextL(
-                        'View_all_hours',
+                        'view_all'.tr,
                         fontSize: 12.sp,
                         color: AppColors.main,
                         fontWeight: FW.medium,
@@ -615,6 +636,9 @@ class ServiceCard extends StatelessWidget {
   }
 
   void _showBranchWorkingHours(BranchModel branch, Map<String, String> days) {
+    final formattedHours = branch.getFormattedWorkingHours();
+    final bool isArabic = Get.locale?.languageCode == 'ar';
+
     Get.bottomSheet(
       Container(
         decoration: BoxDecoration(
@@ -624,86 +648,134 @@ class ServiceCard extends StatelessWidget {
             topRight: Radius.circular(25.r),
           ),
         ),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            12.ESH(),
+            // Drag indicator
             Container(
-              width: 40.w,
-              height: 4.h,
+              width: 50.w,
+              height: 5.h,
               decoration: BoxDecoration(
                 color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(2.r),
-              ),
-            ),
-            20.ESH(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    color: AppColors.main,
-                    size: 24.sp,
-                  ),
-                  8.ESW(),
-                  CustomTextL(
-                    'working_hours'.tr,
-                    fontSize: 18.sp,
-                    fontWeight: FW.bold,
-                  ),
-                ],
+                borderRadius: BorderRadius.circular(10.r),
               ),
             ),
             16.ESH(),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: CustomTextR(
-                '${branch.governorate} - ${branch.city}',
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-                textAlign: TextAlign.center,
-              ),
+
+            // Title
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.access_time, color: AppColors.main, size: 22.sp),
+                6.ESW(),
+                CustomTextL(
+                  'working_hours'.tr,
+                  fontSize: 18.sp,
+                  fontWeight: FW.bold,
+                ),
+              ],
             ),
-            20.ESH(),
-            Flexible(
+            8.ESH(),
+
+            // Location
+            CustomTextR(
+              '${branch.governorate} - ${branch.city}',
+              fontSize: 14.sp,
+              color: Colors.grey[600],
+              textAlign: TextAlign.center,
+            ),
+
+            // Contact info in the header
+            if (branch.phone.isNotEmpty || branch.whatsapp.isNotEmpty) ...[
+              8.ESH(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (branch.phone.isNotEmpty) ...[
+                    Icon(Icons.phone, size: 16.sp, color: Colors.grey[600]),
+                    4.ESW(),
+                    CustomTextR(
+                      branch.phone,
+                      fontSize: 12.sp,
+                      color: Colors.grey[600],
+                    ),
+                  ],
+                  if (branch.phone.isNotEmpty && branch.whatsapp.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w),
+                      child: Container(
+                        width: 4.w,
+                        height: 4.w,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[400],
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    ),
+                  if (branch.whatsapp.isNotEmpty) ...[
+                    IconSvg(
+                      'Whatsapp',
+                      size: 16.sp,
+                      color: Colors.green[600],
+                    ),
+                    4.ESW(),
+                    CustomTextR(
+                      branch.whatsapp,
+                      fontSize: 12.sp,
+                      color: Colors.green[600],
+                    ),
+                  ],
+                ],
+              ),
+            ],
+
+            16.ESH(),
+
+            // Working hours list
+            Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                physics: const BouncingScrollPhysics(),
                 itemCount: days.length,
                 itemBuilder: (context, index) {
                   final dayKey = days.keys.elementAt(index);
                   final dayLabel = days.values.elementAt(index);
-                  final hours = branch.getWorkingHoursForDay(dayKey);
+                  final hours = _formatWorkingHoursForDisplay(
+                      formattedHours[dayKey]!, context);
+                  final isClosed = _isClosed(formattedHours[dayKey]!);
 
                   return Container(
                     margin: EdgeInsets.only(bottom: 8.h),
                     padding:
-                        EdgeInsets.symmetric(horizontal: 12.w, vertical: 10.h),
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
                     decoration: BoxDecoration(
-                      color: Colors.grey[50],
-                      borderRadius: BorderRadius.circular(10.r),
-                      border: Border.all(color: Colors.grey[200]!),
+                      color: isClosed
+                          ? Colors.grey[50]
+                          : Colors.green[50]!.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color:
+                            isClosed ? Colors.grey[200]! : Colors.green[100]!,
+                      ),
                     ),
                     child: Row(
                       children: [
                         Expanded(
-                          flex: 2,
                           child: CustomTextR(
                             dayLabel,
-                            fontSize: 13.sp,
+                            fontSize: 14.sp,
                             fontWeight: FW.medium,
                             color: Colors.grey[800],
                           ),
                         ),
                         Expanded(
-                          flex: 3,
                           child: CustomTextR(
                             hours,
-                            fontSize: 13.sp,
-                            color: hours.toLowerCase().contains('closed')
+                            fontSize: 14.sp,
+                            color: isClosed
                                 ? Colors.red[600]!
-                                : Colors.green[600]!,
+                                : Colors.green[700]!,
                             fontWeight: FW.medium,
                             textAlign: TextAlign.end,
                           ),
@@ -722,25 +794,51 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
+  String _formatWorkingHoursForDisplay(String hours, BuildContext context) {
+    final bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    if (_isClosed(hours)) {
+      return isArabic ? 'مغلق' : 'Closed';
+    }
+
+    String cleaned = hours.trim();
+
+    // Handle language-specific formatting
+    if (isArabic) {
+      // Format for Arabic
+      cleaned = cleaned.replaceAll('AM', 'ص');
+      cleaned = cleaned.replaceAll('PM', 'م');
+      cleaned = cleaned.replaceAll('a', 'ص');
+      cleaned = cleaned.replaceAll('p', 'م');
+    } else {
+      // Format for English
+      cleaned = cleaned.replaceAll('ص', 'AM');
+      cleaned = cleaned.replaceAll('م', 'PM');
+      // Ensure proper AM/PM formatting
+      cleaned = cleaned.replaceAll(
+          RegExp(r'(\d{1,2}:\d{2})\s*([ap])'), r'$1 $2m'.toUpperCase());
+    }
+
+    // Clean up spacing
+    cleaned = cleaned.replaceAll('  ', ' ');
+
+    return cleaned;
+  }
+
+  bool _isClosed(String hours) {
+    final bool isArabic = Get.locale?.languageCode == 'ar';
+    final closedIndicators = ['مغلق', 'قام', 'closed', 'close', 'مقفول'];
+
+    return hours.isEmpty ||
+        closedIndicators.any((indicator) =>
+            hours.toLowerCase().contains(indicator.toLowerCase()));
+  }
+
   Widget _buildActionButtons(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(12.w),
       child: Row(
         children: [
-          // View Details Button (for approved services)
-          if (service.status == ServiceStatus.approved &&
-              onViewDetails != null) ...[
-            Expanded(
-              child: _buildActionButton(
-                icon: Icons.remove_red_eye_outlined,
-                label: 'view_details',
-                color: Colors.blue[600]!,
-                onTap: onViewDetails!,
-              ),
-            ),
-            12.ESW(),
-          ],
-
           // Edit Button (allowed for ALL statuses)
           Expanded(
             child: _buildActionButton(

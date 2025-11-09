@@ -13,9 +13,8 @@ mixin ApiKey {
   final String uRLRegister = "$apiBaseUrl${providerAuth}register";
   final String uRLLogout = "$apiBaseUrl${providerAuth}logout";
   final String uRLChangePassword = "$apiBaseUrl${providerAuth}change-password";
-  final String uRLGetMyAccountData = "$apiBaseUrl${account}my-account";
-  final String uRLUpdateMyAccountData =
-      "$apiBaseUrl${account}my-account/update";
+  final String uRLGetMyAccountData = "$apiBaseUrl${providerAuth}profile";
+  final String uRLUpdateMyAccountData = "$apiBaseUrl${providerAuth}profile";
   final String uRLVerifyAccount =
       "$apiBaseUrl${account}my-account/verify-account";
   final String uRLSendOTP = "$apiBaseUrl${account}send-verify-otp";
@@ -38,19 +37,24 @@ mixin ApiKey {
       "$apiBaseUrl${student}Profile/$universityIDCard";
 
   // app
-  String uRLGetAllSubjects(
-          {required int academicYear, required String search}) =>
-      "$apiBaseUrl${general}subjects?academicYear=$academicYear&search=$search";
 
-  String uRLGetChapters({required int? subjectID}) =>
-      "${apiBaseUrl}upload/subjects/$subjectID/chapters";
-
-  String uRLGetQuestions({required int? chaptersID}) =>
-      "${apiBaseUrl}upload/chapters/$chaptersID/questions";
-
-  String uRLUploadedPdfs({required String status, required int studentID}) =>
-      "${apiBaseUrl}StudentQuiz/$student$studentID/pdfs?status=$status";
-  String uRLGetCustomQuestions({required int fileId, required int studentId}) =>
-      "${apiBaseUrl}StudentQuiz/student/$studentId/uploads/$fileId/quizzes";
-  final String uRLUploadPdf = "${apiBaseUrl}UploadStudent/upload-pdf";
+  final String uRLAddService = "${apiBaseUrl}services";
+  final String uRLGetServices = "${apiBaseUrl}services/";
+  String uRLDeleteService({required String serviceId}) =>
+      "${apiBaseUrl}services/$serviceId";
+  // String uRLGetAllSubjects(
+  //         {required int academicYear, required String search}) =>
+  //     "$apiBaseUrl${general}subjects?academicYear=$academicYear&search=$search";
+  //
+  // String uRLGetChapters({required int? subjectID}) =>
+  //     "${apiBaseUrl}upload/subjects/$subjectID/chapters";
+  //
+  // String uRLGetQuestions({required int? chaptersID}) =>
+  //     "${apiBaseUrl}upload/chapters/$chaptersID/questions";
+  //
+  // String uRLUploadedPdfs({required String status, required int studentID}) =>
+  //     "${apiBaseUrl}StudentQuiz/$student$studentID/pdfs?status=$status";
+  // String uRLGetCustomQuestions({required int fileId, required int studentId}) =>
+  //     "${apiBaseUrl}StudentQuiz/student/$studentId/uploads/$fileId/quizzes";
+  // final String uRLUploadPdf = "${apiBaseUrl}UploadStudent/upload-pdf";
 }

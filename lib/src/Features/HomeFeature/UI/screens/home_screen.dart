@@ -1,4 +1,5 @@
 import 'package:Alegny_provider/src/Features/AddServiceFeature/UI/screens/add_service_screen.dart';
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/controller/services_controller.dart';
 import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_model.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/sizes.dart';
@@ -8,6 +9,8 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/Appbars/app_bars.dart'
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/base_scaffold.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 
@@ -18,15 +21,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<ServiceModel> services = [];
+    // List<ServiceModel> services = [];
     // List<ServiceModel> services = [
     //   ServiceModel(
     //     id: "1",
     //     serviceName: "Dr. Ahmed Cardiology Center",
     //     serviceType: "human_doctor",
-    //     specialization: "Cardiology",
+    //     specialization: "cardiology",
     //     imageUrl: "https://example.com/images/cardiology-center.jpg",
-    //     discounts: {"bloodTest": "20%", "xray": "15%"},
+    //     discounts: {
+    //       "consultation_price_before_discount": "500",
+    //       "consultation_price_after_discount": "400"
+    //     },
     //     status: ServiceStatus.pending,
     //     branches: [
     //       BranchModel(
@@ -107,76 +113,103 @@ class HomeScreen extends StatelessWidget {
     //       ),
     //     ],
     //   ),
+    //   ServiceModel(
+    //     id: "4",
+    //     serviceName: "Advanced Medical Lab",
+    //     serviceType: "lab",
+    //     specialization: null,
+    //     imageUrl: "https://example.com/images/medical-lab.jpg",
+    //     discounts: {},
+    //     status: ServiceStatus.rejected,
+    //     branches: [
+    //       BranchModel(
+    //         governorate: "الدقهلية",
+    //         city: "المنصورة",
+    //         address: "شارع الجمهورية، المنصورة",
+    //         phone: "01234567896",
+    //         whatsapp: "01234567896",
+    //         workingHours: {
+    //           'saturday': '7:00 AM - 10:00 PM',
+    //           'sunday': '7:00 AM - 10:00 PM',
+    //           'monday': '7:00 AM - 10:00 PM',
+    //           'tuesday': '7:00 AM - 10:00 PM',
+    //           'wednesday': '7:00 AM - 10:00 PM',
+    //           'thursday': '7:00 AM - 10:00 PM',
+    //           'friday': '7:00 AM - 10:00 PM',
+    //         },
+    //       ),
+    //     ],
+    //   ),
     // ];
     return BaseScaffold(
       appBar: AppBars.appBarHome(
         bNBIndex: 0,
       ),
-      body: Padding(
-        padding: AppPadding.paddingScreenSH16SV16,
-        child: Stack(
-          children: [
-            services.isEmpty
-                ? _buildEmptyState()
-                : Padding(
-                    padding: EdgeInsets.only(bottom: 60.h),
-                    child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: services.length,
-                      itemBuilder: (context, index) {
-                        return ServiceCard(
-                          service: services[index],
-                          onEdit: () {
-                            // Navigate to edit service screen
-                            print('Edit service: ${services[index].id}');
-                            // Get.to(() => EditServiceScreen(service: services[index]));
-                          },
-                          onDelete: () {
-                            // Call delete API
-                            print('Delete service: ${services[index].id}');
-                            // Your delete logic here
-                            Get.snackbar(
-                              'success'.tr,
-                              'service_deleted_successfully'.tr,
-                              backgroundColor: Colors.green,
-                              colorText: Colors.white,
+      body: GetBuilder<ServicesController>(
+        init: ServicesController(),
+        builder: (controller) => Padding(
+          padding: AppPadding.paddingScreenSH16SV16,
+          child: Stack(
+            children: [
+              controller.services.isEmpty
+                  ? RefreshIndicator(
+                      onRefresh: () async => controller.fetchServices(),
+                      child: _buildEmptyState())
+                  : Padding(
+                      padding: EdgeInsets.only(bottom: 60.h),
+                      child: RefreshIndicator(
+                        onRefresh: () async => controller.fetchServices(),
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: controller.services.length,
+                          itemBuilder: (context, index) {
+                            return ServiceCard(
+                              service: controller.services[index],
+                              onEdit: () {
+                                // Navigate to edit service screen
+                                print(
+                                    'Edit service: ${controller.services[index].id}');
+                                Get.to(() => AddServiceScreen(
+                                    serviceToEdit: controller.services[index]));
+                              },
+                              onDelete: () {
+                                // Call delete API with confirmation
+                                controller.deleteService(
+                                    controller.services[index].id);
+                              },
                             );
                           },
-                          onViewDetails: () {
-                            print(
-                                'View details: ${services[index].serviceName}');
-                          },
-                        );
-                      },
-                    ),
-                  ),
-            Align(
-              alignment: AlignmentDirectional.bottomStart,
-              child: Row(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(16.r),
-                        color: AppColors.main),
-                    child: IconButton(
-                      onPressed: () {
-                        Get.to(() => const AddServiceScreen());
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: AppColors.iconWight,
+                        ),
                       ),
                     ),
-                  ),
-                  10.ESW(),
-                  CustomTextL(
-                    'Add_Service',
-                    fontSize: 18.sp,
-                  ),
-                ],
+              Align(
+                alignment: AlignmentDirectional.bottomStart,
+                child: Row(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16.r),
+                          color: AppColors.main),
+                      child: IconButton(
+                        onPressed: () {
+                          Get.to(() => const AddServiceScreen());
+                        },
+                        icon: const Icon(
+                          Icons.add,
+                          color: AppColors.iconWight,
+                        ),
+                      ),
+                    ),
+                    10.ESW(),
+                    CustomTextL(
+                      'Add_Service',
+                      fontSize: 18.sp,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

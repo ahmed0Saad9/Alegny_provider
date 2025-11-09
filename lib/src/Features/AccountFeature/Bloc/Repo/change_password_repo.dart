@@ -16,9 +16,6 @@ class ChangePasswordRepository with ApiKey {
       Response response = await _networkService.post(
           url: uRLChangePassword,
           auth: true,
-          headers: {
-            'Authorization': 'Bearer ${sl<GetStorage>().read('token')}'
-          },
           body: resetPasswordParams.toMap());
       return ApiResult.success(response);
     } catch (e) {

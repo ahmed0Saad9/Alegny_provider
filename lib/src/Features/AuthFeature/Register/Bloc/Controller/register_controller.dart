@@ -1,4 +1,6 @@
+import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Model/user_model.dart';
 import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
+import 'package:Alegny_provider/src/core/utils/storage_util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
@@ -24,6 +26,7 @@ class RegisterController extends BaseController<RegisterRepository> {
   late TextEditingController passwordController;
   late TextEditingController confirmPasswordController;
   late TextEditingController phoneController;
+  UserModel? _userModel;
 
   void createAccount() async {
     if (registerGlobalKey.currentState!.validate()) {
@@ -40,6 +43,8 @@ class RegisterController extends BaseController<RegisterRepository> {
       );
       closeEasyLoading();
       result.when(success: (Response response) {
+        _userModel = UserModel.fromJson(response.data);
+        LocalStorageCubit().storeUserModel(_userModel!);
         Get.off(
           () => const BaseBNBScreen(),
         );

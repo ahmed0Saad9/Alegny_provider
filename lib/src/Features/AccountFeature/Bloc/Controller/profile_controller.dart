@@ -18,8 +18,9 @@ class ProfileController extends BaseController<ProfileRepo> {
   // TODO: implement repository
   get repository => sl<ProfileRepo>();
 
+  String? _imageLocal;
+  String? get imageLocal => _imageLocal;
   MediaType? _image;
-
   MediaType? get image => _image;
 
   void setImageFromGallery() async {

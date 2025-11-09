@@ -259,7 +259,7 @@ class AppBars {
                   child: AvatarWidget(
                     height: 45,
                     width: 45,
-                    image: sl<GetStorage>().read("UserImage"),
+                    image: sl<GetStorage>().read("userImage"),
                   ),
                 ),
               ),
@@ -278,7 +278,7 @@ class AppBars {
                     // 2.ESH(),
                     Expanded(
                       child: CustomTextL(
-                        ', ${sl<GetStorage>().read("UserName") ?? 'Ahmed Saad'}',
+                        ', ${sl<GetStorage>().read('firstName') ?? 'user'}',
                         fontSize: 20.sp,
                         color: AppColors.titleWhite,
                         fontWeight: FW.bold,

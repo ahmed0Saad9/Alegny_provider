@@ -112,7 +112,7 @@ class EditProfileTFBody extends StatelessWidget {
                   child: TextFieldDefault(
                     label: 'Family_Name',
                     prefixIconUrl: 'Profile',
-                    controller: controller.familyNameController,
+                    controller: controller.lastNameController,
                     validation: nameValidator,
                     onComplete: () {
                       node.nextFocus();
@@ -121,21 +121,21 @@ class EditProfileTFBody extends StatelessWidget {
                 ),
               ],
             ),
-            24.ESH(),
-            TextFieldDefault(
-              label: 'Email',
-              prefixIconUrl: 'Email',
-              controller: controller.emailController,
-              validation: emailValidator,
-              keyboardType: TextInputType.emailAddress,
-              onComplete: () {
-                node.nextFocus();
-              },
-            ),
+            // 24.ESH(),
+            // TextFieldDefault(
+            //   label: 'Email',
+            //   prefixIconUrl: 'Email',
+            //   controller: controller.emailController,
+            //   validation: emailValidator,
+            //   keyboardType: TextInputType.emailAddress,
+            //   onComplete: () {
+            //     node.nextFocus();
+            //   },
+            // ),
             24.ESH(),
             TextFieldPhone(
               node: node,
-              controller: controller.phoneController!,
+              controller: controller.phoneController,
               onCountryChanged: (p0) {},
               initialCountryCode: '+20',
             ),

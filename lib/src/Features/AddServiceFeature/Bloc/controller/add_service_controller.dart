@@ -1,15 +1,28 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/Model/add_service_model.dart';
+import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/controller/services_controller.dart';
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_model.dart';
 import 'package:Alegny_provider/src/core/constants/app_assets.dart';
+import 'package:Alegny_provider/src/core/services/Base/base_controller.dart';
+import 'package:Alegny_provider/src/core/services/Network/network_exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AddServiceController extends GetxController {
+import '../../../../core/services/services_locator.dart';
+import '../repo/add_service_repo.dart';
+
+class AddServiceController extends BaseController<CreateServiceRepository> {
+  @override
+  get repository => sl<CreateServiceRepository>();
+  final ServiceModel? serviceToEdit;
   final RxInt currentStep = 0.obs;
+  final bool isEditingMode;
 
   //first step controllers
   final TextEditingController serviceNameController = TextEditingController();
@@ -183,10 +196,29 @@ class AddServiceController extends GetxController {
 
   void setSelectedService(String? service) {
     selectedService.value = service;
+    // Reset specialization when service type changes
+    selectedSpecialization.value = null;
     update();
   }
 
-  // Egyptian governorates and cities data
+  void setSelectedSpecialization(String? specialization) {
+    selectedSpecialization.value = specialization;
+    update();
+  }
+
+  List<String> getSpecializationsForService(String? serviceType) {
+    if (serviceType == null) return [];
+
+    if (serviceType == 'human_hospital' || serviceType == 'human_pharmacy') {
+      // Return list with "جميع التخصصات" first, then the rest
+      return ['all_specializations', ...specializations];
+    } else if (serviceType == 'human_doctor') {
+      // Return original list for human doctor (without "جميع التخصصات")
+      return List.from(specializations);
+    }
+    return [];
+  }
+
   static const List<String> governorates = [
     'القاهرة',
     'الجيزة',
@@ -216,6 +248,14 @@ class AddServiceController extends GetxController {
     'شمال سيناء',
     'سوهاج',
   ];
+
+  // Helper method to get unique governorates
+  List<String> get uniqueGovernorates {
+    final uniqueList = governorates.toSet().toList();
+    // Sort to maintain consistent order
+    uniqueList.sort();
+    return uniqueList;
+  }
 
   static const Map<String, List<String>> citiesByGovernorate = {
     'القاهرة': [
@@ -260,15 +300,7 @@ class AddServiceController extends GetxController {
     final whatsappController = TextEditingController();
     final selectedCity = ''.obs;
     final selectedGovernorate = ''.obs;
-    final workingHours = <String, String>{
-      'saturday': '',
-      'sunday': '',
-      'monday': '',
-      'tuesday': '',
-      'wednesday': '',
-      'thursday': '',
-      'friday': 'closed'.tr,
-    };
+    final workingHours = <String, String>{}.obs;
 
     branchAddressControllers.add(addressController);
     branchPhoneControllers.add(phoneController);
@@ -317,13 +349,17 @@ class AddServiceController extends GetxController {
 
   void updateBranchData(int index) {
     if (index < branches.length) {
+      final workingHours = branchWorkingHours[index] ?? <String, String>{};
+      final cleanedWorkingHours = Map<String, String>.from(workingHours)
+        ..removeWhere((key, value) => value.isEmpty);
+
       final updatedBranch = Branch(
-        address: branchAddressControllers[index].text,
-        phoneNumber: branchPhoneControllers[index].text,
-        whatsAppNumber: branchWhatsappControllers[index].text,
+        address: branchAddressControllers[index].text.trim(),
+        phoneNumber: branchPhoneControllers[index].text.trim(),
+        whatsAppNumber: branchWhatsappControllers[index].text.trim(),
         selectedGovernorate: branchSelectedGovernorates[index].value,
         selectedCity: branchSelectedCities[index].value,
-        workingHours: Map.from(branchWorkingHours[index]),
+        workingHours: cleanedWorkingHours,
         latitude: branchLatitudes[index].value,
         longitude: branchLongitudes[index].value,
       );
@@ -343,155 +379,251 @@ class AddServiceController extends GetxController {
   }
 
   void updateAllBranches() {
+    print('=== DEBUG UPDATE ALL BRANCHES ===');
     for (int i = 0; i < branches.length; i++) {
-      updateBranchData(i);
+      print('Updating branch $i:');
+      print('  Address controller: "${branchAddressControllers[i].text}"');
+      print('  Phone controller: "${branchPhoneControllers[i].text}"');
+      print('  WhatsApp controller: "${branchWhatsappControllers[i].text}"');
+
+      // Ensure working hours is not null and is properly formatted
+      final workingHours = branchWorkingHours[i] ?? <String, String>{};
+
+      // Clean working hours - remove empty entries
+      final cleanedWorkingHours = Map<String, String>.from(workingHours)
+        ..removeWhere((key, value) => value.isEmpty);
+
+      final updatedBranch = Branch(
+        address: branchAddressControllers[i].text.trim(),
+        phoneNumber:
+            branchPhoneControllers[i].text.trim(), // Make sure this is set
+        whatsAppNumber:
+            branchWhatsappControllers[i].text.trim(), // Make sure this is set
+        selectedGovernorate: branchSelectedGovernorates[i].value,
+        selectedCity: branchSelectedCities[i].value,
+        workingHours: cleanedWorkingHours,
+        latitude: branchLatitudes[i].value,
+        longitude: branchLongitudes[i].value,
+      );
+
+      branches[i] = updatedBranch;
+
+      print('  Updated branch phone: "${branches[i].phoneNumber}"');
+      print('  Updated branch whatsapp: "${branches[i].whatsAppNumber}"');
     }
+    print('=================================');
+    update();
   }
 
   final List<bool Function()> _stepValidators = [];
 
-  AddServiceController() {
+  AddServiceController({this.serviceToEdit})
+      : isEditingMode = serviceToEdit != null {
     _initializeValidators();
     addBranch(); // Create first branch
+    if (isEditingMode) {
+      _populateFormForEditing();
+    }
+  }
+  void _populateFormForEditing() {
+    if (serviceToEdit == null) return;
+
+    final service = serviceToEdit!;
+
+    // Step 1: Basic Information
+    serviceNameController.text = service.serviceName;
+    selectedService.value = service.serviceType;
+    selectedSpecialization.value = service.specialization;
+
+    // TODO: Load image if available - you might need to download and cache it
+    // serviceImage.value = ...
+
+    // Clear existing branches and populate with service branches
+    _clearAllBranches();
+    for (final branch in service.branches) {
+      _addBranchFromModel(branch);
+    }
+
+    // Step 2: Discounts and Pricing
+    _populateDiscountsFromModel(service);
+
+    update();
   }
 
-  void _initializeValidators() {
-    _stepValidators
-      ..add(_validateStep1)
-      ..add(_validateStep2)
-      ..add(_validateStep3);
+  void _clearAllBranches() {
+    // Dispose all existing branch controllers
+    for (var controller in branchAddressControllers) {
+      controller.dispose();
+    }
+    for (var controller in branchPhoneControllers) {
+      controller.dispose();
+    }
+    for (var controller in branchWhatsappControllers) {
+      controller.dispose();
+    }
+
+    // Clear all lists
+    branchAddressControllers.clear();
+    branchPhoneControllers.clear();
+    branchWhatsappControllers.clear();
+    branchSelectedCities.clear();
+    branchSelectedGovernorates.clear();
+    branchWorkingHours.clear();
+    branchLatitudes.clear();
+    branchLongitudes.clear();
+    branches.clear();
   }
 
-  bool _validateStep1() {
-    if (serviceImage.value == null) {
-      _showError('please_upload_picture'.tr);
-      return false;
-    }
-    if (selectedService.value == null) {
-      _showError('please_select_service'.tr);
-      return false;
-    }
-    if (selectedService.value == 'human_doctor' ||
-        selectedService.value == 'human_hospital') {
-      if (selectedSpecialization.value == null) {
-        _showError('please_select_specialization'.tr);
-        return false;
-      }
-    }
-    if (serviceNameController.text.trim().isEmpty) {
-      _showError('please_enter_service_name'.tr);
-      return false;
-    }
-    return true;
-  }
+  void _addBranchFromModel(BranchModel branchModel) {
+    final addressController = TextEditingController(text: branchModel.address);
+    final phoneController = TextEditingController(text: branchModel.phone);
+    final whatsappController =
+        TextEditingController(text: branchModel.whatsapp);
+    final selectedCity = branchModel.city.obs;
+    final selectedGovernorate = branchModel.governorate.obs;
+    final workingHours = Map<String, String>.from(branchModel.workingHours);
 
-  bool _validateStep2() {
-    return true;
-  }
+    branchAddressControllers.add(addressController);
+    branchPhoneControllers.add(phoneController);
+    branchWhatsappControllers.add(whatsappController);
+    branchSelectedCities.add(selectedCity);
+    branchSelectedGovernorates.add(selectedGovernorate);
+    branchWorkingHours.add(workingHours);
+    branchLatitudes.add(Rxn<double>());
+    branchLongitudes.add(Rxn<double>());
 
-  bool _validateStep3() {
-    for (int i = 0; i < branches.length; i++) {
-      // Validate using the branch-specific controllers and Rx values
-      if (branchSelectedGovernorates[i].value.isEmpty) {
-        _showError(
-            '${'please_select_governorate'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
-      }
-
-      if (branchSelectedCities[i].value.isEmpty) {
-        _showError('${'please_select_city'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
-      }
-
-      if (branchAddressControllers[i].text.trim().isEmpty) {
-        _showError('${'please_enter_address'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
-      }
-
-      if (branchPhoneControllers[i].text.trim().isEmpty) {
-        _showError(
-            '${'please_enter_phone_number'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
-      }
-
-      if (branchWhatsappControllers[i].text.trim().isEmpty) {
-        _showError(
-            '${'please_enter_whatsapp_number'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
-      }
-    }
-    return true;
-  }
-
-  void _showError(String message) {
-    Get.snackbar(
-      'error'.tr,
-      message,
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
+    final newBranch = Branch(
+      address: branchModel.address,
+      phoneNumber: branchModel.phone,
+      whatsAppNumber: branchModel.whatsapp,
+      workingHours: workingHours,
+      selectedCity: branchModel.city,
+      selectedGovernorate: branchModel.governorate,
+      latitude: null, // You might want to store these in your BranchModel
+      longitude: null,
     );
+
+    branches.add(newBranch);
   }
 
-  void nextStep() {
-    if (currentStep.value < 2) {
-      if (_stepValidators[currentStep.value]()) {
-        currentStep.value++;
-        update();
-      }
-    } else {
-      submitService();
+  void _populateDiscountsFromModel(ServiceModel service) {
+    final discounts = service.discounts;
+
+    // Gym fields
+    if (service.serviceType == 'gym') {
+      gymMonthSubPriceA.text =
+          discounts['gym_month_sub_price_a']?.toString() ?? '';
+      gymMonthSubPriceB.text =
+          discounts['gym_month_sub_price_b']?.toString() ?? '';
+      gymMonth3SubPriceA.text =
+          discounts['gym_month_3_sub_price_a']?.toString() ?? '';
+      gymMonth3SubPriceB.text =
+          discounts['gym_month_3_sub_price_b']?.toString() ?? '';
+      gymMonth6SubPriceA.text =
+          discounts['gym_month_6_sub_price_a']?.toString() ?? '';
+      gymMonth6SubPriceB.text =
+          discounts['gym_month_6_sub_price_b']?.toString() ?? '';
+      gymMonth12SubPriceA.text =
+          discounts['gym_month_12_sub_price_a']?.toString() ?? '';
+      gymMonth12SubPriceB.text =
+          discounts['gym_month_12_sub_price_b']?.toString() ?? '';
+      discountOther.text = discounts['other_discount']?.toString() ?? '';
     }
-  }
 
-  void previousStep() {
-    if (currentStep.value > 0) {
-      currentStep.value--;
-      update();
+    // Human Doctor fields
+    if (service.serviceType == 'human_doctor') {
+      humanDoctorPriceBefore.text =
+          discounts['consultation_price_before']?.toString() ?? '';
+      humanDoctorPriceAfter.text =
+          discounts['consultation_price_after']?.toString() ?? '';
+      humanDoctorIsHome.value = discounts['is_home_visit'] == 'true';
+      humanDoctorIsCard.value = discounts['home_discount'] == 'true';
     }
-  }
 
-  Future<void> pickImageFromGallery() async {
-    try {
-      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        serviceImage.value = File(image.path);
-        update();
-      }
-    } on PlatformException catch (e) {
-      debugPrint("Failed to pick image: $e");
-      _showError('failed_to_pick_image'.tr);
+    // Veterinary Doctor fields
+    if (service.serviceType == 'veterinarian') {
+      veterinaryDoctorPriceBefore.text =
+          discounts['consultation_price_before']?.toString() ?? '';
+      veterinaryDoctorPriceAfter.text =
+          discounts['consultation_price_after']?.toString() ?? '';
+      veterinaryDoctorIsHome.value = discounts['is_home_visit'] == 'true';
+      veterinaryDoctorIsCard.value = discounts['home_discount'] == 'true';
     }
-  }
 
-  // Method to open social media apps
-  Future<void> openSocialMediaApp(String url, String platform) async {
-    try {
-      final Uri uri = Uri.parse(url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri, mode: LaunchMode.externalApplication);
-      } else {
-        Get.snackbar(
-          'error'.tr,
-          '${'cannot_open'.tr} $platform',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-        );
-      }
-    } catch (e) {
-      Get.snackbar(
-        'error'.tr,
-        'error_occurred'.tr,
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+    // Hospital fields (Human & Veterinary)
+    if (service.serviceType == 'human_hospital' ||
+        service.serviceType == 'veterinary_hospital') {
+      humanHospitalDiscountExaminations.text =
+          discounts['examinations_discount']?.toString() ?? '';
+      humanHospitalDiscountMedicalTest.text =
+          discounts['medical_tests_discount']?.toString() ?? '';
+      humanHospitalDiscountXRay.text =
+          discounts['xray_discount']?.toString() ?? '';
+      humanHospitalDiscountMedicines.text =
+          discounts['medicines_discount']?.toString() ?? '';
     }
+
+    // Pharmacy fields (Human & Veterinary)
+    if (service.serviceType == 'human_pharmacy' ||
+        service.serviceType == 'veterinary_pharmacy') {
+      humanPharmacyDiscountLocalMedicine.text =
+          discounts['local_medicines_discount']?.toString() ?? '';
+      humanPharmacyDiscountImportedMedicine.text =
+          discounts['imported_medicines_discount']?.toString() ?? '';
+      humanPharmacyDiscountMedicalSupplies.text =
+          discounts['medical_supplies_discount']?.toString() ?? '';
+      humanPharmacyIsHome.value = discounts['is_home_delivery'] == 'true';
+    }
+
+    // Lab Test fields
+    if (service.serviceType == 'lab') {
+      labTestDiscountAllTypes.text =
+          discounts['all_tests_discount']?.toString() ?? '';
+      labTestIsHome.value = discounts['is_home_service'] == 'true';
+    }
+
+    // Radiology fields
+    if (service.serviceType == 'radiology_center') {
+      xRayDiscount.text = discounts['xray_discount']?.toString() ?? '';
+    }
+
+    // Eye Care fields
+    if (service.serviceType == 'optics') {
+      eyeCareDiscountGlasses.text =
+          discounts['glasses_discount']?.toString() ?? '';
+      eyeCareDiscountSunGlasses.text =
+          discounts['sunglasses_discount']?.toString() ?? '';
+      contactLensesController.text =
+          discounts['contact_lenses_discount']?.toString() ?? '';
+      eyeCareDiscountEyeExam.text =
+          discounts['eye_exam_discount']?.toString() ?? '';
+      eyeCareIsDelivery.value = discounts['is_delivery'] == 'true';
+    }
+
+    // Shared fields
+    surgeriesOtherServicesDiscount.text =
+        discounts['surgeries_other_services_discount']?.toString() ?? '';
   }
 
+  // Modify the submitService method to handle both create and update
   void submitService() {
-    final branchesData = branches.map((branch) => branch.toJson()).toList();
     updateAllBranches();
+
+    final branchesData = branches.map((branch) => branch.toJson()).toList();
+
+    print('=== DEBUG BRANCH DATA BEFORE SENDING ===');
+    for (int i = 0; i < branches.length; i++) {
+      print('Branch ${i + 1}:');
+      print('  Phone: "${branches[i].phoneNumber}"');
+      print('  WhatsApp: "${branches[i].whatsAppNumber}"');
+      print('  Address: "${branches[i].address}"');
+      print('  City: "${branches[i].selectedCity}"');
+      print('  Governorate: "${branches[i].selectedGovernorate}"');
+      print('  Working Hours: ${branches[i].workingHours}');
+      print('---');
+    }
+    print('========================================');
+
     final serviceData = ServiceData(
       // Basic info
       serviceName: serviceNameController.text.trim(),
@@ -563,7 +695,7 @@ class AddServiceController extends GetxController {
               ? veterinaryPharmacyIsHome.value
               : null),
 
-      // Lab Test fields
+      // Lab
       allTestsDiscount: labTestDiscountAllTypes.text.trim(),
       isHomeService: labTestIsHome.value,
 
@@ -575,7 +707,8 @@ class AddServiceController extends GetxController {
       sunglassesDiscount: eyeCareDiscountSunGlasses.text.trim(),
       contactLensesDiscount: contactLensesController.text.trim(),
       eyeExamDiscount: eyeCareDiscountEyeExam.text.trim(),
-      isDelivery: eyeCareIsDelivery.value,
+      isDelivery:
+          selectedService.value == 'optics' ? eyeCareIsDelivery.value : null,
 
       // Gym fields
       gymMonthSubPriceB: gymMonthSubPriceB.text.trim(),
@@ -586,27 +719,592 @@ class AddServiceController extends GetxController {
       gymMonth6SubPriceA: gymMonth6SubPriceA.text.trim(),
       gymMonth12SubPriceB: gymMonth12SubPriceB.text.trim(),
       gymMonth12SubPriceA: gymMonth12SubPriceA.text.trim(),
-
       otherDiscount: discountOther.text.trim(),
 
       branches: branchesData,
     );
-
-    // Send to backend
-    _sendToBackend(serviceData);
+    _debugAllData(serviceData, branchesData);
+    if (isEditingMode) {
+      _updateService(serviceData);
+    } else {
+      _createService(serviceData);
+    }
   }
 
-  void _sendToBackend(ServiceData serviceData) {
-    // TODO: Implement actual backend integration
-    printDM('Service Data with Branches: ${serviceData.toJson()}');
+  void _debugAllData(
+      ServiceData serviceData, List<Map<String, dynamic>> branchesData) {
+    print('=== COMPREHENSIVE DEBUG DATA ===');
 
+    // 1. Debug ServiceData object
+    print('1. SERVICE DATA OBJECT:');
+    print('   serviceName: ${serviceData.serviceName}');
+    print('   serviceType: ${serviceData.serviceType}');
+    print('   specialization: ${serviceData.specialization}');
+    print(
+        '   isHomeService: ${serviceData.isHomeService} (type: ${serviceData.isHomeService.runtimeType})');
+    print(
+        '   isHomeVisit: ${serviceData.isHomeVisit} (type: ${serviceData.isHomeVisit.runtimeType})');
+    print(
+        '   homeDiscount: ${serviceData.homeDiscount} (type: ${serviceData.homeDiscount.runtimeType})');
+    print(
+        '   isHomeDelivery: ${serviceData.isHomeDelivery} (type: ${serviceData.isHomeDelivery.runtimeType})');
+    print(
+        '   isDelivery: ${serviceData.isDelivery} (type: ${serviceData.isDelivery.runtimeType})');
+
+    // 2. Debug Branches
+    print('2. BRANCHES DATA:');
+    for (int i = 0; i < branchesData.length; i++) {
+      print('   Branch ${i + 1}:');
+      print('     phone: ${branchesData[i]['phone']}');
+      print('     whatsapp: ${branchesData[i]['whatsapp']}');
+      print('     address: ${branchesData[i]['address']}');
+      print('     city: ${branchesData[i]['city']}');
+      print('     governorate: ${branchesData[i]['governorate']}');
+      print('     workingHours: ${branchesData[i]['workingHours']}');
+    }
+
+    // 3. Debug ServiceData.toJson() output
+    print('3. SERVICE DATA TO JSON:');
+    try {
+      final serviceJson = serviceData.toJson();
+      print('   Raw JSON map: $serviceJson');
+
+      // Try to encode to JSON string
+      final jsonString = jsonEncode(serviceJson);
+      print('   JSON encoded successfully!');
+      print('   JSON string length: ${jsonString.length}');
+
+      // Print formatted JSON for better readability
+      final formattedJson = JsonEncoder.withIndent('  ').convert(serviceJson);
+      print('   Formatted JSON:');
+      print(formattedJson);
+    } catch (e, stackTrace) {
+      print('   JSON ENCODE ERROR: $e');
+      print('   Error type: ${e.runtimeType}');
+      print('   Stack trace: $stackTrace');
+
+      // Debug individual problematic fields
+      _debugProblematicFields(serviceData);
+    }
+
+    print('================================');
+  }
+
+  void _debugProblematicFields(ServiceData serviceData) {
+    print('4. DEBUG INDIVIDUAL FIELDS FOR JSON:');
+
+    final testMap = <String, dynamic>{};
+
+    // Test basic fields first
+    testMap['service_name'] = serviceData.serviceName;
+    testMap['service_type'] = serviceData.serviceType;
+    testMap['specialization'] = serviceData.specialization;
+
+    // Test boolean fields one by one
+    try {
+      testMap['is_home_service'] = serviceData.isHomeService ?? false;
+      print('   ✓ is_home_service: OK');
+    } catch (e) {
+      print('   ✗ is_home_service ERROR: $e');
+    }
+
+    try {
+      testMap['is_home_visit'] = serviceData.isHomeVisit ?? false;
+      print('   ✓ is_home_visit: OK');
+    } catch (e) {
+      print('   ✗ is_home_visit ERROR: $e');
+    }
+
+    try {
+      testMap['home_discount'] = serviceData.homeDiscount ?? false;
+      print('   ✓ home_discount: OK');
+    } catch (e) {
+      print('   ✗ home_discount ERROR: $e');
+    }
+
+    // Test branches
+    try {
+      testMap['branches'] = serviceData.branches;
+      print('   ✓ branches: OK');
+    } catch (e) {
+      print('   ✗ branches ERROR: $e');
+    }
+
+    // Try to encode the test map
+    try {
+      final testJson = jsonEncode(testMap);
+      print('   Test JSON encode: SUCCESS');
+    } catch (e) {
+      print('   Test JSON encode ERROR: $e');
+    }
+  }
+
+  void _createService(ServiceData serviceData) async {
+    showEasyLoading();
+
+    final result = await repository!.createService(serviceData);
+
+    closeEasyLoading();
+
+    result.when(
+      success: (response) {
+        print('DEBUG createService response: ${response.runtimeType}');
+        print(response.data);
+        successEasyLoading(
+            response.data['message'] ?? 'Service created successfully');
+        printDM('✅ Service Created: ${response.data}');
+        printDM('result ${serviceData.toJson()}');
+        Get.offAll(const BaseBNBScreen());
+      },
+      failure: (error) {
+        actionNetworkExceptions(error);
+      },
+    );
+  }
+
+  void _updateService(ServiceData serviceData) async {
+    showEasyLoading();
+
+    // You'll need to add an updateService method to your repository
+    final result = await repository!.updateService(
+      serviceId: serviceToEdit!.id,
+      serviceData: serviceData,
+      imageFile: serviceImage.value,
+    );
+
+    closeEasyLoading();
+
+    result.when(
+      success: (response) {
+        successEasyLoading(
+            response.data['message'] ?? 'Service updated successfully');
+        printDM('✅ Service Updated: ${response.data}');
+
+        // Navigate back and refresh the services list
+        Get.off(() => const BaseBNBScreen());
+
+        // Refresh the services list in the home controller
+        final servicesController = Get.find<ServicesController>();
+        servicesController.fetchServices();
+      },
+      failure: (error) {
+        actionNetworkExceptions(error);
+      },
+    );
+  }
+
+  void _initializeValidators() {
+    _stepValidators
+      ..add(_validateStep1)
+      ..add(_validateStep2)
+      ..add(_validateStep3);
+  }
+
+  bool _validateStep1() {
+    if (serviceImage.value == null) {
+      _showError('please_upload_picture'.tr);
+      return false;
+    }
+    if (selectedService.value == null) {
+      _showError('please_select_service'.tr);
+      return false;
+    }
+    if (selectedService.value == 'human_doctor' ||
+        selectedService.value == 'human_hospital' ||
+        selectedService.value == 'human_pharmacy') {
+      if (selectedSpecialization.value == null) {
+        _showError('please_select_specialization'.tr);
+        return false;
+      }
+    }
+    if (serviceNameController.text.trim().isEmpty) {
+      _showError('please_enter_service_name'.tr);
+      return false;
+    }
+    return true;
+  }
+
+  bool _validateStep2() {
+    return true;
+  }
+
+  bool _validateStep3() {
+    for (int i = 0; i < branches.length; i++) {
+      // Validate using the branch-specific controllers and Rx values
+      if (branchSelectedGovernorates[i].value.isEmpty) {
+        _showError(
+            '${'please_select_governorate'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
+
+      if (branchSelectedCities[i].value.isEmpty) {
+        _showError('${'please_select_city'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
+
+      if (branchAddressControllers[i].text.trim().isEmpty) {
+        _showError('${'please_enter_address'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
+
+      if (branchPhoneControllers[i].text.trim().isEmpty) {
+        _showError(
+            '${'please_enter_phone_number'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
+
+      // Validate phone number format (Egyptian numbers)
+      // final phone = branchPhoneControllers[i].text.trim();
+      // if (!RegExp(r'^01[0-2,5]{1}[0-9]{8}$').hasMatch(phone)) {
+      //   _showError(
+      //       '${'please_enter_valid_phone'.tr} ${'for_branch'.tr} ${i + 1}');
+      //   return false;
+      // }
+
+      // WhatsApp is now optional based on Postman (can be null)
+      // final whatsapp = branchWhatsappControllers[i].text.trim();
+      // if (whatsapp.isNotEmpty &&
+      //     !RegExp(r'^01[0-2,5]{1}[0-9]{8}$').hasMatch(whatsapp)) {
+      //   _showError(
+      //       '${'please_enter_valid_whatsapp'.tr} ${'for_branch'.tr} ${i + 1}');
+      //   return false;
+      // }
+
+      // Validate working hours - at least one day must have proper opening hours
+      if (!_validateWorkingHours(branchWorkingHours[i])) {
+        _showError(
+            '${'please_set_proper_working_hours'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
+    }
+    return true;
+  }
+
+  bool _validateWorkingHours(Map<String, String> workingHours) {
+    bool hasAtLeastOneOpenDay = false;
+    bool allOpenDaysHaveValidTimes = true;
+
+    final days = [
+      'saturday',
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday'
+    ];
+
+    for (final day in days) {
+      final hours = workingHours[day] ?? '';
+
+      if (hours.isNotEmpty &&
+          hours.toLowerCase() != 'closed'.tr.toLowerCase()) {
+        hasAtLeastOneOpenDay = true;
+
+        // Check if the hours are in proper format "HH:MM AM/PM - HH:MM AM/PM"
+        // if (!_isValidTimeFormat(hours)) {
+        //   allOpenDaysHaveValidTimes = false;
+        //   _showError('${'invalid_time_format_for'.tr} ${_getDayName(day)}');
+        //   break;
+        // }
+
+        // Additional validation: ensure from time is before to time
+        // if (!_isFromTimeBeforeToTime(hours)) {
+        //   allOpenDaysHaveValidTimes = false;
+        //   _showError(
+        //       '${'closing_time_must_be_after_opening_time_for'.tr} ${_getDayName(day)}');
+        //   break;
+        // }
+      }
+    }
+
+    // At least one day should be open with valid times
+    if (!hasAtLeastOneOpenDay) {
+      _showError('at_least_one_open_day_required'.tr);
+      return false;
+    }
+
+    // if (!allOpenDaysHaveValidTimes) {
+    //   return false;
+    // }
+
+    return true;
+  }
+
+  // bool _isValidTimeFormat(String timeString) {
+  //   // Valid format: "9:00 AM - 5:00 PM" or "08:30 AM - 11:30 PM"
+  //   final timeFormatRegex = RegExp(
+  //       r'^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] [AP]M - ([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9] [AP]M$',
+  //       caseSensitive: false);
+  //
+  //   return timeFormatRegex.hasMatch(timeString);
+  // }
+
+  // bool _isFromTimeBeforeToTime(String timeString) {
+  //   try {
+  //     final parts = timeString.split(' - ');
+  //     if (parts.length != 2) return false;
+  //
+  //     final fromTime = parts[0].trim();
+  //     final toTime = parts[1].trim();
+  //
+  //     final fromTimeOfDay = _parseTimeString(fromTime);
+  //     final toTimeOfDay = _parseTimeString(toTime);
+  //
+  //     // Convert to minutes for comparison
+  //     final fromMinutes = fromTimeOfDay.hour * 60 + fromTimeOfDay.minute;
+  //     final toMinutes = toTimeOfDay.hour * 60 + toTimeOfDay.minute;
+  //
+  //     return fromMinutes < toMinutes;
+  //   } catch (e) {
+  //     return false;
+  //   }
+  // }
+  // String _getDayName(String dayKey) {
+  //   final dayNames = {
+  //     'saturday': 'saturday'.tr,
+  //     'sunday': 'sunday'.tr,
+  //     'monday': 'monday'.tr,
+  //     'tuesday': 'tuesday'.tr,
+  //     'wednesday': 'wednesday'.tr,
+  //     'thursday': 'thursday'.tr,
+  //     'friday': 'friday'.tr,
+  //   };
+  //
+  //   return dayNames[dayKey] ?? dayKey;
+  // }
+  //
+  // TimeOfDay _parseTimeString(String timeString) {
+  //   try {
+  //     final cleanedString = timeString.trim().toLowerCase();
+  //     final parts = cleanedString.split(' ');
+  //     final timeParts = parts[0].split(':');
+  //
+  //     if (timeParts.length < 2) return TimeOfDay(hour: 9, minute: 0);
+  //
+  //     int hour = int.parse(timeParts[0]);
+  //     int minute = int.parse(timeParts[1]);
+  //
+  //     // Handle AM/PM conversion
+  //     if (cleanedString.contains('pm') && hour < 12) {
+  //       hour += 12;
+  //     } else if (cleanedString.contains('am') && hour == 12) {
+  //       hour = 0;
+  //     }
+  //
+  //     return TimeOfDay(hour: hour, minute: minute);
+  //   } catch (e) {
+  //     return TimeOfDay(hour: 9, minute: 0);
+  //   }
+  // }
+
+  void _showError(String message) {
     Get.snackbar(
-      'success'.tr,
-      'service_added_successfully'.tr,
-      backgroundColor: Colors.green,
+      'error'.tr,
+      message,
+      backgroundColor: Colors.red,
       colorText: Colors.white,
     );
-    Get.back();
+  }
+
+  void nextStep() {
+    if (currentStep.value < 2) {
+      if (_stepValidators[currentStep.value]()) {
+        currentStep.value++;
+        update();
+      }
+    } else {
+      if (_validateStep3()) {
+        submitService();
+      }
+    }
+  }
+
+  void previousStep() {
+    if (currentStep.value > 0) {
+      currentStep.value--;
+      update();
+    }
+  }
+
+  Future<void> pickImageFromGallery() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+      if (image != null) {
+        serviceImage.value = File(image.path);
+        update();
+      }
+    } on PlatformException catch (e) {
+      debugPrint("Failed to pick image: $e");
+      _showError('failed_to_pick_image'.tr);
+    }
+  }
+
+  // Method to open social media apps
+  Future<void> openSocialMediaApp(String url, String platform) async {
+    try {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri, mode: LaunchMode.externalApplication);
+      } else {
+        Get.snackbar(
+          'error'.tr,
+          '${'cannot_open'.tr} $platform',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'error_occurred'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  // void submitService() {
+  //   updateAllBranches();
+  //
+  //   final branchesData = branches.map((branch) => branch.toJson()).toList();
+  //   print('=== BRANCH DATA BEING SENT ===');
+  //   for (int i = 0; i < branches.length; i++) {
+  //     print('Branch ${i + 1}:');
+  //     print('  Phone: ${branches[i].phoneNumber}');
+  //     print('  WhatsApp: ${branches[i].whatsAppNumber}');
+  //     print('  Working Hours: ${branches[i].workingHours}');
+  //     print('  Address: ${branches[i].address}');
+  //     print('  City: ${branches[i].selectedCity}');
+  //     print('  Governorate: ${branches[i].selectedGovernorate}');
+  //
+  //     print('==============================');
+  //   }
+  //   final serviceData = ServiceData(
+  //     // Basic info
+  //     serviceName: serviceNameController.text.trim(),
+  //     serviceDescription: serviceDescriptionController.text.trim(),
+  //     serviceType: selectedService.value,
+  //     specialization: selectedSpecialization.value,
+  //     serviceImage: serviceImage.value,
+  //
+  //     // Social media
+  //     facebook: facebookController.text.trim(),
+  //     instagram: instagramController.text.trim(),
+  //     tiktok: tiktokController.text.trim(),
+  //     youtube: youtubeController.text.trim(),
+  //
+  //     // Doctor fields
+  //     consultationPriceBefore: humanDoctorPriceBefore.text.trim().isNotEmpty
+  //         ? humanDoctorPriceBefore.text.trim()
+  //         : veterinaryDoctorPriceBefore.text.trim(),
+  //     consultationPriceAfter: humanDoctorPriceAfter.text.trim().isNotEmpty
+  //         ? humanDoctorPriceAfter.text.trim()
+  //         : veterinaryDoctorPriceAfter.text.trim(),
+  //     isHomeVisit: selectedService.value == 'human_doctor'
+  //         ? humanDoctorIsHome.value
+  //         : (selectedService.value == 'veterinarian'
+  //             ? veterinaryDoctorIsHome.value
+  //             : null),
+  //     homeDiscount: selectedService.value == 'human_doctor'
+  //         ? humanDoctorIsCard.value
+  //         : (selectedService.value == 'veterinarian'
+  //             ? veterinaryDoctorIsCard.value
+  //             : null),
+  //
+  //     // Hospital fields
+  //     examinationsDiscount:
+  //         humanHospitalDiscountExaminations.text.trim().isNotEmpty
+  //             ? humanHospitalDiscountExaminations.text.trim()
+  //             : veterinaryHospitalDiscountExaminations.text.trim(),
+  //     medicalTestsDiscount:
+  //         humanHospitalDiscountMedicalTest.text.trim().isNotEmpty
+  //             ? humanHospitalDiscountMedicalTest.text.trim()
+  //             : veterinaryHospitalDiscountMedicalTest.text.trim(),
+  //     xrayDiscount: humanHospitalDiscountXRay.text.trim().isNotEmpty
+  //         ? humanHospitalDiscountXRay.text.trim()
+  //         : veterinaryHospitalDiscountXRay.text.trim(),
+  //     medicinesDiscount: humanHospitalDiscountMedicines.text.trim().isNotEmpty
+  //         ? humanHospitalDiscountMedicines.text.trim()
+  //         : veterinaryHospitalDiscountMedicines.text.trim(),
+  //
+  //     // Shared
+  //     surgeriesOtherServicesDiscount:
+  //         surgeriesOtherServicesDiscount.text.trim(),
+  //
+  //     // Pharmacy fields
+  //     localMedicinesDiscount:
+  //         humanPharmacyDiscountLocalMedicine.text.trim().isNotEmpty
+  //             ? humanPharmacyDiscountLocalMedicine.text.trim()
+  //             : veterinaryPharmacyDiscountLocalMedicine.text.trim(),
+  //     importedMedicinesDiscount:
+  //         humanPharmacyDiscountImportedMedicine.text.trim().isNotEmpty
+  //             ? humanPharmacyDiscountImportedMedicine.text.trim()
+  //             : veterinaryPharmacyDiscountImportedMedicine.text.trim(),
+  //     medicalSuppliesDiscount:
+  //         humanPharmacyDiscountMedicalSupplies.text.trim().isNotEmpty
+  //             ? humanPharmacyDiscountMedicalSupplies.text.trim()
+  //             : veterinaryPharmacyDiscountMedicalSupplies.text.trim(),
+  //     isHomeDelivery: selectedService.value == 'human_pharmacy'
+  //         ? humanPharmacyIsHome.value
+  //         : (selectedService.value == 'veterinary_pharmacy'
+  //             ? veterinaryPharmacyIsHome.value
+  //             : null),
+  //
+  //     // Lab Test fields
+  //     allTestsDiscount: labTestDiscountAllTypes.text.trim(),
+  //     isHomeService: labTestIsHome.value,
+  //
+  //     // Radiology fields
+  //     xRayDiscount: xRayDiscount.text.trim(),
+  //
+  //     // Eye Care fields
+  //     glassesDiscount: eyeCareDiscountGlasses.text.trim(),
+  //     sunglassesDiscount: eyeCareDiscountSunGlasses.text.trim(),
+  //     contactLensesDiscount: contactLensesController.text.trim(),
+  //     eyeExamDiscount: eyeCareDiscountEyeExam.text.trim(),
+  //     isDelivery: eyeCareIsDelivery.value,
+  //
+  //     // Gym fields
+  //     gymMonthSubPriceB: gymMonthSubPriceB.text.trim(),
+  //     gymMonthSubPriceA: gymMonthSubPriceA.text.trim(),
+  //     gymMonth3SubPriceB: gymMonth3SubPriceB.text.trim(),
+  //     gymMonth3SubPriceA: gymMonth3SubPriceA.text.trim(),
+  //     gymMonth6SubPriceB: gymMonth6SubPriceB.text.trim(),
+  //     gymMonth6SubPriceA: gymMonth6SubPriceA.text.trim(),
+  //     gymMonth12SubPriceB: gymMonth12SubPriceB.text.trim(),
+  //     gymMonth12SubPriceA: gymMonth12SubPriceA.text.trim(),
+  //
+  //     otherDiscount: discountOther.text.trim(),
+  //
+  //     branches: branchesData,
+  //   );
+  //
+  //   // Send to backend
+  //   _sendToBackend(serviceData);
+  // }
+
+  void _sendToBackend(ServiceData serviceData) async {
+    showEasyLoading();
+
+    final result = await repository!.createService(serviceData);
+
+    closeEasyLoading();
+
+    result.when(
+      success: (response) {
+        successEasyLoading(
+            response.data['message'] ?? 'Service created successfully');
+        printDM('✅ Service Created: ${response.data}');
+        printDM('result ${serviceData.toJson()}');
+        Get.off(() => const BaseBNBScreen());
+      },
+      failure: (error) {
+        actionNetworkExceptions(error);
+      },
+    );
   }
 
   @override

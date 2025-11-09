@@ -74,7 +74,7 @@ class _Step3Content extends StatelessWidget {
           ),
           16.ESH(),
 
-          // Governorate Dropdown
+          // Governorate Dropdown - FIXED
           _buildSectionLabel('governorate'.tr, true),
           12.ESH(),
           _buildGovernorateDropdown(controller, index),
@@ -115,7 +115,7 @@ class _Step3Content extends StatelessWidget {
           24.ESH(),
 
           // WhatsApp Number Field (REPLACED Branch Phone)
-          _buildSectionLabel('whatsapp_number'.tr, false),
+          _buildSectionLabel('whatsapp_number'.tr, true),
           12.ESH(),
           TextFieldDefault(
             controller: controller.branchWhatsappControllers[index],
@@ -135,6 +135,9 @@ class _Step3Content extends StatelessWidget {
   }
 
   Widget _buildGovernorateDropdown(AddServiceController controller, int index) {
+    // Get unique governorates to avoid duplicates
+    final uniqueGovernorates = controller.uniqueGovernorates;
+
     return DropdownButtonFormField<String>(
       value: controller.branchSelectedGovernorates[index].value.isEmpty
           ? null
@@ -142,25 +145,37 @@ class _Step3Content extends StatelessWidget {
       decoration: _dropdownDecoration(),
       hint: CustomTextL('select_governorate'.tr,
           color: Colors.grey[600], fontSize: 16.sp),
-      items: AddServiceController.governorates.map((gov) {
-        return DropdownMenuItem(
+      items: uniqueGovernorates.map((gov) {
+        return DropdownMenuItem<String>(
           value: gov,
           child: CustomTextL(gov, fontSize: 14.sp),
         );
       }).toList(),
       onChanged: (value) {
-        controller.branchSelectedGovernorates[index].value = value!;
-        controller.branchSelectedCities[index].value =
-            ''; // Reset city when governorate changes
-        controller.update();
+        if (value != null) {
+          controller.branchSelectedGovernorates[index].value = value;
+          controller.branchSelectedCities[index].value =
+              ''; // Reset city when governorate changes
+          controller.update();
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'please_select_governorate'.tr;
+        }
+        return null;
       },
     );
   }
 
   Widget _buildCityDropdown(AddServiceController controller, int index) {
-    final cities = AddServiceController.citiesByGovernorate[
-            controller.branchSelectedGovernorates[index].value] ??
-        [];
+    final selectedGovernorate =
+        controller.branchSelectedGovernorates[index].value;
+    final cities =
+        AddServiceController.citiesByGovernorate[selectedGovernorate] ?? [];
+
+    // Get unique cities to avoid duplicates
+    final uniqueCities = cities.toSet().toList();
 
     return DropdownButtonFormField<String>(
       value: controller.branchSelectedCities[index].value.isEmpty
@@ -169,15 +184,23 @@ class _Step3Content extends StatelessWidget {
       decoration: _dropdownDecoration(),
       hint: CustomTextL('select_city'.tr,
           color: Colors.grey[600], fontSize: 16.sp),
-      items: cities.map((city) {
-        return DropdownMenuItem(
+      items: uniqueCities.map((city) {
+        return DropdownMenuItem<String>(
           value: city,
           child: CustomTextL(city, fontSize: 14.sp),
         );
       }).toList(),
       onChanged: (value) {
-        controller.branchSelectedCities[index].value = value!;
-        controller.update();
+        if (value != null) {
+          controller.branchSelectedCities[index].value = value;
+          controller.update();
+        }
+      },
+      validator: (value) {
+        if (value == null || value.isEmpty) {
+          return 'please_select_city'.tr;
+        }
+        return null;
       },
     );
   }
@@ -255,15 +278,17 @@ class _Step3Content extends StatelessWidget {
     String fromTime = '';
     String toTime = '';
 
-    if (!isClosed && currentHours.contains(' - ')) {
-      final times = currentHours.split(' - ');
-      if (times.length == 2) {
-        fromTime = times[0].trim();
-        toTime = times[1].trim();
+    if (!isClosed && currentHours.isNotEmpty) {
+      if (currentHours.contains(' - ')) {
+        final times = currentHours.split(' - ');
+        if (times.length == 2) {
+          fromTime = times[0].trim();
+          toTime = times[1].trim();
+        }
+      } else {
+        // Handle case where only one time is set
+        fromTime = currentHours.trim();
       }
-    } else if (!isClosed && currentHours.isNotEmpty) {
-      // Handle case where only one time is set
-      fromTime = currentHours;
     }
 
     return Padding(
@@ -296,7 +321,8 @@ class _Step3Content extends StatelessWidget {
                         if (value) {
                           workingHours[dayKey] = 'closed'.tr;
                         } else {
-                          workingHours[dayKey] = '';
+                          // When opening a day, set default times
+                          workingHours[dayKey] = '9:00 AM - 5:00 PM';
                         }
                         controller.update();
                       },
@@ -310,12 +336,10 @@ class _Step3Content extends StatelessWidget {
             12.ESH(),
             Row(
               children: [
-                Expanded(
-                    flex: 1,
-                    child: SizedBox()), // Reduced flex to give more space
+                Expanded(flex: 1, child: SizedBox()),
                 8.ESW(),
                 Expanded(
-                  flex: 4, // Increased flex for time pickers
+                  flex: 4,
                   child: Row(
                     children: [
                       // From Time Picker
@@ -332,12 +356,14 @@ class _Step3Content extends StatelessWidget {
                               branchIndex),
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 18.h), // Even larger padding
+                                horizontal: 20.w, vertical: 18.h),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: Colors.grey[300]!),
+                              border: Border.all(
+                                  color: fromTime.isEmpty
+                                      ? Colors.orange
+                                      : Colors.grey[300]!),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -345,24 +371,26 @@ class _Step3Content extends StatelessWidget {
                                 Flexible(
                                   child: CustomTextL(
                                     fromTime.isEmpty ? 'from'.tr : fromTime,
-                                    fontSize: 15.sp, // Slightly larger font
+                                    fontSize: 15.sp,
                                     color: fromTime.isEmpty
-                                        ? Colors.grey[500]
+                                        ? Colors.orange
                                         : Colors.grey[800],
                                   ),
                                 ),
                                 Icon(Icons.access_time,
                                     size: 20.sp,
-                                    color: AppColors.main), // Larger icon
+                                    color: fromTime.isEmpty
+                                        ? Colors.orange
+                                        : AppColors.main),
                               ],
                             ),
                           ),
                         ),
                       ),
-                      12.ESW(), // More spacing
+                      12.ESW(),
                       CustomTextL('-',
                           fontSize: 16.sp, color: Colors.grey[600]),
-                      12.ESW(), // More spacing
+                      12.ESW(),
                       // To Time Picker
                       Expanded(
                         child: InkWell(
@@ -377,12 +405,14 @@ class _Step3Content extends StatelessWidget {
                               branchIndex),
                           child: Container(
                             padding: EdgeInsets.symmetric(
-                                horizontal: 20.w,
-                                vertical: 18.h), // Even larger padding
+                                horizontal: 20.w, vertical: 18.h),
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12.r),
-                              border: Border.all(color: Colors.grey[300]!),
+                              border: Border.all(
+                                  color: toTime.isEmpty
+                                      ? Colors.orange
+                                      : Colors.grey[300]!),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -390,15 +420,17 @@ class _Step3Content extends StatelessWidget {
                                 Flexible(
                                   child: CustomTextL(
                                     toTime.isEmpty ? 'to'.tr : toTime,
-                                    fontSize: 15.sp, // Slightly larger font
+                                    fontSize: 15.sp,
                                     color: toTime.isEmpty
-                                        ? Colors.grey[500]
+                                        ? Colors.orange
                                         : Colors.grey[800],
                                   ),
                                 ),
                                 Icon(Icons.access_time,
                                     size: 20.sp,
-                                    color: AppColors.main), // Larger icon
+                                    color: toTime.isEmpty
+                                        ? Colors.orange
+                                        : AppColors.main),
                               ],
                             ),
                           ),
@@ -425,24 +457,16 @@ class _Step3Content extends StatelessWidget {
     AddServiceController controller,
     int branchIndex,
   ) async {
-    // Get current hours for this day
     final currentHours = workingHours[dayKey] ?? '';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
-    // If closed, don't show time picker
     if (isClosed) return;
 
     // Parse current times
-    String fromTime = '';
-    String toTime = '';
+    String fromTime = currentFromTime;
+    String toTime = currentToTime;
 
-    if (currentHours.contains(' - ')) {
-      final times = currentHours.split(' - ');
-      fromTime = times[0].trim();
-      toTime = times[1].trim();
-    }
-
-    // Determine which time to use as initial value
+    // Determine initial time for the picker
     TimeOfDay initialTime = TimeOfDay(hour: 9, minute: 0);
 
     if (isFromTime) {
@@ -452,13 +476,9 @@ class _Step3Content extends StatelessWidget {
     } else {
       if (toTime.isNotEmpty) {
         initialTime = _parseTimeString(toTime);
-      } else if (fromTime.isNotEmpty) {
-        // If "to" time is empty but "from" time exists, set initial time 1 hour later
-        final fromTimeOfDay = _parseTimeString(fromTime);
-        initialTime = TimeOfDay(
-          hour: (fromTimeOfDay.hour + 1) % 24,
-          minute: fromTimeOfDay.minute,
-        );
+      } else {
+        // Default to 5:00 PM for "to" time if not set
+        initialTime = TimeOfDay(hour: 17, minute: 0);
       }
     }
 
@@ -484,44 +504,33 @@ class _Step3Content extends StatelessWidget {
     if (picked != null) {
       final formattedTime = _formatTimeOfDay(picked);
 
-      // Get current values again in case they changed
-      final updatedCurrentHours = workingHours[dayKey] ?? '';
-      String updatedFromTime = '';
-      String updatedToTime = '';
-
-      if (updatedCurrentHours.contains(' - ')) {
-        final times = updatedCurrentHours.split(' - ');
-        updatedFromTime = times[0].trim();
-        updatedToTime = times[1].trim();
-      } else if (updatedCurrentHours.isNotEmpty &&
-          !updatedCurrentHours.toLowerCase().contains('closed')) {
-        // If there's only one time value, assume it's the from time
-        updatedFromTime = updatedCurrentHours;
-      }
-
-      // Update the appropriate time
+      // Update the appropriate time immediately
       if (isFromTime) {
-        updatedFromTime = formattedTime;
+        fromTime = formattedTime;
       } else {
-        updatedToTime = formattedTime;
+        toTime = formattedTime;
       }
 
-      // Build the final time string
+      // Build the final time string - handle cases where only one time is set
       String finalTimeString = '';
-      if (updatedFromTime.isNotEmpty && updatedToTime.isNotEmpty) {
-        finalTimeString = '$updatedFromTime - $updatedToTime';
-      } else if (updatedFromTime.isNotEmpty) {
-        finalTimeString = updatedFromTime;
-      } else if (updatedToTime.isNotEmpty) {
-        finalTimeString = updatedToTime;
+
+      if (fromTime.isNotEmpty && toTime.isNotEmpty) {
+        finalTimeString = '$fromTime - $toTime';
+      } else if (fromTime.isNotEmpty) {
+        finalTimeString = fromTime; // Only from time is set
+      } else if (toTime.isNotEmpty) {
+        finalTimeString = toTime; // Only to time is set
       }
 
-      // Update working hours
-      workingHours[dayKey] = finalTimeString;
-      controller.update();
+      // Update working hours immediately
+      if (finalTimeString.isNotEmpty) {
+        workingHours[dayKey] = finalTimeString;
+        controller.update();
 
-      // Debug print to verify saving
-      print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
+        // Debug print
+        print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
+        print('From: $fromTime, To: $toTime');
+      }
     }
   }
 
@@ -536,7 +545,7 @@ class _Step3Content extends StatelessWidget {
         final parts = cleanedString.split(' ');
         final timeParts = parts[0].split(':');
 
-        if (timeParts.length < 2) return TimeOfDay(hour: 9, minute: 0);
+        if (timeParts.length < 2) return const TimeOfDay(hour: 9, minute: 0);
 
         int hour = int.parse(timeParts[0]);
         int minute = int.parse(timeParts[1]);
@@ -552,7 +561,7 @@ class _Step3Content extends StatelessWidget {
       } else {
         // Assume 24-hour format
         final timeParts = cleanedString.split(':');
-        if (timeParts.length < 2) return TimeOfDay(hour: 9, minute: 0);
+        if (timeParts.length < 2) return const TimeOfDay(hour: 9, minute: 0);
 
         int hour = int.parse(timeParts[0]);
         int minute = int.parse(timeParts[1]);
@@ -561,7 +570,7 @@ class _Step3Content extends StatelessWidget {
       }
     } catch (e) {
       print('Error parsing time string: $timeString, error: $e');
-      return TimeOfDay(hour: 9, minute: 0);
+      return const TimeOfDay(hour: 9, minute: 0);
     }
   }
 
@@ -576,27 +585,6 @@ class _Step3Content extends StatelessWidget {
     final displayMinute = minute.toString().padLeft(2, '0');
 
     return '$displayHour:$displayMinute $period';
-  }
-
-  TimeOfDay _getInitialTime(String currentTime) {
-    if (currentTime.isEmpty) {
-      return TimeOfDay(hour: 9, minute: 0); // Default to 9:00 AM
-    }
-
-    try {
-      final isPM = currentTime.toLowerCase().contains('pm');
-      final timeParts =
-          currentTime.replaceAll(RegExp(r'[^0-9:]'), '').split(':');
-      int hour = int.parse(timeParts[0]);
-      final int minute = int.parse(timeParts[1]);
-
-      if (isPM && hour < 12) hour += 12;
-      if (!isPM && hour == 12) hour = 0;
-
-      return TimeOfDay(hour: hour, minute: minute);
-    } catch (e) {
-      return TimeOfDay(hour: 9, minute: 0);
-    }
   }
 
   Widget _buildAddBranchButton(AddServiceController controller) {
@@ -643,6 +631,34 @@ class _Step3Content extends StatelessWidget {
           CustomTextL('*', fontSize: 16.sp, color: Colors.red),
         ],
       ],
+    );
+  }
+
+  InputDecoration _dropdownDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: Colors.grey[300]!),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: Colors.grey[300]!),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: const BorderSide(color: AppColors.main, width: 1),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
+      ),
     );
   }
 }

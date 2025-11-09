@@ -1,8 +1,9 @@
 import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Repo/profile_repo.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Repo/change_password_repo.dart';
+import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/repo/add_service_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/DeleteAccount/Bloc/Repo/delete_account_repo.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Bloc/Repo/account_details_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Bloc/Repo/efit_profile_repo.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Bloc/Repo/get_user_data_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/check_email_and_send_otp_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/validate-otp-and-change-password_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
@@ -12,6 +13,7 @@ import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Repo/regi
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Controller/send_otp_controller.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Repo/send_otp_repository.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Repo/verify_otp_repository.dart';
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/Repo/get_services_repo.dart';
 import 'package:Alegny_provider/src/core/ThemeData/theme_manager.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_services.dart';
 import 'package:dio/dio.dart';
@@ -35,7 +37,7 @@ class ServicesLocator {
     // Auth
     sl.registerLazySingleton(() => LogInRepository());
     sl.registerLazySingleton(() => SendOTPController());
-    // sl.registerLazySingleton(() => GetMyAccountDataRepository());
+    sl.registerLazySingleton(() => AccountDetailsRepository());
     sl.registerLazySingleton(() => LogOutRepository());
     sl.registerLazySingleton(() => DeleteAccountRepository());
     sl.registerLazySingleton(() => ChangePasswordRepository());
@@ -47,9 +49,11 @@ class ServicesLocator {
     sl.registerLazySingleton(() => ValidateOtpAndChangePasswordRepo());
     sl.registerLazySingleton(() => EditGeneralProfileRepository());
     // sl.registerLazySingleton(() => ChangePasswordRepository());
-    sl.registerLazySingleton(() => GetUserDataRepository());
+    // sl.registerLazySingleton(() => GetUserDataRepository());
 //app
     sl.registerLazySingleton(() => ProfileRepo());
+    sl.registerLazySingleton(() => CreateServiceRepository());
+    sl.registerLazySingleton(() => ServicesRepository());
 
     //app
     // sl.registerLazySingleton(() => OpportunitiesRepository());

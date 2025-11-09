@@ -19,29 +19,25 @@ class EditProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<EditProfileController>(
       init: EditProfileController(),
-      builder: (_) => BaseScaffold(
+      builder: (controller) => BaseScaffold(
         backgroundColor: Colors.white,
         appBar: AppBars.appBarBack(title: 'edit_account'),
-        body: Padding(
-          padding: AppPadding.paddingScreenSH16,
-          child: Column(
-            children: [
-              EditProfileTFBody(
-                controller: _,
+        body: controller.isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Padding(
+                padding: AppPadding.paddingScreenSH16,
+                child: Column(
+                  children: [
+                    EditProfileTFBody(controller: controller),
+                    const Spacer(),
+                    ButtonDefault.main(
+                      title: 'Confirm',
+                      onTap: () => controller.editProfile(),
+                    ),
+                    24.ESH(),
+                  ],
+                ),
               ),
-              const Spacer(),
-              ButtonDefault.main(
-                title: 'Confirm',
-                active: _.emailController!.text.isNotEmpty &&
-                    _.phoneController!.text.isNotEmpty &&
-                    _.firstNameController!.text.isNotEmpty &&
-                    _.familyNameController!.text.isNotEmpty,
-                onTap: () => _.modifiesData(),
-              ),
-              24.ESH(),
-            ],
-          ),
-        ),
       ),
     );
   }

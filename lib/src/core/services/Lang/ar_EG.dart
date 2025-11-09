@@ -309,6 +309,7 @@ const Map<String, String> arAE = {
   "please_enter_location": "يرجى إدخال الموقع",
   "service_added_successfully": "تمت إضافة الخدمة بنجاح",
   "success": "نجاح",
+  "Profile_Update_Successfully": "تم تحديث الملف الشخصي بنجاح",
 
   //خدمات
   "human_hospital": "مستشفى بشري أو مركز طبي",
@@ -323,6 +324,7 @@ const Map<String, String> arAE = {
   "veterinary_pharmacy": "صيدلية بيطري أو مستلزمات حيوان",
 
   //تخصصات
+  "all_specializations": "جميع التخصصات",
   "dermatology": "جلدية",
   "laser": "ليزر",
   "dentistry": "اسنان",
@@ -378,6 +380,9 @@ const Map<String, String> arAE = {
   "Can_the_discount_card_be_used_in_the_case_of_a_home_visit":
       "هل يمكن استخدام كارت الخصومات في حالة الزيارة المنزلية",
   "home_delivery": "توصيل منزلي",
+  "is_home_visit": "زيارة منزلية",
+  "is_home_delivery": "توصيل منزلي",
+  "is_home_service": "خدمة منزلية",
   "home_service": "خدمة منزلية",
   "consultation_price_before_discount": "سعر الكشف قبل الخصم",
   "consultation_price_after_discount": "سعر الكشف بعد الخصم",
@@ -458,6 +463,7 @@ const Map<String, String> arAE = {
   'under_review': 'قيد المراجعة من قبل الإدارة',
   'approved_on': 'تم القبول في {date}',
   'view_details': 'عرض التفاصيل',
+  'delete': 'حذف',
   'delete_service': 'حذف الخدمة',
   'delete_service_confirmation':
       'هل أنت متأكد من حذف هذه الخدمة؟ لا يمكن التراجع عن هذا الإجراء.',
@@ -469,4 +475,12 @@ const Map<String, String> arAE = {
   'Select_location': 'حدد الموقع',
   'selected_location': 'الموقع المحدد',
   'Location_selected': 'تم تحديد موقع',
+  'View_all_branches': 'عرض جميع الفروع',
+  'no_address_available': 'لا يوجد عنوان',
+  'view_all': 'عرض الكل',
+  'are_you_sure_you_want_to_delete': 'هل أنت متأكد أنك تريد حذف',
+  'cancel': 'إلغاء',
+  'service_deleted_successfully': 'تم حذف الخدمة بنجاح',
+  'failed_to_delete_service': 'فشل في حذف الخدمة',
+  'my_services': 'خدماتي',
 };

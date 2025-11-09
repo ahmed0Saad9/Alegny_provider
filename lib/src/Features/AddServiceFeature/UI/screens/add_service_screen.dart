@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:Alegny_provider/src/Features/AddServiceFeature/Bloc/controller/add_service_controller.dart';
 import 'package:Alegny_provider/src/Features/AddServiceFeature/UI/widgets/location_picker_screen.dart';
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_model.dart';
 
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Appbars/app_bars.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_default.dart';
@@ -17,17 +18,18 @@ part '../widgets/step_2_content.dart';
 part '../widgets/step_3_content.dart';
 
 class AddServiceScreen extends StatelessWidget {
-  const AddServiceScreen({super.key});
+  final ServiceModel? serviceToEdit;
+  const AddServiceScreen({super.key, this.serviceToEdit});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBars.appBarBack(
-        title: 'Add_Service',
+        title: serviceToEdit != null ? 'edit_service'.tr : 'add_service'.tr,
       ),
       body: GetBuilder<AddServiceController>(
-        init: AddServiceController(),
+        init: AddServiceController(serviceToEdit: serviceToEdit),
         builder: (controller) => Column(
           children: [
             _buildStepperHeader(

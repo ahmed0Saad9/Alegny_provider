@@ -445,7 +445,7 @@ const Map<String, String> enUS = {
   "veterinary_pharmacy": "Veterinary Pharmacy or Animal Supplies",
 
   //specializations
-
+  "all_specializations": "All Specializations",
   "dermatology": "Dermatology",
   "laser": "Laser",
   "dentistry": "Dentistry",
@@ -581,4 +581,13 @@ const Map<String, String> enUS = {
   'delete_service_confirmation':
       'Are you sure you want to delete this service? This action cannot be undone.',
   'all_branches': 'All Branches',
+  "is_home_visit": "Home Visit",
+  "is_home_delivery": "Home Delivery",
+  "is_home_service": "Home Visit",
+  'no_address_available': 'No address available',
+  'view_all': 'View all',
+  'are_you_sure_you_want_to_delete': 'Are you sure you want to delete',
+  'cancel': 'Cancel',
+  'service_deleted_successfully': 'Service deleted successfully',
+  'failed_to_delete_service': 'Failed to delete service',
 };

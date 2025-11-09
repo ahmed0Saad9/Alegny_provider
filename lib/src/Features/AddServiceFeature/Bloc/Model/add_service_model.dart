@@ -140,7 +140,6 @@ class ServiceData {
         'service_type': serviceType,
         'specialization': specialization,
         'service_description': serviceDescription,
-        'service_image': serviceImage,
 
         // Social media
         'facebook': facebook,
@@ -156,7 +155,7 @@ class ServiceData {
         'consultation_price_before': consultationPriceBefore,
         'consultation_price_after': consultationPriceAfter,
         'is_home_visit': isHomeVisit,
-        'homeDiscount': homeDiscount,
+        'home_discount': homeDiscount,
 
         // Hospital fields
         'examinations_discount': examinationsDiscount,
@@ -182,7 +181,7 @@ class ServiceData {
         'sunglasses_discount': sunglassesDiscount,
         'contact_lenses_discount': contactLensesDiscount,
         'eye_exam_discount': eyeExamDiscount,
-        'is_delivery': isDelivery,
+        'is_delivery': isDelivery ?? false,
 
         // Gym fields
         'gym_month_sub_price_b': gymMonthSubPriceB,
@@ -211,19 +210,6 @@ class Branch {
   final double? latitude;
   final double? longitude;
 
-  Map<String, dynamic> toJson() {
-    return {
-      'address': address,
-      'phone': phoneNumber,
-      'whatsapp': whatsAppNumber,
-      'governorate': selectedGovernorate,
-      'city': selectedCity,
-      'workingHours': workingHours,
-      'latitude': latitude,
-      'longitude': longitude,
-    };
-  }
-
   const Branch({
     required this.address,
     required this.phoneNumber,
@@ -234,4 +220,34 @@ class Branch {
     this.latitude,
     this.longitude,
   });
+
+  Map<String, dynamic> toJson() {
+    // Convert Arabic day keys to English for API
+    final Map<String, String> englishWorkingHours = {};
+    final dayMapping = {
+      'saturday': 'Saturday',
+      'sunday': 'Sunday',
+      'monday': 'Monday',
+      'tuesday': 'Tuesday',
+      'wednesday': 'Wednesday',
+      'thursday': 'Thursday',
+      'friday': 'Friday',
+    };
+
+    workingHours.forEach((key, value) {
+      final englishKey = dayMapping[key] ?? key;
+      englishWorkingHours[englishKey] = value;
+    });
+
+    return {
+      'address': address,
+      'phoneNumber': phoneNumber,
+      'whatsapp': whatsAppNumber,
+      'governorate': selectedGovernorate,
+      'city': selectedCity,
+      'workingHours': englishWorkingHours,
+      'latitude': latitude,
+      'longitude': longitude,
+    };
+  }
 }

@@ -13,10 +13,10 @@ class EditGeneralProfileRepository with ApiKey {
     required EditProfileParam param,
   }) async {
     try {
-      Response response = await _networkService.post(
+      Response response = await _networkService.put(
         url: uRLUpdateMyAccountData,
         auth: true,
-        // bodyFormData:await param.toFormData(),
+        bodyFormData: await param.toFormData(),
         // body: param.toMap(),
       );
       return ApiResult.success(response);

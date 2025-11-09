@@ -20,37 +20,51 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Debug prints
+    print('=== AvatarWidget Debug ===');
+    print('Image URL: $image');
+    print('Image File: $imageFile');
+    print('Image is null: ${image == null}');
+    print('Image is empty: ${image?.isEmpty ?? true}');
+
     return Container(
       height: height.h,
-      width: width.w,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50.r),
+      width: width.h, // Changed from width.w to height.h for circle
+      decoration: const BoxDecoration(
+        shape: BoxShape.circle, // Use circle for perfect circle
         color: Colors.white,
       ),
       clipBehavior: Clip.antiAlias,
-      child: (imageFile == null && (image == null || image!.isEmpty))
-          ? Image.asset(
-              'assets/images/Profile.png',
-              height: height.h,
-              width: width.w,
-              fit: BoxFit.cover,
-            )
-          : imageFile == null
-              ? ImageNetwork(
-                  url: image,
-                  height: height.h,
-                  width: width.w,
-                  boxFit: BoxFit.cover,
-                )
-              : Image.file(
-                  imageFile!,
-                  height: height.h,
-                  width: width.w,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => const Icon(
-                    Icons.error_outline,
-                  ),
-                ),
+      child: _buildImage(),
+    );
+  }
+
+  Widget _buildImage() {
+    if (imageFile != null) {
+      return Image.file(
+        imageFile!,
+        height: height.h,
+        width: width.h,
+        fit: BoxFit.cover,
+      );
+    }
+
+    if (image != null && image!.isNotEmpty) {
+      print('Loading network image: $image');
+      return ImageNetwork(
+        url: image,
+        height: height.h,
+        width: width.h,
+        boxFit: BoxFit.cover,
+      );
+    }
+
+    // Fallback to default profile image
+    return Image.asset(
+      'assets/images/Profile.png',
+      height: height.h,
+      width: width.h,
+      fit: BoxFit.cover,
     );
   }
 }

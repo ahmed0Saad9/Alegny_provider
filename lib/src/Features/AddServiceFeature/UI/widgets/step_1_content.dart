@@ -60,7 +60,8 @@ class _Step1Content extends StatelessWidget {
         GetBuilder<AddServiceController>(
           builder: (controller) {
             return (controller.selectedService.value == 'human_doctor') ||
-                    (controller.selectedService.value == 'human_hospital')
+                    (controller.selectedService.value == 'human_hospital' ||
+                        controller.selectedService.value == 'human_pharmacy')
                 ? Column(
                     children: [
                       buildSectionLabel('specialization', true),
@@ -142,21 +143,33 @@ class _Step1Content extends StatelessWidget {
 
   Widget _buildSpecializationDropdown() {
     return DropdownButtonFormField<String>(
-      value: controller.selectedSpecialization.value,
-      decoration: _dropdownDecoration(),
-      hint: CustomTextL(
-        'select_specialization',
-        color: Colors.grey[600],
-        fontSize: 18.sp,
-      ),
-      items: AddServiceController.specializations
-          .map((spec) => DropdownMenuItem(
-                value: spec,
-                child: CustomTextL(spec, fontSize: 14.sp),
-              ))
-          .toList(),
-      onChanged: (value) => controller.selectedSpecialization.value = value,
-    );
+        value: controller.selectedSpecialization.value,
+        decoration: _dropdownDecoration(),
+        hint: CustomTextL(
+          'select_specialization',
+          color: Colors.grey[600],
+          fontSize: 18.sp,
+        ),
+        items: controller
+            .getSpecializationsForService(controller.selectedService.value)
+            .map((spec) => DropdownMenuItem(
+                  value: spec,
+                  child: CustomTextL(_getSpecializationDisplayText(spec),
+                      fontSize: 14.sp),
+                ))
+            .toList(),
+        onChanged: (value) {
+          controller.selectedSpecialization.value = value;
+          controller.update();
+        });
+  }
+
+  String _getSpecializationDisplayText(String specialization) {
+    if (specialization == 'جميع التخصصات') {
+      return 'all_specializations'.tr; // Make sure to add this translation
+    }
+    return specialization
+        .tr; // Assuming you have translations for other specializations
   }
 
   Widget _buildServiceDropdown() {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 //  Service Status
 enum ServiceStatus {
@@ -14,7 +15,6 @@ enum ServiceStatus {
 
   const ServiceStatus(this.value, this.translationKey, this.color, this.icon);
 
-  // Helper to convert string → enum
   static ServiceStatus fromString(String? value) {
     switch (value?.toLowerCase()) {
       case 'approved':
@@ -27,7 +27,6 @@ enum ServiceStatus {
     }
   }
 
-  // Helper to convert enum → string
   String toJsonValue() => value;
 }
 
@@ -38,7 +37,7 @@ class BranchModel {
   final String address;
   final String phone;
   final String whatsapp;
-  final Map<String, String> workingHours;
+  final Map<String, dynamic> workingHours;
 
   BranchModel({
     required this.governorate,
@@ -54,13 +53,83 @@ class BranchModel {
       governorate: json['governorate'] ?? '',
       city: json['city'] ?? '',
       address: json['address'] ?? '',
-      phone: json['phone'] ?? '',
-      whatsapp: json['whatsapp'] ?? '',
+      phone: json['phone']?.toString() ?? '',
+      whatsapp: json['whatsapp']?.toString() ?? '',
       workingHours: (json['workingHours'] as Map?)?.map(
-            (key, value) => MapEntry(key.toString(), value.toString()),
+            (key, value) => MapEntry(key.toString(), value),
           ) ??
           {},
     );
+  }
+
+  // Enhanced method to get working hours with language support
+  String getWorkingHoursForDay(String dayKey) {
+    final bool isArabic = Get.locale?.languageCode == 'ar';
+
+    // Try multiple key formats
+    final possibleKeys = [
+      dayKey, // Original key (english)
+      dayKey.toLowerCase(), // Lowercase english
+      _convertToArabicDay(dayKey), // Arabic equivalent
+      _convertToArabicDay(dayKey).toLowerCase(), // Lowercase arabic
+    ];
+
+    for (final key in possibleKeys) {
+      final hours = workingHours[key];
+      if (hours != null && hours.toString().isNotEmpty) {
+        final hoursString = hours.toString();
+
+        // If closed, return in correct language
+        if (_isClosedHours(hoursString)) {
+          return isArabic ? 'مغلق' : 'Closed';
+        }
+
+        return hoursString;
+      }
+    }
+
+    return isArabic ? 'مغلق' : 'Closed';
+  }
+
+  bool _isClosedHours(String hours) {
+    final closedIndicators = ['مغلق', 'closed', 'close', 'مقفول'];
+    return hours.isEmpty ||
+        closedIndicators.any((indicator) =>
+            hours.toLowerCase().contains(indicator.toLowerCase()));
+  }
+
+  // Helper method to convert english days to arabic
+  String _convertToArabicDay(String englishDay) {
+    final dayMap = {
+      'saturday': 'السبت',
+      'sunday': 'الأحد',
+      'monday': 'الإثنين',
+      'tuesday': 'الثلاثاء',
+      'wednesday': 'الأربعاء',
+      'thursday': 'الخميس',
+      'friday': 'الجمعة',
+    };
+    return dayMap[englishDay.toLowerCase()] ?? englishDay;
+  }
+
+  // New method to get all working hours in a consistent format
+  Map<String, String> getFormattedWorkingHours() {
+    final Map<String, String> formatted = {};
+    final days = [
+      'saturday',
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday'
+    ];
+
+    for (final day in days) {
+      formatted[day] = getWorkingHoursForDay(day);
+    }
+
+    return formatted;
   }
 
   Map<String, dynamic> toJson() => {
@@ -71,15 +140,6 @@ class BranchModel {
         'whatsapp': whatsapp,
         'workingHours': workingHours,
       };
-
-  // Get working hours for a specific day
-  String getWorkingHoursForDay(String dayKey) {
-    final hours = workingHours[dayKey] ?? '';
-    if (hours.isEmpty || hours.toLowerCase() == 'closed') {
-      return 'Closed';
-    }
-    return hours;
-  }
 }
 
 //  ServiceModel
@@ -88,8 +148,8 @@ class ServiceModel {
   final String serviceName;
   final String serviceType;
   final String? specialization;
-  final String imageUrl;
-  final Map<String, String> discounts;
+  final String? imageUrl;
+  final Map<String, dynamic> discounts;
   final List<BranchModel> branches;
   final ServiceStatus status;
 
@@ -108,9 +168,10 @@ class ServiceModel {
     return ServiceModel(
       id: json['id'].toString(),
       serviceName: json['serviceName'] ?? '',
-      serviceType: json['serviceType'],
+      serviceType: json['serviceType'] ?? '',
       specialization: json['specialization'],
       imageUrl: json['imageUrl'],
+      // may be null — safe now
       discounts: (json['discounts'] as Map?)?.map(
             (key, value) => MapEntry(key.toString(), value.toString()),
           ) ??

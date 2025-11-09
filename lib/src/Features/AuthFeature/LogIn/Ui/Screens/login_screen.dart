@@ -50,6 +50,7 @@ class LoginScreen extends StatelessWidget {
                   TextFieldDefault(
                     label: 'Email',
                     prefixIconUrl: 'Email',
+                    autoFillHints: const [AutofillHints.email],
                     controller: _.emailController,
                     validation: emailValidator,
                     keyboardType: TextInputType.emailAddress,
@@ -61,6 +62,7 @@ class LoginScreen extends StatelessWidget {
                   TextFieldDefault(
                     label: 'Password',
                     prefixIconUrl: 'Lock',
+                    autoFillHints: const [AutofillHints.password],
                     controller: _.passwordController,
                     validation: passwordValidator,
                     secureType: SecureType.toggle,

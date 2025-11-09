@@ -8,11 +8,13 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/BottomSheets/base_bott
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
+import 'package:Alegny_provider/src/core/services/services_locator.dart';
 import 'package:Alegny_provider/src/core/services/svg_widget.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -177,6 +179,7 @@ class ProfileScreen extends StatelessWidget {
                                 ),
                                 child: ClipOval(
                                   child: AvatarWidget(
+                                    image: sl<GetStorage>().read('userImage'),
                                     imageFile: controller.image?.media,
                                     height: 100,
                                     width: 100,
@@ -185,7 +188,7 @@ class ProfileScreen extends StatelessWidget {
 
                             16.ESH(),
                             CustomTextR(
-                              'Ahmed Saad',
+                              '${sl<GetStorage>().read('firstName')} ${sl<GetStorage>().read('lastName')}',
                               fontSize: 24.sp,
                               fontWeight: FW.bold,
                               color: Colors.white,
@@ -212,7 +215,7 @@ class ProfileScreen extends StatelessWidget {
                                   Column(
                                     children: [
                                       CustomTextR(
-                                        'ahmedsaad191419@gmail.com',
+                                        sl<GetStorage>().read('email'),
                                         fontSize: 12.sp,
                                         color: Colors.white,
                                       ),
