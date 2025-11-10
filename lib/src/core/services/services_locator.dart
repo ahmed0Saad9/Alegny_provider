@@ -15,11 +15,14 @@ import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Repo/
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Repo/verify_otp_repository.dart';
 import 'package:Alegny_provider/src/Features/ComplaintsFeature/Bloc/Repo/complaints_repo.dart';
 import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/Repo/get_services_repo.dart';
+import 'package:Alegny_provider/src/Features/NotificationFeature/Bloc/Repo/notification_repo.dart';
 import 'package:Alegny_provider/src/core/ThemeData/theme_manager.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_services.dart';
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
+
+import '../../Features/NotificationFeature/Bloc/Controller/notification_controller.dart';
 
 final sl = GetIt.instance;
 
@@ -53,6 +56,7 @@ class ServicesLocator {
     // sl.registerLazySingleton(() => GetUserDataRepository());
 //app
     sl.registerLazySingleton(() => ProfileRepo());
+    sl.registerLazySingleton(() => NotificationsRepo());
     sl.registerLazySingleton(() => CreateServiceRepository());
     sl.registerLazySingleton(() => ServicesRepository());
     sl.registerLazySingleton(() => ComplaintRepository());
@@ -70,6 +74,8 @@ class ServicesLocator {
 
     /// Other
     sl.registerFactory(() => ThemeManagerController());
+    sl.registerFactory<NotificationsController>(
+        () => NotificationsController());
     sl.registerLazySingleton(() => NetworkService());
     sl.registerLazySingleton(() => GetStorage());
     sl.registerLazySingleton(() => LogInterceptor(

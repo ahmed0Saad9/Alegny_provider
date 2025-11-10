@@ -161,7 +161,7 @@ class CustomTextL extends StatelessWidget {
 
         /// adaptive arabic nums ///TODO/ update when eng sub ends
         textScaleFactor: 1,
-        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: color,
               backgroundColor: backgroundColor,
               fontSize: (fontSize ?? 16).sp,
@@ -300,7 +300,7 @@ class CustomTextR extends StatelessWidget {
 
         /// adaptive arabic nums ///TODO/ update when eng sub ends
         textScaleFactor: 1,
-        style: Theme.of(context).textTheme.bodyText2?.copyWith(
+        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
               color: color,
               backgroundColor: backgroundColor,
               fontSize: (fontSize ?? 16).sp,

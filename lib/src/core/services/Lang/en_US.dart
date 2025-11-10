@@ -230,7 +230,25 @@ const Map<String, String> enUS = {
   "Terms_and_Conditions": "Terms and conditions",
 
   ///old
-
+  "notifications": "Notifications",
+  "notification_not_found": "Notification not found",
+  "unread_notifications": "unread notifications",
+  "mark_all_read": "Mark all as read",
+  "no_notifications": "No notifications",
+  "no_notifications_subtitle": "You don't have any notifications yet",
+  "just_now": "Just now",
+  "minutes_ago": "minutes ago",
+  "hours_ago": "hours ago",
+  "days_ago": "days ago",
+  "notification_details": "Notification Details",
+  "read": "Read",
+  "unread": "Unread",
+  "message": "Message",
+  "notification_info": "Notification Information",
+  "sent_date": "Sent Date",
+  "notification_id": "Notification ID",
+  "status": "Status",
+  "mark_as_read": "Mark as Read",
   "Enter_A_4_Digit_Number_That_Was_Sent_To":
       "Enter A 4 Digit Number That\nWas Sent To",
   "Phone_number": "Phone number",
@@ -301,6 +319,10 @@ const Map<String, String> enUS = {
   "Reply": "Reply",
   "empty_date": "Empty date",
   "Booking_requests": "Booking Requests",
+  // "error_occurred": "Error Occurred",
+  "retry": "Retry",
+  "success": "Success",
+  "notification_marked_read": "Notification marked as read",
 
   /// new keys
   "comments": "Comments",
@@ -399,7 +421,6 @@ const Map<String, String> enUS = {
   "logout": "Logout",
 
   "complaints_suggestions": "Complaints & Suggestions",
-  "app_idea": "App Idea",
   "language": "Languages",
   "terms_conditions": "Terms & Conditions",
   "contact_phone_1": "Contact us via Phone 1",
@@ -443,7 +464,7 @@ const Map<String, String> enUS = {
   "please_enter_discount": "Please enter discount percentage",
   "please_enter_location": "Please enter location details",
   "service_added_successfully": "Service added successfully",
-  "success": "Success",
+  // "success": "Success",
   "failed_to_pick_image": "Failed to pick image",
 
   //Services
@@ -648,7 +669,6 @@ const Map<String, String> enUS = {
   "complaints": "Complaints",
   "subject": "Subject",
   "enter_subject": "Enter complaint subject",
-  "message": "Message",
   "enter_message": "Please describe your complaint in detail...",
   "attach_image": "Attach Image (Optional)",
   "select_image": "Select Image",
@@ -658,5 +678,32 @@ const Map<String, String> enUS = {
   "message_required": "Message is required",
   "message_too_short": "Message must be at least 10 characters",
   "complaint_submitted_successfully": "Complaint submitted successfully",
-  "an_error_occurred": "An error occurred"
+  "an_error_occurred": "An error occurred",
+
+  "app_idea": "App Idea",
+  "app_demo_video": "App Demo Video",
+  "about_app": "About Our App",
+  "app_description":
+      "A platform for medical providers to showcase their services and offer discounts to patients.",
+  "app_description_arabic":
+      "A comprehensive application for medical service providers including human and veterinary doctors, clinics, hospitals, and pharmacies. It enables them to easily create a professional profile to display their medical services, in addition to publishing available offers and discounts for customers.",
+  "key_features": "Key Features",
+  "service_management": "Comprehensive medical service management",
+  "discount_management": "Discount and offer management system",
+  "multi_branch_support": "Multi-branch and location support",
+  "professional_profile": "Professional provider profile creation",
+  "direct_communication": "Direct communication with patients",
+  "for_providers": "For Service Providers",
+  "create_profile": "Create your professional medical profile",
+  "add_services": "Add and manage your medical services",
+  "set_prices_discounts": "Set prices and create special discounts",
+  "connect_customers": "Connect with patients and grow your practice",
+  "watch_demo": "Watch Demo Video",
+  "tap_to_watch": "Tap the button below to watch",
+  "external_video": "External Video",
+  "watch": "Watch",
+  "watch_on_youtube": "Watch on YouTube",
+  "youtube_redirect_message":
+      "You will be redirected to YouTube to watch the app demo video.",
+  "open_youtube": "Open YouTube"
 };

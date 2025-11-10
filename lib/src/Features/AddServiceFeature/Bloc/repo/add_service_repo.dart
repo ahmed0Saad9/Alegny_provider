@@ -115,30 +115,40 @@ class CreateServiceRepository with ApiKey {
     File? imageFile,
   }) async {
     try {
-      // If there's an image, use form-data, otherwise use JSON
-      if (imageFile != null) {
-        final formData = FormData.fromMap({
-          'serviceDataJson': jsonEncode(serviceData.toJson()),
-          'image': await MultipartFile.fromFile(imageFile.path),
-        });
+      print('=== UPDATE SERVICE ===');
 
-        final response = await _networkService.put(
-          url: uRLUpdateServiceService(serviceId: serviceId),
-          bodyFormData: formData,
-          auth: true,
-        );
+      final serviceDataJson = jsonEncode(serviceData.toJson());
+      print('1. ServiceData JSON: $serviceDataJson');
 
-        return ApiResult.success(response);
-      } else {
-        final response = await _networkService.put(
-          url: uRLUpdateServiceService(serviceId: serviceId),
-          body: serviceData.toJson(),
-          auth: true,
-        );
+      // Create FormData
+      final formData = FormData.fromMap({
+        'serviceDataJson': serviceDataJson,
+        if (imageFile != null)
+          'coverImage': await MultipartFile.fromFile(
+            imageFile.path,
+            filename: 'service_image.jpg',
+          ),
+      });
 
-        return ApiResult.success(response);
-      }
+      print('2. FormData created');
+      print('3. FormData fields: ${formData.fields}');
+
+      final url = uRLUpdateServiceService(serviceId: serviceId);
+      print('4. URL: $url');
+
+      // Use bodyFormData parameter and set isForm to true
+      final response = await _networkService.put(
+        url: url,
+        bodyFormData: formData, // This should trigger the FormData path
+        isForm: true, // Important: set this to true
+        auth: true,
+      );
+
+      print('5. Update successful! Status: ${response.statusCode}');
+      return ApiResult.success(response);
     } catch (e) {
+      print('=== UPDATE SERVICE ERROR ===');
+      print('Error: $e');
       return ApiResult.failure(NetworkExceptions.getDioException(e));
     }
   }

@@ -8,7 +8,7 @@ mixin ApiKey {
   static const String student = 'Student/';
 
   /// Auth
-  final String uRLSetting = "${apiBaseUrl}setting";
+  final String uRLNotifications = "${apiBaseUrl}setting";
   final String uRLLogin = "$apiBaseUrl${providerAuth}login";
   final String uRLRegister = "$apiBaseUrl${providerAuth}register";
   final String uRLLogout = "$apiBaseUrl${providerAuth}logout";
@@ -31,7 +31,9 @@ mixin ApiKey {
 
   final String uRLCheckQrCode = "$apiBaseUrl${account}qr-code-check";
 
-  final String uRLNotifications = "$apiBaseUrl${account}notifications?=";
+  final String uRLGetNotifications = "$apiBaseUrl${providerAuth}notifications";
+  String uRLReadNotifications({required String notificationId}) =>
+      "$apiBaseUrl${providerAuth}notifications/$notificationId/read";
 
   String uRLProfile({required int universityIDCard}) =>
       "$apiBaseUrl${student}Profile/$universityIDCard";

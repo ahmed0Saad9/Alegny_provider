@@ -149,6 +149,7 @@ class NetworkService with ApiKey {
     @required String? url,
     Map<String, String>? headers,
     Map<String, dynamic>? body,
+    dynamic data,
     FormData? bodyFormData,
     bool isForm = false,
     int? contentLength,

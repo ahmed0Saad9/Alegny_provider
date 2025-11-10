@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Alegny_provider/src/Features/NotificationFeature/Bloc/Controller/notification_controller.dart';
 import 'package:Alegny_provider/src/Features/NotificationFeature/UI/screens/notifications_screen.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
 import 'package:flutter/material.dart';
@@ -217,84 +218,86 @@ class AppBars {
     bool hasUnreadNotifications = true,
   }) {
     return AppBar(
-        scrolledUnderElevation: 0,
-        toolbarHeight: 70.h,
-        backgroundColor: AppColors.main,
-        elevation: 0.0,
-        flexibleSpace: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                AppColors.main,
-                AppColors.main.withOpacity(0.85),
-              ],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-          ),
-        ),
-        title: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.h),
-          child: Row(
-            children: [
-              // Avatar
-              Container(
-                width: 45.w,
-                height: 45.w,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Colors.white,
-                    width: 2,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: ClipOval(
-                  child: AvatarWidget(
-                    height: 45,
-                    width: 45,
-                    image: sl<GetStorage>().read("userImage"),
-                  ),
-                ),
-              ),
-              12.ESW(),
-              Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    CustomTextL(
-                      'Hello',
-                      fontSize: 20.sp,
-                      color: Colors.white.withOpacity(0.9),
-                      fontWeight: FW.regular,
-                    ),
-                    // 2.ESH(),
-                    Expanded(
-                      child: CustomTextL(
-                        ', ${sl<GetStorage>().read('firstName') ?? 'user'}',
-                        fontSize: 20.sp,
-                        color: AppColors.titleWhite,
-                        fontWeight: FW.bold,
-                        isOverFlow: true,
-                        maxLines: 1,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+      scrolledUnderElevation: 0,
+      toolbarHeight: 70.h,
+      backgroundColor: AppColors.main,
+      elevation: 0.0,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              AppColors.main,
+              AppColors.main.withOpacity(0.85),
             ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
         ),
-        actions: [
-          // Notification Button
-          Padding(
+      ),
+      title: Padding(
+        padding: EdgeInsets.symmetric(vertical: 8.h),
+        child: Row(
+          children: [
+            // Avatar
+            Container(
+              width: 45.w,
+              height: 45.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: Colors.white,
+                  width: 2,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: AvatarWidget(
+                  height: 45,
+                  width: 45,
+                  image: sl<GetStorage>().read("userImage"),
+                ),
+              ),
+            ),
+            12.ESW(),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  CustomTextL(
+                    'Hello',
+                    fontSize: 20.sp,
+                    color: Colors.white.withOpacity(0.9),
+                    fontWeight: FW.regular,
+                  ),
+                  // 2.ESH(),
+                  Expanded(
+                    child: CustomTextL(
+                      ', ${sl<GetStorage>().read('firstName') ?? 'user'}',
+                      fontSize: 20.sp,
+                      color: AppColors.titleWhite,
+                      fontWeight: FW.bold,
+                      isOverFlow: true,
+                      maxLines: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        // Notification Button
+        GetBuilder<NotificationsController>(
+          init: NotificationsController(),
+          builder: (controller) => Padding(
             padding: EdgeInsetsDirectional.only(end: 16.w, top: 10.h),
             child: Stack(
               clipBehavior: Clip.none,
@@ -324,7 +327,7 @@ class AppBars {
                   ),
                 ),
                 // Notification Dot Indicator
-                if (hasUnreadNotifications)
+                if (controller.hasUnreadNotifications.value)
                   PositionedDirectional(
                     top: 5.h,
                     start: 5.w,
@@ -351,7 +354,9 @@ class AppBars {
               ],
             ),
           ),
-        ]);
+        ),
+      ],
+    );
   }
 
   static AppBar appBarInvestmentPortfolio({

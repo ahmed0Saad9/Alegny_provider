@@ -1,4 +1,5 @@
 import 'package:Alegny_provider/src/Features/AccountFeature/Bloc/Controller/profile_controller.dart';
+import 'package:Alegny_provider/src/Features/AccountFeature/UI/screens/app_idea_screen.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/UI/screens/change_password_screen.dart';
 import 'package:Alegny_provider/src/Features/AccountFeature/UI/widgets/language_select.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Ui/Screen/edit_profile_screen.dart';
@@ -264,7 +265,9 @@ class ProfileScreen extends StatelessWidget {
                       _buildMenuItem(
                         icon: Icons.play_circle_outline,
                         title: 'app_idea',
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => const AppIdeaScreen());
+                        },
                       ),
 
                       16.ESH(),
