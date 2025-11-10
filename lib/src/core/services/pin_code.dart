@@ -11,7 +11,7 @@ import '../constants/color_constants.dart';
 class PinCodeServices {
   static pinCodeWidget(
       {Function? onChanged,
-      int fieldCounts = 4,
+      int fieldCounts = 6,
       required BuildContext context,
       required TextEditingController pinCodeController,
       required StreamController<ErrorAnimationType> errorController}) {
@@ -20,8 +20,8 @@ class PinCodeServices {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: PinCodeTextField(
-          showCursor: false,
-          autoFocus: false,
+          showCursor: true,
+          autoFocus: true,
           autoUnfocus: true,
           autoDismissKeyboard: true,
           enablePinAutofill: true,
@@ -45,8 +45,8 @@ class PinCodeServices {
             shape: PinCodeFieldShape.box,
             borderWidth: 1,
             borderRadius: BorderRadius.circular(12.r),
-            fieldHeight: 57.h,
-            fieldWidth: 72.w,
+            // fieldHeight: 57.h,
+            // fieldWidth: 72.w,
             activeFillColor: AppColors.transparentColor,
           ),
           animationDuration: const Duration(milliseconds: 400),
@@ -84,7 +84,7 @@ class PinCodeWidget extends StatelessWidget {
   const PinCodeWidget(
       {Key? key,
       this.onChanged,
-      this.fieldCounts = 4,
+      this.fieldCounts = 6,
       this.fieldWidth = 60.0,
       required this.context,
       required this.pinCodeController,

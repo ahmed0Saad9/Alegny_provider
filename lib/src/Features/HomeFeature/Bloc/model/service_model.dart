@@ -38,6 +38,8 @@ class BranchModel {
   final String phoneNumber;
   final String whatsapp;
   final Map<String, dynamic> workingHours;
+  final double? latitude;
+  final double? longitude;
 
   BranchModel({
     required this.governorate,
@@ -46,6 +48,8 @@ class BranchModel {
     required this.phoneNumber,
     required this.whatsapp,
     required this.workingHours,
+    this.latitude,
+    this.longitude,
   });
 
   factory BranchModel.fromJson(Map<String, dynamic> json) {
@@ -59,6 +63,12 @@ class BranchModel {
             (key, value) => MapEntry(key.toString(), value),
           ) ??
           {},
+      latitude: json['latitude'] != null
+          ? double.tryParse(json['latitude'].toString())
+          : null,
+      longitude: json['longitude'] != null
+          ? double.tryParse(json['longitude'].toString())
+          : null,
     );
   }
 

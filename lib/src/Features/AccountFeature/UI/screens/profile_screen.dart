@@ -4,6 +4,7 @@ import 'package:Alegny_provider/src/Features/AccountFeature/UI/widgets/language_
 import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Ui/Screen/edit_profile_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogOut/Bloc/Controller/log_out_controller.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/terms_and_conditions_screen.dart';
+import 'package:Alegny_provider/src/Features/ComplaintsFeature/UI/Screens/complaints_screen.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/BottomSheets/base_bottom_sheet.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
@@ -256,7 +257,9 @@ class ProfileScreen extends StatelessWidget {
                       _buildMenuItem(
                         icon: Icons.support_agent_outlined,
                         title: 'complaints_suggestions',
-                        onTap: () {},
+                        onTap: () {
+                          Get.to(() => ComplaintScreen());
+                        },
                       ),
                       _buildMenuItem(
                         icon: Icons.play_circle_outline,
@@ -428,7 +431,7 @@ class ProfileScreen extends StatelessWidget {
       ),
       child: CustomTextL(
         title,
-        fontSize: 14.sp,
+        fontSize: 18.sp,
         color: AppColors.main,
       ),
     );
@@ -479,14 +482,14 @@ class ProfileScreen extends StatelessWidget {
         ),
         title: CustomTextL(
           title,
-          fontSize: 14.sp,
+          fontSize: 16.sp,
           fontWeight: FW.medium,
           color: Colors.grey[800],
         ),
         subtitle: subtitle != null
             ? CustomTextR(
                 subtitle,
-                fontSize: 12.sp,
+                fontSize: 14.sp,
                 color: Colors.grey[600],
               )
             : null,

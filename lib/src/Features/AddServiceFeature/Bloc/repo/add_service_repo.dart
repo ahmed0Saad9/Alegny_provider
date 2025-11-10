@@ -123,8 +123,7 @@ class CreateServiceRepository with ApiKey {
         });
 
         final response = await _networkService.put(
-          url: uRLUpdateServiceService(
-              serviceId: serviceId), // Use your actual update endpoint
+          url: uRLUpdateServiceService(serviceId: serviceId),
           bodyFormData: formData,
           auth: true,
         );

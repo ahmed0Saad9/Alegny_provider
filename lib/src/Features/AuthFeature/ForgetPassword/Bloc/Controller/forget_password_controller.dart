@@ -19,13 +19,13 @@ class ForgetPasswordController
   @override
   get repository => sl<CheckEmailAndSendOtpRepo>();
 
-  TextEditingController pinCodeController = TextEditingController();
-  TextEditingController newPasswordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  late TextEditingController pinCodeController;
+  late TextEditingController newPasswordController;
+  late TextEditingController confirmPasswordController;
+  late TextEditingController emailController;
 
-  StreamController<ErrorAnimationType> errorController =
-      StreamController<ErrorAnimationType>();
+  late StreamController<ErrorAnimationType> errorController;
+
   final GlobalKey<FormState> globalKey = GlobalKey<FormState>();
   final GlobalKey<FormState> resetPasswordGlobalKey = GlobalKey<FormState>();
 
@@ -35,21 +35,75 @@ class ForgetPasswordController
   final ValidateOtpAndChangePasswordRepo _validateOtpAndChangePasswordRepo =
       sl<ValidateOtpAndChangePasswordRepo>();
 
-  // Send OTP for password reset - FIXED METHOD NAME
+  bool _isDisposed = false;
+
+  // Initialize controllers
+  @override
+  void onInit() {
+    super.onInit();
+    _initTextEditing();
+  }
+
+  void _initTextEditing() {
+    pinCodeController = TextEditingController();
+    newPasswordController = TextEditingController();
+    confirmPasswordController = TextEditingController();
+    emailController = TextEditingController();
+    errorController = StreamController<ErrorAnimationType>();
+    _isDisposed = false;
+  }
+
+  // Safe method to check if controllers are still valid
+  bool get areControllersValid {
+    return !_isDisposed;
+  }
+
+  // Clear all text fields
+  void clearAllFields() {
+    if (areControllersValid) {
+      pinCodeController.clear();
+      newPasswordController.clear();
+      confirmPasswordController.clear();
+      // Don't clear email controller as it might be needed for resend
+    }
+  }
+
+  // Reset only OTP fields
+  void resetOtpFields() {
+    if (areControllersValid) {
+      pinCodeController.clear();
+    }
+  }
+
+  // Reset only password fields
+  void resetPasswordFields() {
+    if (areControllersValid) {
+      newPasswordController.clear();
+      confirmPasswordController.clear();
+    }
+  }
+
+  // Send OTP for password reset
   Future<void> sendOtp({bool isResendCode = false}) async {
+    if (!areControllersValid) {
+      _initTextEditing(); // Reinitialize if disposed
+    }
+
     if (globalKey.currentState!.validate()) {
       globalKey.currentState!.save();
       showEasyLoading();
 
-      var result = await repository!.checkEmailAndSendOtp(
-          email: emailController.text); // FIXED: checkEmailAndSendOtp
+      var result =
+          await repository!.checkEmailAndSendOtp(email: emailController.text);
       closeEasyLoading();
 
       result.when(success: (Response response) {
-        _token = response.data['data']['verify_token'] ?? '';
+        _token = response.data['token'] ?? '';
         _email = emailController.text;
 
         if (!isResendCode) {
+          // Clear OTP field when navigating to new screen
+          resetOtpFields();
           Get.to(() => VerificationForgetPasswordScreen(
                 token: _token,
                 email: _email,
@@ -64,7 +118,13 @@ class ForgetPasswordController
 
   // Verify OTP code
   void checkCode() {
-    if (pinCodeController.text.length == 4) {
+    if (!areControllersValid) {
+      _initTextEditing(); // Reinitialize if disposed
+    }
+
+    if (pinCodeController.text.length == 6) {
+      // Clear password fields when navigating to new screen
+      resetPasswordFields();
       Get.to(() => NewPasswordScreen(
             token: _token,
             email: _email,
@@ -75,12 +135,16 @@ class ForgetPasswordController
     }
   }
 
-  // Reset password with OTP - FIXED METHOD CALL
+  // Reset password with OTP
   Future<void> resetPassword({
     required String token,
     required String email,
     required String code,
   }) async {
+    if (!areControllersValid) {
+      _initTextEditing(); // Reinitialize if disposed
+    }
+
     if (resetPasswordGlobalKey.currentState!.validate() &&
         newPasswordController.text == confirmPasswordController.text) {
       resetPasswordGlobalKey.currentState!.save();
@@ -97,6 +161,8 @@ class ForgetPasswordController
       closeEasyLoading();
 
       result.when(success: (Response response) {
+        // Clear all fields after successful password reset
+        clearAllFields();
         Get.offAll(() => const LoginScreen());
         successEasyLoading(
             response.data["message"] ?? "Password reset successfully");
@@ -108,25 +174,7 @@ class ForgetPasswordController
     }
   }
 
-  // Alternative method name that matches your original call
-  Future<void> checkEmailAndSendOtp({bool isResendCode = false}) async {
-    await sendOtp(isResendCode: isResendCode);
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-    _initTextEditing();
-  }
-
-  void _initTextEditing() {
-    pinCodeController = TextEditingController();
-    newPasswordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
-    emailController = TextEditingController();
-    errorController = StreamController<ErrorAnimationType>();
-  }
-
+  // Safe disposal method
   @override
   void onClose() {
     _disposeTextEditing();
@@ -134,10 +182,13 @@ class ForgetPasswordController
   }
 
   void _disposeTextEditing() {
-    pinCodeController.dispose();
-    newPasswordController.dispose();
-    confirmPasswordController.dispose();
-    emailController.dispose();
-    errorController.close();
+    if (!_isDisposed) {
+      pinCodeController.dispose();
+      newPasswordController.dispose();
+      confirmPasswordController.dispose();
+      emailController.dispose();
+      errorController.close();
+      _isDisposed = true;
+    }
   }
 }

@@ -30,19 +30,13 @@ class NewPasswordScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var node = FocusScope.of(context);
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.scaffoldBackGround,
-        image: DecorationImage(
-            image: AssetImage('assets/images/Gradiant.png'), fit: BoxFit.cover),
-      ),
-      padding: AppPadding.paddingScreenSH36,
-      child: BaseScaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBars.appBarBack(title: 'change_password'),
-        body: GetBuilder<ForgetPasswordController>(
-          builder: (_) => Form(
-            key: _.resetPasswordGlobalKey,
+    return BaseScaffold(
+      appBar: AppBars.appBarBack(title: 'change_password'),
+      body: GetBuilder<ForgetPasswordController>(
+        builder: (_) => Form(
+          key: _.resetPasswordGlobalKey,
+          child: Padding(
+            padding: AppPadding.paddingScreenSH16,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -59,7 +53,7 @@ class NewPasswordScreen extends StatelessWidget {
                 ),
                 40.ESH(),
                 TextFieldDefault(
-                  label: 'new_Password',
+                  label: 'new_Password'.tr,
                   controller: _.newPasswordController,
                   validation: passwordValidator,
                   secureType: SecureType.toggle,
@@ -69,7 +63,7 @@ class NewPasswordScreen extends StatelessWidget {
                 ),
                 24.ESH(),
                 TextFieldDefault(
-                  label: 'Re_Enter_Password',
+                  label: 'Re_Enter_Password'.tr,
                   controller: _.confirmPasswordController,
                   validation: (value) {
                     return confirmPasswordValidator(

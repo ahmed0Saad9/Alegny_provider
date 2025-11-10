@@ -212,10 +212,6 @@ class EditProfileController
     storage.write("userImage",
         data.profile.profileImageUrl); // This is the key you're using
     storage.write("phoneNumber", data.profile.phoneNumber);
-
-    print('=== STORAGE VERIFICATION ===');
-    print('Stored userImage: ${storage.read("userImage")}');
-    print('Stored firstName: ${storage.read("firstName")}');
   }
 
   // Add this method to check stored data

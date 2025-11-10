@@ -48,4 +48,5 @@ mixin ApiKey {
       "${apiBaseUrl}services/$serviceId";
   String uRLUpdateServiceService({required String serviceId}) =>
       "${apiBaseUrl}services/$serviceId";
+  final String uRLAddComplain = "${apiBaseUrl}complaints";
 }

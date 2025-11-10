@@ -11,7 +11,7 @@ class _Step1Content extends StatelessWidget {
       case 'facebook':
         return 'fb://page';
       case 'instagram':
-        return 'instagram://app';
+        return 'instagram://user?username=instagram';
       case 'tiktok':
         return 'tiktok://';
       case 'youtube':
@@ -105,13 +105,26 @@ class _Step1Content extends StatelessWidget {
               borderRadius: BorderRadius.circular(16.r),
               border: Border.all(color: Colors.grey[300]!, width: 2),
             ),
-            child: controller.serviceImage.value == null
-                ? _buildUploadPlaceholder()
-                : _buildImagePreview(controller.serviceImage.value!),
+            child: _buildImageContent(),
           ),
         );
       },
     );
+  }
+
+  Widget _buildImageContent() {
+    // Show selected image first
+    if (controller.serviceImage.value != null) {
+      return _buildImagePreview(controller.serviceImage.value!);
+    }
+    // Show existing image from URL
+    else if (controller.serviceImageUrl.value.isNotEmpty) {
+      return _buildNetworkImagePreview(controller.serviceImageUrl.value);
+    }
+    // Show upload placeholder
+    else {
+      return _buildUploadPlaceholder();
+    }
   }
 
   Widget _buildUploadPlaceholder() {
@@ -130,14 +143,87 @@ class _Step1Content extends StatelessWidget {
   }
 
   Widget _buildImagePreview(File imageFile) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(14.r),
-      child: Image.file(
-        imageFile,
-        fit: BoxFit.cover,
-        width: double.infinity,
-        height: double.infinity,
-      ),
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(14.r),
+          child: Image.file(
+            imageFile,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ),
+        // Add remove button
+        Positioned(
+          top: 8.w,
+          right: 8.w,
+          child: GestureDetector(
+            onTap: () {
+              controller.serviceImage.value = null;
+              controller.update();
+            },
+            child: Container(
+              padding: EdgeInsets.all(4.w),
+              decoration: const BoxDecoration(
+                color: Colors.black54,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.close,
+                size: 16.sp,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNetworkImagePreview(String imageUrl) {
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(14.r),
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: double.infinity,
+            loadingBuilder: (context, child, loadingProgress) {
+              if (loadingProgress == null) return child;
+              return Center(
+                child: CircularProgressIndicator(
+                  value: loadingProgress.expectedTotalBytes != null
+                      ? loadingProgress.cumulativeBytesLoaded /
+                          loadingProgress.expectedTotalBytes!
+                      : null,
+                ),
+              );
+            },
+            errorBuilder: (context, error, stackTrace) {
+              return _buildUploadPlaceholder();
+            },
+          ),
+        ),
+        Positioned(
+          bottom: 8.w,
+          right: 8.w,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+            decoration: BoxDecoration(
+              color: Colors.black54,
+              borderRadius: BorderRadius.circular(8.r),
+            ),
+            child: CustomTextL(
+              'existing_image',
+              fontSize: 10.sp,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
     );
   }
 

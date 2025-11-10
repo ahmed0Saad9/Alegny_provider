@@ -26,50 +26,41 @@ class PinCodeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.scaffoldBackGround,
-        image: DecorationImage(
-            image: AssetImage('assets/images/Gradiant.png'), fit: BoxFit.cover),
+    return BaseScaffold(
+      appBar: AppBars.appBarBack(
+        title: title,
       ),
-      padding: AppPadding.paddingScreenSH36,
-      child: BaseScaffold(
-        backgroundColor: Colors.transparent,
-        appBar: AppBars.appBarBack(
-          title: title,
-        ),
-        body: GetBuilder<ForgetPasswordController>(
-          builder: (_) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              50.ESH(),
-              const CustomTextL(
-                'Enter_code',
-                fontSize: 28,
-                fontWeight: FW.bold,
-                textAlign: TextAlign.center,
-              ),
-              8.ESH(),
-              CustomTextL.subtitle(
-                'Enter_code_subtitle',
-                fontWeight: FW.medium,
-              ),
-              40.ESH(),
-              PinCodeServices.pinCodeWidget(
-                  context: context,
-                  pinCodeController: _.pinCodeController,
-                  errorController: _.errorController),
-              40.ESH(),
-              const Spacer(),
-              ButtonDefault.main(
-                title: 'Continue',
-                onTap: () {
-                  _.checkCode();
-                },
-              ),
-              33.ESH(),
-            ],
-          ),
+      body: GetBuilder<ForgetPasswordController>(
+        builder: (_) => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            50.ESH(),
+            const CustomTextL(
+              'Enter_code',
+              fontSize: 28,
+              fontWeight: FW.bold,
+              textAlign: TextAlign.center,
+            ),
+            8.ESH(),
+            CustomTextL.subtitle(
+              'Enter_code_subtitle',
+              fontWeight: FW.medium,
+            ),
+            40.ESH(),
+            PinCodeServices.pinCodeWidget(
+                context: context,
+                pinCodeController: _.pinCodeController,
+                errorController: _.errorController),
+            40.ESH(),
+            const Spacer(),
+            ButtonDefault.main(
+              title: 'Continue',
+              onTap: () {
+                _.checkCode();
+              },
+            ),
+            33.ESH(),
+          ],
         ),
       ),
     );

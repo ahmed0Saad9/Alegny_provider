@@ -13,6 +13,7 @@ import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Repo/regi
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Controller/send_otp_controller.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Repo/send_otp_repository.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Repo/verify_otp_repository.dart';
+import 'package:Alegny_provider/src/Features/ComplaintsFeature/Bloc/Repo/complaints_repo.dart';
 import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/Repo/get_services_repo.dart';
 import 'package:Alegny_provider/src/core/ThemeData/theme_manager.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_services.dart';
@@ -46,6 +47,7 @@ class ServicesLocator {
     sl.registerLazySingleton(() => VerifyOTPRepository());
     sl.registerLazySingleton(() => GetCompanyCategoriesRepository());
     sl.registerLazySingleton(() => ValidateOtpAndChangePasswordRepo());
+    sl.registerLazySingleton(() => CheckEmailAndSendOtpRepo());
     sl.registerLazySingleton(() => EditGeneralProfileRepository());
     // sl.registerLazySingleton(() => ChangePasswordRepository());
     // sl.registerLazySingleton(() => GetUserDataRepository());
@@ -53,6 +55,7 @@ class ServicesLocator {
     sl.registerLazySingleton(() => ProfileRepo());
     sl.registerLazySingleton(() => CreateServiceRepository());
     sl.registerLazySingleton(() => ServicesRepository());
+    sl.registerLazySingleton(() => ComplaintRepository());
 
     //app
     // sl.registerLazySingleton(() => OpportunitiesRepository());

@@ -76,7 +76,22 @@ const Map<String, String> enUS = {
   "Enter_code": "Enter 4 Digits Code",
   "Enter_code_subtitle":
       "Enter the 4 digits code that you received on\nyour email.",
-
+  "password_recovery": "Password Recovery",
+  "confirm_code": "Confirm Code",
+  "enter_6_digit_code_sent_to_email":
+      "Enter the 6-digit code sent to your email",
+  "characters": "characters",
+  "check_spam_folder": "Didn't receive the code? Check your spam folder",
+  "forgot_password": "Forgot Password",
+  "forgot_password_subtitle":
+      "Enter your email to verify your identity, and we'll send you a 4-digit verification code to your email.",
+  "email": "Email",
+  "continue": "Continue",
+  "change_password": "Change Password",
+  "reset_password": "Reset Password",
+  "reset_password_subtitle": "Create a new password for your account",
+  "new_password": "New Password",
+  "confirm_new_password": "Confirm New Password",
   "Join_us_to_start": "Join us to start",
   "Please_enter_the_code": "Please enter the code",
   "Please_enter_the_new_password": "Please enter the new password",
@@ -223,7 +238,6 @@ const Map<String, String> enUS = {
   "Verify": "Verify",
   "edit_account": "Edit account",
   "Create_Password": "Create_Password",
-  "change_password": "Change password",
   "Reset_Password": "Reset Password",
   "Reset_Password_subtitle":
       "Set the new password for your account so you\ncan log in and access all the features.",
@@ -279,6 +293,7 @@ const Map<String, String> enUS = {
   "select_an_attachment": "Select an attachment",
   "Complete_SignOut": "Complete & SignOut",
   "Add_Service": "Add Service",
+  "edit_Service": "Edit Service",
   "Save_Changes": "Save Changes",
   "Delete_Service": "Delete Service",
   "Event_Name": "Event name",
@@ -627,4 +642,21 @@ const Map<String, String> enUS = {
   // Success messages
   "service_created_successfully": "Service created successfully",
   "service_updated_successfully": "Service updated successfully",
+  'please_upload_picture_or_keep_existing':
+      'Please upload a picture or keep the existing one',
+  'existing_image': 'Existing Image',
+  "complaints": "Complaints",
+  "subject": "Subject",
+  "enter_subject": "Enter complaint subject",
+  "message": "Message",
+  "enter_message": "Please describe your complaint in detail...",
+  "attach_image": "Attach Image (Optional)",
+  "select_image": "Select Image",
+  "submit_complaint": "Submit Complaint",
+  "subject_required": "Subject is required",
+  "subject_too_short": "Subject must be at least 3 characters",
+  "message_required": "Message is required",
+  "message_too_short": "Message must be at least 10 characters",
+  "complaint_submitted_successfully": "Complaint submitted successfully",
+  "an_error_occurred": "An error occurred"
 };

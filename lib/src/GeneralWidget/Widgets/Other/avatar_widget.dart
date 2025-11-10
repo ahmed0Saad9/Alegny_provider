@@ -20,18 +20,11 @@ class AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Debug prints
-    print('=== AvatarWidget Debug ===');
-    print('Image URL: $image');
-    print('Image File: $imageFile');
-    print('Image is null: ${image == null}');
-    print('Image is empty: ${image?.isEmpty ?? true}');
-
     return Container(
       height: height.h,
-      width: width.h, // Changed from width.w to height.h for circle
+      width: width.h,
       decoration: const BoxDecoration(
-        shape: BoxShape.circle, // Use circle for perfect circle
+        shape: BoxShape.circle,
         color: Colors.white,
       ),
       clipBehavior: Clip.antiAlias,
@@ -50,7 +43,6 @@ class AvatarWidget extends StatelessWidget {
     }
 
     if (image != null && image!.isNotEmpty) {
-      print('Loading network image: $image');
       return ImageNetwork(
         url: image,
         height: height.h,

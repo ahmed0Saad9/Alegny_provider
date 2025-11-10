@@ -26,7 +26,7 @@ class AddServiceScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBars.appBarBack(
-        title: serviceToEdit != null ? 'edit_service'.tr : 'add_service'.tr,
+        title: serviceToEdit != null ? 'edit_Service'.tr : 'Add_Service'.tr,
       ),
       body: GetBuilder<AddServiceController>(
         init: AddServiceController(serviceToEdit: serviceToEdit),

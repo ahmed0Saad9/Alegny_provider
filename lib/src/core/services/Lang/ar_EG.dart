@@ -25,6 +25,21 @@ const Map<String, String> arAE = {
   "Confirm_Password": "تأكيد كلمة المرور",
   "Confirm_New_Password": "تأكيد كلمة المرور الجديدة",
   "Re_Enter_Password": "تأكيد كلمة المرور",
+  "password_recovery": "استرجاع كلمة المرور",
+  "confirm_code": "تأكيد الرمز",
+  "enter_6_digit_code_sent_to_email":
+      "أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني",
+  "forgot_password": "نسيت كلمة المرور",
+  "forgot_password_subtitle":
+      "أدخل بريدك الإلكتروني لإجراء عملية التحقق، وسيرسل لك رمزاً مكوناً من 4 أرقام إلى بريدك الإلكتروني.",
+  "email": "البريد الإلكتروني",
+  "continue": "التالي",
+  "reset_password": "إعادة تعيين كلمة المرور",
+  "reset_password_subtitle": "أنشئ كلمة مرور جديدة لحسابك",
+  "new_password": "كلمة المرور الجديدة",
+  "confirm_new_password": "تأكيد كلمة المرور الجديدة",
+  "characters": "أحرف",
+  "check_spam_folder": "لم تستلم الرمز؟ تحقق من البريد المزعج",
   "Remember_me": "تذكرني",
   "College_ID": "الجامعة ID",
   "National_ID": "الرقم القومي",
@@ -520,4 +535,21 @@ const Map<String, String> arAE = {
   // Success messages
   "service_created_successfully": "تم إنشاء الخدمة بنجاح",
   "service_updated_successfully": "تم تحديث الخدمة بنجاح",
+  'existing_image': 'الصورة الموجودة',
+  'please_upload_picture_or_keep_existing':
+      'يرجى تحميل الصورة أو الاحتفاظ بالصورة الموجودة',
+  "complaints": "الشكاوى",
+  "subject": "الموضوع",
+  "enter_subject": "أدخل موضوع الشكوى",
+  "message": "الرسالة",
+  "enter_message": "يرجى وصف شكواك بالتفصيل...",
+  "attach_image": "إرفاق صورة (اختياري)",
+  "select_image": "اختر صورة",
+  "submit_complaint": "إرسال الشكوى",
+  "subject_required": "الموضوع مطلوب",
+  "subject_too_short": "الموضوع يجب أن يكون 3 أحرف على الأقل",
+  "message_required": "الرسالة مطلوبة",
+  "message_too_short": "الرسالة يجب أن تكون 10 أحرف على الأقل",
+  "complaint_submitted_successfully": "تم إرسال الشكوى بنجاح",
+  "an_error_occurred": "حدث خطأ"
 };

@@ -16,7 +16,7 @@ class ValidateOtpAndChangePasswordRepo with ApiKey {
   }) async {
     try {
       final response = await _networkService.post(
-        url: uRLResetPassword, // Make sure this URL is correct
+        url: uRLResetPassword,
         body: {
           "email": email,
           "code": code,

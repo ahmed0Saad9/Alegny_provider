@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -19,6 +20,17 @@ int kNumOfNav = 0;
 /// start background
 @pragma('vm:entry-point')
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Make status bar transparent
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark, // For dark icons
+      // statusBarIconBrightness: Brightness.light, // For light icons
+      systemStatusBarContrastEnforced: false,
+    ),
+  );
   initializeDateFormatting('ar', null); // Initialize Arabic locale
   await AppInitializer.initializeApp();
   runApp(MyApp());

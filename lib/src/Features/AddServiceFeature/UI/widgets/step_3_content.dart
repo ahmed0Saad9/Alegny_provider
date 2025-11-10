@@ -207,6 +207,10 @@ class _Step3Content extends StatelessWidget {
 
   Widget _buildLocationSelector(
       AddServiceController controller, int index, bool hasLocation) {
+    final hasExistingLocation =
+        controller.branchLatitudes[index].value != null &&
+            controller.branchLongitudes[index].value != null;
+
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
@@ -218,7 +222,7 @@ class _Step3Content extends StatelessWidget {
               ));
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: hasLocation ? Colors.green : AppColors.main,
+          backgroundColor: hasExistingLocation ? Colors.green : AppColors.main,
           foregroundColor: Colors.white,
           padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
           shape: RoundedRectangleBorder(
@@ -229,16 +233,27 @@ class _Step3Content extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(
-              hasLocation ? Icons.location_on : Icons.my_location_outlined,
+              hasExistingLocation
+                  ? Icons.location_on
+                  : Icons.my_location_outlined,
               size: 20.sp,
             ),
             8.ESW(),
             CustomTextL(
-              hasLocation ? 'Location_selected' : 'Select_location',
+              hasExistingLocation ? 'Location_selected' : 'Select_location',
               fontSize: 16.sp,
               color: AppColors.titleWhite,
               fontWeight: FW.medium,
             ),
+            if (hasExistingLocation) ...[
+              8.ESW(),
+              CustomTextL(
+                '(${controller.branchLatitudes[index].value!.toStringAsFixed(4)}, '
+                '${controller.branchLongitudes[index].value!.toStringAsFixed(4)})',
+                fontSize: 12.sp,
+                color: Colors.white,
+              ),
+            ],
           ],
         ),
       ),

@@ -35,6 +35,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   final Rxn<String> selectedSpecialization = Rxn<String>();
   final Rxn<String> selectedService = Rxn<String>();
   final Rxn<File> serviceImage = Rxn<File>();
+  final RxString serviceImageUrl = ''.obs;
 
   final List<Branch> branches = <Branch>[].obs;
 
@@ -435,8 +436,14 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     selectedService.value = service.serviceType;
     selectedSpecialization.value = service.specialization;
 
-    // TODO: Load image if available - you might need to download and cache it
-    // serviceImage.value = ...
+    // Load image URL if available
+    if (service.imageUrl != null && service.imageUrl!.isNotEmpty) {
+      serviceImageUrl.value = service.imageUrl!;
+      print('Service image URL loaded: ${service.imageUrl}');
+    } else {
+      serviceImageUrl.value = '';
+      serviceImage.value = null;
+    }
 
     // Clear existing branches and populate with service branches
     _clearAllBranches();
@@ -447,6 +454,12 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     // Step 2: Discounts and Pricing
     _populateDiscountsFromModel(service);
 
+    update();
+  }
+
+  void removeServiceImage() {
+    serviceImage.value = null;
+    serviceImageUrl.value = ''; // Clear the URL to indicate removal
     update();
   }
 
@@ -490,8 +503,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     branchSelectedCities.add(selectedCity);
     branchSelectedGovernorates.add(selectedGovernorate);
     branchWorkingHours.add(workingHours);
-    branchLatitudes.add(Rxn<double>());
-    branchLongitudes.add(Rxn<double>());
+    branchLatitudes.add(Rxn<double>(branchModel.latitude));
+    branchLongitudes.add(Rxn<double>(branchModel.longitude));
 
     final newBranch = Branch(
       address: branchModel.address,
@@ -500,8 +513,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       workingHours: workingHours,
       selectedCity: branchModel.city,
       selectedGovernorate: branchModel.governorate,
-      latitude: latitude.value,
-      longitude: longitude.value,
+      latitude: branchModel.latitude,
+      longitude: branchModel.longitude,
     );
 
     branches.add(newBranch);
@@ -711,7 +724,11 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       branches: branchesData,
     );
     if (isEditingMode) {
-      _updateService(serviceData);
+      updateService(
+        serviceId: serviceToEdit!.id,
+        serviceData: serviceData,
+        imageFile: serviceImage.value,
+      );
     } else {
       _createService(serviceData);
     }
@@ -742,37 +759,48 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     );
   }
 
-  void _updateService(ServiceData serviceData) async {
-    showEasyLoading();
+  Future<bool> updateService({
+    required String serviceId,
+    required ServiceData serviceData,
+    File? imageFile,
+  }) async {
+    try {
+      showEasyLoading();
 
-    // You'll need to add an updateService method to your repository
-    final result = await repository!.updateService(
-      serviceId: serviceToEdit!.id,
-      serviceData: serviceData,
-      imageFile: serviceImage.value,
-    );
+      final result = await repository!.updateService(
+        serviceId: serviceId,
+        serviceData: serviceData,
+        imageFile: imageFile,
+      );
 
-    closeEasyLoading();
+      closeEasyLoading();
 
-    result.when(
-      success: (response) {
-        successEasyLoading(response.data['message'] ??
-            (isEditingMode
-                ? 'service_updated_successfully'.tr
-                : 'service_created_successfully'.tr));
-        printDM('✅ Service Updated: ${response.data}');
+      return result.when(
+        success: (response) {
+          successEasyLoading(
+            response.data['message'] ?? 'service_updated_successfully'.tr,
+          );
 
-        // Navigate back and refresh the services list
-        Get.off(() => const BaseBNBScreen());
+          // Navigate back and let the parent screen refresh
+          Get.offAll(const BaseBNBScreen());
 
-        // Refresh the services list in the home controller
-        final servicesController = Get.find<ServicesController>();
-        servicesController.fetchServices();
-      },
-      failure: (error) {
-        actionNetworkExceptions(error);
-      },
-    );
+          return true;
+        },
+        failure: (error) {
+          // Show user-friendly message for concurrency errors
+          if (error.toString().toLowerCase().contains('affected 0 row')) {
+            errorEasyLoading('service_modified_please_try_again'.tr);
+          } else {
+            actionNetworkExceptions(error);
+          }
+          return false;
+        },
+      );
+    } catch (e) {
+      closeEasyLoading();
+      errorEasyLoading('failed_to_update_service'.tr);
+      return false;
+    }
   }
 
   void _initializeValidators() {
@@ -783,9 +811,20 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   }
 
   bool _validateStep1() {
-    if (serviceImage.value == null) {
-      _showError('please_upload_picture'.tr);
-      return false;
+    // For editing: if we have an image URL, it's valid even if serviceImage.value is null
+    // For creating: we need an actual image file
+    if (isEditingMode) {
+      // In edit mode, it's valid if we have either an existing image URL OR a new image file
+      if (serviceImageUrl.value.isEmpty && serviceImage.value == null) {
+        _showError('please_upload_picture'.tr);
+        return false;
+      }
+    } else {
+      // In create mode, we must have an image file
+      if (serviceImage.value == null) {
+        _showError('please_upload_picture'.tr);
+        return false;
+      }
     }
     if (selectedService.value == null) {
       _showError('please_select_service'.tr);

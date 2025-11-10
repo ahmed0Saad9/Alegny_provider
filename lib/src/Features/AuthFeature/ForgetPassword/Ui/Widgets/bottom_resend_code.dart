@@ -46,7 +46,7 @@ class _ResendButtonState extends State<ResendButton> {
               'resend',
               fontWeight: FW.bold,
               fontSize: 16,
-              color: AppColors.titleGreen,
+              color: AppColors.main,
               decoration: CustomTextDecoration.underLine,
             ))
       ],
