@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.yourpackage.alegny_provider">
+    >
     <!-- Replace com.yourpackage.alegny_provider with your actual package name -->
 
     <!-- Add permissions here -->

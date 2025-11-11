@@ -9,7 +9,7 @@ class AppInitializer {
   AppInitializer._();
   // static final LocalNotificationService _localNotificationService = LocalNotificationService();
   static Future<void> initializeApp() async {
-    WidgetsFlutterBinding.ensureInitialized();
+
     // await Firebase.initializeApp(
     //   options: DefaultFirebaseOptions.currentPlatform,
     //   name: AppStrings.appName,
