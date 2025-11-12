@@ -36,6 +36,35 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need camera or gallery access in order to get a photo for your profile</string>
 
+	<!-- ADD URL SCHEMES HERE - Place it after permissions but before UI configurations -->
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<!-- WhatsApp -->
+		<string>whatsapp</string>
+		<string>whatsapp-business</string>
+
+		<!-- Facebook -->
+		<string>fb</string>
+		<string>facebook</string>
+		<string>fbauth2</string>
+
+		<!-- Instagram -->
+		<string>instagram</string>
+		<string>instagram-stories</string>
+
+		<!-- TikTok -->
+		<string>tiktok</string>
+		<string>musically</string>
+
+		<!-- YouTube -->
+		<string>youtube</string>
+		<string>youtubemusic</string>
+
+		<!-- General -->
+		<string>https</string>
+		<string>http</string>
+	</array>
+
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

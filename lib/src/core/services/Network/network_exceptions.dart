@@ -61,30 +61,39 @@ abstract class NetworkExceptions with _$NetworkExceptions {
     }
 
     int statusCode = response?.statusCode ?? 0;
+    String? backendMessage = errorModel?.statusMessage ??
+        response?.data?['message']?.toString() ??
+        response?.data?['error']?.toString();
+
     switch (statusCode) {
       case 302:
-        return const NetworkExceptions.defaultError("Error 302");
+        return NetworkExceptions.defaultError(backendMessage ?? "Error 302");
+      case 400:
+        return NetworkExceptions.defaultError(backendMessage ?? "Bad Request");
       case 401:
       case 403:
         return NetworkExceptions.unauthorizedRequest(
-            errorModel?.statusMessage ?? "You are not unauthorized");
+            backendMessage ?? "You are not unauthorized");
       case 404:
-        return NetworkExceptions.notFound(
-            errorModel?.statusMessage ?? "Not Found");
+        return NetworkExceptions.notFound(backendMessage ?? "Not Found");
       case 409:
-        return const NetworkExceptions.conflict();
+        return NetworkExceptions.defaultError(backendMessage ?? "Conflict");
       case 408:
-        return const NetworkExceptions.requestTimeout();
+        return NetworkExceptions.defaultError(
+            backendMessage ?? "Request Timeout");
       case 422:
-        return NetworkExceptions.defaultError(errorModel!.statusMessage);
+        return NetworkExceptions.defaultError(
+            backendMessage ?? "Unprocessable Entity");
       case 500:
-        return const NetworkExceptions.internalServerError();
+        return NetworkExceptions.defaultError(
+            backendMessage ?? "Internal Server Error");
       case 503:
-        return const NetworkExceptions.serviceUnavailable();
+        return NetworkExceptions.defaultError(
+            backendMessage ?? "Service Unavailable");
       default:
         var responseCode = statusCode;
         return NetworkExceptions.defaultError(
-          "Received invalid status code: $responseCode",
+          backendMessage ?? "Received invalid status code: $responseCode",
         );
     }
   }

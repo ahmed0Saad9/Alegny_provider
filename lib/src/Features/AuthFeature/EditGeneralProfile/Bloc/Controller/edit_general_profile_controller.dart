@@ -29,10 +29,9 @@ class EditProfileController
     extends BaseController<EditGeneralProfileRepository> {
   @override
   get repository => sl<EditGeneralProfileRepository>();
-
-  TextEditingController firstNameController = TextEditingController();
-  TextEditingController lastNameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+  late TextEditingController firstNameController;
+  late TextEditingController lastNameController;
+  late TextEditingController phoneController;
 
   bool isLoading = false; // Add loading state
   bool dataModifiedSuccessfully = false;
@@ -112,9 +111,20 @@ class EditProfileController
     if (_profile != null) {
       _imageLocal = _profile!.profileImageUrl;
 
-      firstNameController.text = _profile!.firstName;
-      lastNameController.text = _profile!.lastName;
-      phoneController.text = _profile!.phoneNumber;
+      _setControllerText(firstNameController, _profile!.firstName);
+      _setControllerText(lastNameController, _profile!.lastName);
+      _setControllerText(phoneController, _profile!.phoneNumber);
+    }
+  }
+
+  void _setControllerText(TextEditingController controller, String text) {
+    final currentText = controller.text;
+    if (currentText != text) {
+      controller.value = controller.value.copyWith(
+        text: text,
+        selection: TextSelection.collapsed(offset: text.length),
+        composing: TextRange.empty,
+      );
     }
   }
 

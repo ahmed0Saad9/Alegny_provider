@@ -5,7 +5,7 @@ String? nameValidator(String? text) {
     return 'Please enter your name'.tr;
   }
 
-  RegExp regex = RegExp(r'^[a-zA-Z ]+$');
+  RegExp regex = RegExp(r'^[\u0600-\u06FF\u0750-\u077F\u08A0-\u08FFa-zA-Z ]+$');
   if (!regex.hasMatch(text)) {
     return 'Please enter alphabets only'.tr;
   }

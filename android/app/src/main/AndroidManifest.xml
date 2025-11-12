@@ -41,4 +41,35 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <queries>
+        <!-- WhatsApp -->
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" /> <!-- WhatsApp Business -->
+
+        <!-- Facebook -->
+        <package android:name="com.facebook.katana" />
+        <package android:name="com.facebook.lite" />
+
+        <!-- Instagram -->
+        <package android:name="com.instagram.android" />
+        <package android:name="com.instagram.lite" />
+
+        <!-- TikTok -->
+        <package android:name="com.zhiliaoapp.musically" />
+        <package android:name="com.tiktok.lite" />
+
+        <!-- YouTube -->
+        <package android:name="com.google.android.youtube" />
+        <package android:name="com.google.android.apps.youtube.music" />
+
+        <!-- General URL handling -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="http" />
+        </intent>
+    </queries>
 </manifest>

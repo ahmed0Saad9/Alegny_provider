@@ -20,18 +20,17 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<RegisterController>(
-      init: RegisterController(),
-      builder: (_) => Container(
-        color: AppColors.scaffoldBackGround,
-        child: Form(
+    return Scaffold(
+      // Add Scaffold for proper keyboard handling
+      backgroundColor: AppColors.scaffoldBackGround,
+      body: GetBuilder<RegisterController>(
+        init: RegisterController(),
+        builder: (_) => Form(
           key: _.registerGlobalKey,
-          child: ListView(
-            shrinkWrap: true,
+          child: SingleChildScrollView(
+            // Use only one scroll view
             padding: AppPadding.paddingScreenSH16,
-            children: [
-              _Body(controller: _),
-            ],
+            child: _Body(controller: _),
           ),
         ),
       ),
@@ -49,7 +48,7 @@ class _Body extends StatelessWidget {
     var node = FocusScope.of(context);
     return BaseStaggeredColumn(
       children: [
-        80.ESH(),
+        60.ESH(),
         Row(
           children: [
             const CustomTextL('Join_us_to_start', fontWeight: FW.bold),
@@ -62,9 +61,12 @@ class _Body extends StatelessWidget {
         ),
         Row(
           children: [
-            CustomTextL.subtitle(
-              'Create_your_account_for_a_better_experience',
-              fontWeight: FW.medium,
+            Expanded(
+              // Wrap with Expanded to prevent overflow
+              child: CustomTextL.subtitle(
+                'Create_your_account_for_a_better_experience',
+                fontWeight: FW.medium,
+              ),
             ),
           ],
         ),
@@ -140,16 +142,23 @@ class _Body extends StatelessWidget {
           },
         ),
         _AcceptTermsAndConditions(controller: controller),
-        100.ESH(),
+        40.ESH(), // Reduced space to make button more accessible
         ButtonDefault.main(
           onTap: () {
             controller.createAccount();
           },
           title: 'Sign_up',
+          active: controller.firstNameController.text.isNotEmpty &&
+              controller.lastNameController.text.isNotEmpty &&
+              controller.emailController.text.isNotEmpty &&
+              controller.phoneController.text.isNotEmpty &&
+              controller.passwordController.text.isNotEmpty &&
+              controller.confirmPasswordController.text.isNotEmpty &&
+              controller.acceptTermsAndConditions == true,
         ),
-        _LoginWidget(
-          controller: controller,
-        )
+        20.ESH(),
+        _LoginWidget(controller: controller),
+        20.ESH(), // Add bottom padding for better scrolling
       ],
     );
   }

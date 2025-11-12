@@ -12,6 +12,7 @@ import 'package:Alegny_provider/src/core/constants/sizes.dart';
 import 'package:Alegny_provider/src/core/utils/validator.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../../../GeneralWidget/Widgets/Other/base_scaffold.dart';
 import '/src/core/utils/extensions.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -20,76 +21,78 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var node = FocusScope.of(context);
-    return Container(
-      decoration: const BoxDecoration(
-        color: AppColors.scaffoldBackGround,
-      ),
-      padding: AppPadding.paddingScreenSH16,
-      child: GetBuilder<LoginController>(
+    return BaseScaffold(
+      body: GetBuilder<LoginController>(
         init: LoginController(),
-        builder: (_) => KeyboardVisibilityBuilder(
-          builder: (context, isKeyboardVisible) {
-            return Form(
-              key: _.loginGlobalKey,
-              child: BaseStaggeredColumn(
-                children: [
-                  70.ESH(),
-                  Row(
-                    children: [
-                      const CustomTextL('welcome_back', fontWeight: FW.bold),
-                      SizedBox(
-                        height: 40.h,
-                        child: Lottie.asset(
-                          'assets/lottie/HandWave.json', // Add your Lottie file
-                          fit: BoxFit.contain,
+        builder: (_) => Form(
+          key: _.loginGlobalKey,
+          child: Padding(
+            padding: AppPadding.paddingScreenSH16,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                BaseStaggeredColumn(
+                  children: [
+                    20.ESH(),
+                    Row(
+                      children: [
+                        const CustomTextL('welcome_back', fontWeight: FW.bold),
+                        SizedBox(
+                          height: 40.h,
+                          child: Lottie.asset(
+                            'assets/lottie/HandWave.json',
+                            fit: BoxFit.contain,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                  50.ESH(),
-                  TextFieldDefault(
-                    label: 'Email',
-                    prefixIconUrl: 'Email',
-                    autoFillHints: const [AutofillHints.email],
-                    controller: _.emailController,
-                    validation: emailValidator,
-                    keyboardType: TextInputType.emailAddress,
-                    onComplete: () {
-                      node.nextFocus();
-                    },
-                  ),
-                  24.ESH(),
-                  TextFieldDefault(
-                    label: 'Password',
-                    prefixIconUrl: 'Lock',
-                    autoFillHints: const [AutofillHints.password],
-                    controller: _.passwordController,
-                    validation: passwordValidator,
-                    secureType: SecureType.toggle,
-                    onComplete: () {
-                      node.unfocus();
-                      _.logIn();
-                    },
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      RememberMe(controller: _),
-                      ButtonForgetPassword(controller: _),
-                    ],
-                  ),
-                  410.ESH(),
-                  ButtonDefault.main(
-                    onTap: () => _.logIn(),
-                    title: 'login',
-                  ),
-                  _DoNotHaveAccountWidget(
-                    controller: _,
-                  ),
-                ],
-              ),
-            );
-          },
+                      ],
+                    ),
+                    50.ESH(),
+                    TextFieldDefault(
+                      label: 'Email',
+                      prefixIconUrl: 'Email',
+                      autoFillHints: const [AutofillHints.email],
+                      controller: _.emailController,
+                      validation: emailValidator,
+                      keyboardType: TextInputType.emailAddress,
+                      onComplete: () {
+                        node.nextFocus();
+                      },
+                    ),
+                    24.ESH(),
+                    TextFieldDefault(
+                      label: 'Password',
+                      prefixIconUrl: 'Lock',
+                      autoFillHints: const [AutofillHints.password],
+                      controller: _.passwordController,
+                      validation: passwordValidator,
+                      secureType: SecureType.toggle,
+                      onComplete: () {
+                        node.unfocus();
+                        _.logIn();
+                      },
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        RememberMe(controller: _),
+                        ButtonForgetPassword(controller: _),
+                      ],
+                    ),
+                    410.ESH(),
+                    ButtonDefault.main(
+                      onTap: () => _.logIn(),
+                      title: 'login',
+                      active: _.emailController!.text.isNotEmpty &&
+                          _.passwordController!.text.isNotEmpty,
+                    ),
+                    _DoNotHaveAccountWidget(
+                      controller: _,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
