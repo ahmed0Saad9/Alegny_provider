@@ -13,12 +13,16 @@ import 'package:get/get.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
+
 part '../widgets/step_1_content.dart';
+
 part '../widgets/step_2_content.dart';
+
 part '../widgets/step_3_content.dart';
 
 class AddServiceScreen extends StatelessWidget {
   final ServiceModel? serviceToEdit;
+
   const AddServiceScreen({super.key, this.serviceToEdit});
 
   @override
@@ -38,7 +42,7 @@ class AddServiceScreen extends StatelessWidget {
             _buildStepContent(
               controller,
             ),
-            _buildNavigationButtons(controller),
+            _buildNavigationButtons(controller, serviceToEdit),
           ],
         ),
       ),
@@ -93,7 +97,8 @@ class AddServiceScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildNavigationButtons(AddServiceController controller) {
+  Widget _buildNavigationButtons(
+      AddServiceController controller, ServiceModel? serviceToEdit) {
     return Container(
       padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
@@ -117,7 +122,11 @@ class AddServiceScreen extends StatelessWidget {
           Expanded(
             flex: controller.currentStep.value == 0 ? 1 : 1,
             child: ButtonDefault(
-              title: controller.currentStep.value == 2 ? 'submit' : 'next',
+              title: controller.currentStep.value == 2
+                  ? serviceToEdit != null
+                      ? 'Save'
+                      : 'submit'
+                  : 'next',
               onTap: controller.nextStep,
             ),
           ),

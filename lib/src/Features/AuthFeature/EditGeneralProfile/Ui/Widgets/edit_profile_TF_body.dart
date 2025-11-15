@@ -58,6 +58,7 @@ class EditProfileTFBody extends StatelessWidget {
                       ),
                       child: ClipOval(
                         child: AvatarWidget(
+                          image: controller.imageLocal,
                           imageFile: controller.image?.media,
                           height: 100,
                           width: 100,

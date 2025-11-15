@@ -7,7 +7,14 @@ import 'package:get_storage/get_storage.dart';
 
 class SelectLanguageController extends GetxController {
   final _box = sl<GetStorage>();
-  String selectedLanguage = 'ar';
+  late String selectedLanguage;
+
+  @override
+  void onInit() {
+    super.onInit();
+    // Read the stored language preference on initialization
+    selectedLanguage = _box.read("lan") ?? 'ar';
+  }
 
   void changeLanguage(String languageCode) {
     selectedLanguage = languageCode;
@@ -19,15 +26,12 @@ class SelectLanguageController extends GetxController {
       LocalizationServices().changeLocale("English");
       _box.write("lan", "en");
       _box.write("language", "english");
-      selectedLanguage = 'en';
     }
-
-    update(); // To refresh the UI
+    update();
   }
 
   @override
   void onClose() {
-    // TODO: implement onClose
     super.onClose();
   }
 }

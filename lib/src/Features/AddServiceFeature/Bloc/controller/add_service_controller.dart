@@ -426,6 +426,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       _populateFormForEditing();
     }
   }
+
   void _populateFormForEditing() {
     if (serviceToEdit == null) return;
 
@@ -435,7 +436,11 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     serviceNameController.text = service.serviceName;
     selectedService.value = service.serviceType;
     selectedSpecialization.value = service.specialization;
-
+    serviceDescriptionController.text = service.description ?? '';
+    facebookController.text = service.facebookUrl ?? '';
+    instagramController.text = service.instagramUrl ?? '';
+    tiktokController.text = service.tikTokUrl ?? '';
+    youtubeController.text = service.youTubeUrl ?? '';
     // Load image URL if available
     if (service.imageUrl != null && service.imageUrl!.isNotEmpty) {
       serviceImageUrl.value = service.imageUrl!;

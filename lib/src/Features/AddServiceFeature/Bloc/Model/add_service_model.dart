@@ -5,14 +5,14 @@ class ServiceData {
   final String serviceName;
   final String? serviceType;
   final String? specialization;
-  final String serviceDescription;
+  final String? serviceDescription;
   final File? serviceImage;
 
   // Social media
-  final String facebook;
-  final String instagram;
-  final String tiktok;
-  final String youtube;
+  final String? facebook;
+  final String? instagram;
+  final String? tiktok;
+  final String? youtube;
 
   // Location
   final String address;
@@ -70,16 +70,16 @@ class ServiceData {
   const ServiceData({
     // Basic info
     required this.serviceName,
-    this.serviceDescription = '',
+    this.serviceDescription,
     this.serviceType,
     this.specialization,
     this.serviceImage,
 
     // Social media
-    this.facebook = '',
-    this.instagram = '',
-    this.tiktok = '',
-    this.youtube = '',
+    this.facebook,
+    this.instagram,
+    this.tiktok,
+    this.youtube,
 
     // Location
     this.address = '',
@@ -139,13 +139,13 @@ class ServiceData {
         'service_name': serviceName,
         'service_type': serviceType,
         'specialization': specialization,
-        'service_description': serviceDescription,
+        'description': serviceDescription,
 
         // Social media
-        'facebook': facebook,
-        'instagram': instagram,
-        'tiktok': tiktok,
-        'youtube': youtube,
+        'facebookUrl': facebook,
+        'instagramUrl': instagram,
+        'tikTokUrl': tiktok,
+        'youTubeUrl': youtube,
 
         // Location
         'address': address,

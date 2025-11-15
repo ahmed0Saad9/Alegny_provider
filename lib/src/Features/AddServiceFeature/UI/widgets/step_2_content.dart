@@ -189,7 +189,7 @@ class _Step2Content extends StatelessWidget {
                 )),
             Obx(() => CheckboxListTile(
                   title: CustomTextL(
-                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_delivery',
                       fontSize: 14.sp),
                   value: controller.humanPharmacyIsCard.value,
                   onChanged: (value) =>
@@ -294,7 +294,7 @@ class _Step2Content extends StatelessWidget {
                 )),
             Obx(() => CheckboxListTile(
                   title: CustomTextL(
-                      'Can_the_discount_card_be_used_in_the_case_of_a_home_visit',
+                      'Can_the_discount_card_be_used_in_the_case_of_a_home_delivery',
                       fontSize: 14.sp),
                   value: controller.eyeCareIsCard.value,
                   onChanged: (value) => controller.eyeCareIsCard.value = value!,

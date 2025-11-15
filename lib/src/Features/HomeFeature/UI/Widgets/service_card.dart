@@ -58,8 +58,8 @@ class ServiceCard extends StatelessWidget {
                 Stack(
                   children: [
                     Container(
-                      width: 70.w,
-                      height: 70.w,
+                      width: 100.w,
+                      height: 100.w,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(15.r),
                         border: Border.all(
@@ -75,7 +75,7 @@ class ServiceCard extends StatelessWidget {
                         ],
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.r),
+                        borderRadius: BorderRadius.circular(555.r),
                         child: service.imageUrl != null
                             ? Image.network(
                                 service.imageUrl!,

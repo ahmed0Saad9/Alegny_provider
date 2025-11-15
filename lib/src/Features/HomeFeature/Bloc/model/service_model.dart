@@ -159,6 +159,11 @@ class ServiceModel {
   final String serviceType;
   final String? specialization;
   final String? imageUrl;
+  final String? description;
+  final String? facebookUrl;
+  final String? instagramUrl;
+  final String? tikTokUrl;
+  final String? youTubeUrl;
   final Map<String, dynamic> discounts;
   final List<BranchModel> branches;
   final ServiceStatus status;
@@ -168,6 +173,11 @@ class ServiceModel {
     required this.serviceName,
     required this.serviceType,
     this.specialization,
+    this.description,
+    this.facebookUrl,
+    this.instagramUrl,
+    this.tikTokUrl,
+    this.youTubeUrl,
     required this.imageUrl,
     required this.discounts,
     required this.branches,
@@ -180,6 +190,11 @@ class ServiceModel {
       serviceName: json['serviceName'] ?? '',
       serviceType: json['serviceType'] ?? '',
       specialization: json['specialization'],
+      description: json['description'],
+      facebookUrl: json['facebookUrl'],
+      instagramUrl: json['instagramUrl'],
+      tikTokUrl: json['tikTokUrl'],
+      youTubeUrl: json['youTubeUrl'],
       imageUrl: json['imageUrl'],
       // may be null — safe now
       discounts: (json['discounts'] as Map?)?.map(
@@ -199,6 +214,11 @@ class ServiceModel {
         'serviceName': serviceName,
         'serviceType': serviceType,
         'specialization': specialization,
+        'description': description,
+        'facebookUrl': facebookUrl,
+        'instagramUrl': instagramUrl,
+        'tikTokUrl': tikTokUrl,
+        'youTubeUrl': youTubeUrl,
         'imageUrl': imageUrl,
         'discounts': discounts,
         'branches': branches.map((b) => b.toJson()).toList(),

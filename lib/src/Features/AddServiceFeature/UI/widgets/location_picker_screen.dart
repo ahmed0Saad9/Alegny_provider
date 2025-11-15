@@ -64,8 +64,7 @@ class _MapsLocationPickerScreenState extends State<MapsLocationPickerScreen> {
           mapController = controller;
         },
         initialCameraPosition: CameraPosition(
-          target: _selectedLocation ??
-              const LatLng(30.0444, 31.2357), // Cairo coordinates as default
+          target: _selectedLocation ?? const LatLng(30.0444, 31.2357),
           zoom: 12,
         ),
         markers: _markers,

@@ -638,8 +638,11 @@ const Map<String, String> enUS = {
   "consultation_price_after": "Consultation Price After Discount",
   "is_home_visit": "Home Visit Available",
   "home_discount": "Home Visit Discount",
-
   "is_delivery": "Delivery Available",
+  "Can_the_discount_card_be_used_in_the_case_of_a_home_visit":
+      "Can the discount card be used in the case of a home visit?",
+  "Can_the_discount_card_be_used_in_the_case_of_a_home_delivery":
+      "Can the discount card be used in the case of a home delivery?",
 
   "gym_month_sub_price_b": "1 Month Subscription Price Before Discount",
   "gym_month_sub_price_a": "1 Month Subscription Price After Discount",
