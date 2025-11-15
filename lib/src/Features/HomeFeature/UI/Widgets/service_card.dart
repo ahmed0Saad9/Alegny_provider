@@ -61,7 +61,7 @@ class ServiceCard extends StatelessWidget {
                       width: 100.w,
                       height: 100.w,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(15.r),
+                        shape: BoxShape.circle,
                         border: Border.all(
                           color: Colors.white,
                           width: 3,

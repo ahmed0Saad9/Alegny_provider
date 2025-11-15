@@ -87,7 +87,6 @@ dependencies:
   get_it: ^7.2.0
   linear_timer:
   flutter_screenutil: ^5.5.4
-  video_player: ^2.7.1
   geolocator: ^11.1.0
   cached_network_image: ^3.4.1
   lottie: ^2.2.0
@@ -124,6 +123,8 @@ dependencies:
   circular_bottom_navigation: ^2.4.0
   bloc: ^9.0.0
   google_maps_flutter: ^2.14.0
+  video_player: ^2.8.2
+  chewie: ^1.7.5
 
 
 
@@ -161,6 +162,7 @@ flutter:
     - assets/icons/
     - assets/fonts/
     - assets/lottie/
+    - assets/videos/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
