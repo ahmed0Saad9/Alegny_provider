@@ -218,7 +218,7 @@ class ServiceModel {
         'facebookUrl': facebookUrl,
         'instagramUrl': instagramUrl,
         'tikTokUrl': tikTokUrl,
-        'youTubeUrl': youTubeUrl,
+        'yoyTubeUrl': youTubeUrl,
         'imageUrl': imageUrl,
         'discounts': discounts,
         'branches': branches.map((b) => b.toJson()).toList(),

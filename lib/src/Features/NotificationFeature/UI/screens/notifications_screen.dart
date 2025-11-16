@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
-import 'package:Alegny_provider/src/core/constants/sizes.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 
 class NotificationsScreen extends StatelessWidget {
@@ -60,106 +59,82 @@ class NotificationsScreen extends StatelessWidget {
 
   Widget _buildNotificationItem(
       NotificationModel notification, NotificationsController controller) {
-    return Dismissible(
-      key: Key(notification.id),
-      direction: DismissDirection.endToStart,
-      background: Container(
-        decoration: BoxDecoration(
-          color: notification.isRead ? AppColors.titleGray95 : AppColors.main,
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        alignment: Alignment.centerRight,
-        padding: EdgeInsets.symmetric(horizontal: 20.w),
-        child: Icon(
-          notification.isRead
-              ? Icons.mark_email_unread_outlined
-              : Icons.mark_email_read_outlined,
-          color: AppColors.main,
-          size: 24.w,
-        ),
-      ),
-      onDismissed: (direction) {
-        if (!notification.isRead) {
-          controller.markAsRead(notification.id);
-        }
+    return InkWell(
+      onTap: () {
+        // Navigate to detail screen with notification ID
+        Get.to(() => NotificationDetailScreen(
+              notificationId: notification.id,
+            ));
       },
-      child: InkWell(
-        onTap: () {
-          // Navigate to detail screen with notification ID
-          Get.to(() => NotificationDetailScreen(
-                notificationId: notification.id,
-              ));
-        },
-        borderRadius: BorderRadius.circular(12.r),
-        child: Container(
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12.r),
-            border: Border.all(
-              color: notification.isRead
-                  ? Colors.grey
-                  : AppColors.main.withOpacity(0.3),
-              width: notification.isRead ? 1 : 2,
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        padding: EdgeInsets.all(16.w),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12.r),
+          border: Border.all(
+            color: notification.isRead
+                ? Colors.grey
+                : AppColors.main.withOpacity(0.3),
+            width: notification.isRead ? 1 : 2,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
+          ],
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Title
+                  CustomTextL(
+                    notification.title,
+                    fontSize: 16.sp,
+                    color: AppColors.titleGray7A,
+                  ),
+
+                  8.ESH(),
+
+                  // Message
+                  CustomTextL(
+                    notification.message,
+                    fontSize: 14.sp,
+                    color: AppColors.titleGray95,
+                    maxLines: 3,
+                    isOverFlow: true,
+                  ),
+
+                  8.ESH(),
+
+                  // Date
+                  CustomTextL(
+                    _formatDate(notification.dateSent),
+                    fontSize: 12.sp,
+                    color: Colors.grey,
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Content
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Title
-                    CustomTextL(
-                      notification.title,
-                      fontSize: 16.sp,
-                      color: AppColors.titleGray7A,
-                    ),
+            ),
 
-                    8.ESH(),
-
-                    // Message
-                    CustomTextL(
-                      notification.message,
-                      fontSize: 14.sp,
-                      color: AppColors.titleGray95,
-                      maxLines: 3,
-                      isOverFlow: true,
-                    ),
-
-                    8.ESH(),
-
-                    // Date
-                    CustomTextL(
-                      _formatDate(notification.dateSent),
-                      fontSize: 12.sp,
-                      color: Colors.grey,
-                    ),
-                  ],
-                ),
+            // Status Indicator
+            Container(
+              width: 8.w,
+              height: 8.w,
+              margin: EdgeInsets.only(top: 4.h, right: 12.w),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: notification.isRead ? Colors.grey : AppColors.main,
               ),
-
-              // Status Indicator
-              Container(
-                width: 8.w,
-                height: 8.w,
-                margin: EdgeInsets.only(top: 4.h, right: 12.w),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: notification.isRead ? Colors.grey : AppColors.main,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

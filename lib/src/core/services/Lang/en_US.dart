@@ -639,6 +639,7 @@ const Map<String, String> enUS = {
   "is_home_visit": "Home Visit Available",
   "home_discount": "Home Visit Discount",
   "is_delivery": "Delivery Available",
+  "Home_service_available": "Is home service available?",
   "Can_the_discount_card_be_used_in_the_case_of_a_home_visit":
       "Can the discount card be used in the case of a home visit?",
   "Can_the_discount_card_be_used_in_the_case_of_a_home_delivery":

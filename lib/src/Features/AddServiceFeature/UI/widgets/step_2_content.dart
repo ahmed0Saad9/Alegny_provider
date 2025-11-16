@@ -216,7 +216,7 @@ class _Step2Content extends StatelessWidget {
         Column(
           children: [
             Obx(() => CheckboxListTile(
-                  title: CustomTextL('home_service', fontSize: 14.sp),
+                  title: CustomTextL('Home_service_available', fontSize: 14.sp),
                   value: controller.labTestIsHome.value,
                   onChanged: (value) => controller.labTestIsHome.value = value!,
                 )),
