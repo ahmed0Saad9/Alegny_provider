@@ -196,10 +196,89 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   ];
 
   void setSelectedService(String? service) {
+    // Store the previous service type
+    final previousService = selectedService.value;
+
+    // Update the selected service
     selectedService.value = service;
+
+    // Only clear fields if service type actually changed and we're not in editing mode
+    if (previousService != null &&
+        previousService != service &&
+        !isEditingMode) {
+      _clearPreviousServiceTypeFields();
+    }
+
     // Reset specialization when service type changes
     selectedSpecialization.value = null;
     update();
+  }
+
+  void _clearPreviousServiceTypeFields() {
+    // Clear all doctor fields
+    humanDoctorPriceBefore.clear();
+    humanDoctorPriceAfter.clear();
+    humanDoctorIsHome.value = false;
+    humanDoctorIsCard.value = false;
+
+    veterinaryDoctorPriceBefore.clear();
+    veterinaryDoctorPriceAfter.clear();
+    veterinaryDoctorIsHome.value = false;
+    veterinaryDoctorIsCard.value = false;
+
+    // Clear all hospital fields
+    humanHospitalDiscountExaminations.clear();
+    humanHospitalDiscountMedicalTest.clear();
+    humanHospitalDiscountXRay.clear();
+    humanHospitalDiscountMedicines.clear();
+
+    veterinaryHospitalDiscountExaminations.clear();
+    veterinaryHospitalDiscountMedicalTest.clear();
+    veterinaryHospitalDiscountXRay.clear();
+    veterinaryHospitalDiscountMedicines.clear();
+
+    // Clear all pharmacy fields
+    humanPharmacyDiscountLocalMedicine.clear();
+    humanPharmacyDiscountImportedMedicine.clear();
+    humanPharmacyDiscountMedicalSupplies.clear();
+    humanPharmacyIsHome.value = false;
+    humanPharmacyIsCard.value = false;
+
+    veterinaryPharmacyDiscountLocalMedicine.clear();
+    veterinaryPharmacyDiscountImportedMedicine.clear();
+    veterinaryPharmacyDiscountMedicalSupplies.clear();
+    veterinaryPharmacyIsHome.value = false;
+    veterinaryPharmacyIsCard.value = false;
+
+    // Clear lab fields
+    labTestDiscountAllTypes.clear();
+    labTestIsHome.value = false;
+    labTestIsCard.value = false;
+
+    // Clear radiology fields
+    xRayDiscount.clear();
+
+    // Clear eye care fields
+    eyeCareDiscountGlasses.clear();
+    eyeCareDiscountSunGlasses.clear();
+    contactLensesController.clear();
+    eyeCareDiscountEyeExam.clear();
+    eyeCareIsDelivery.value = false;
+    eyeCareIsCard.value = false;
+
+    // Clear gym fields
+    gymMonthSubPriceB.clear();
+    gymMonthSubPriceA.clear();
+    gymMonth3SubPriceB.clear();
+    gymMonth3SubPriceA.clear();
+    gymMonth6SubPriceB.clear();
+    gymMonth6SubPriceA.clear();
+    gymMonth12SubPriceB.clear();
+    gymMonth12SubPriceA.clear();
+    discountOther.clear();
+
+    // Clear shared fields
+    surgeriesOtherServicesDiscount.clear();
   }
 
   void setSelectedSpecialization(String? specialization) {
@@ -266,35 +345,230 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'مصر الجديدة',
       'الزمالك',
       'الدقي',
-      'المهندسين'
+      'المهندسين',
+      'وسط البلد',
+      'رمسيس',
+      'باب الشعريه',
+      'الموسكي',
+      'النزهه',
+      'روكسي الخليفه المأمون',
+      'المطريه',
+      'المرج',
+      'الزيتون',
+      'عزبه النخل',
+      'حدائق القبة',
+      'مصر القديمه',
+      'حلوان'
     ],
-    'الجيزة': ['الدقي', 'المهندسين', 'العجوزة', 'الهرم', 'فيصل', 'أكتوبر'],
-    'الإسكندرية': ['المنتزه', 'سموحة', 'السيوف', 'العصافرة', 'اللبان'],
-    'الدقهلية': ['المنصورة', 'طلخا', 'ميت غمر', 'بلقاس', 'أجا'],
-    'البحر الأحمر': ['الغردقة', 'مرسى علم', 'رأس غارب'],
-    'البحيرة': ['دمنهور', 'كفر الدوار', 'إدكو', 'أبو المطامير'],
+    'الجيزة': [
+      'الدقي',
+      'المهندسين',
+      'العجوزة',
+      'الهرم',
+      'فيصل',
+      'أكتوبر',
+      'العمرانيه',
+      'الوراق',
+      'مدينة الشيخ زايد',
+      'مركز منشأة القناطر',
+      'مركز أوسيم',
+      'مركز كرداسة',
+      'مركز أبو النمرس',
+      'مركز الحوامدية',
+      'مركز البدرشين',
+      'مركز العياط',
+      'مركز الصف',
+      'مركز أطفيح',
+    ],
+    'الإسكندرية': [
+      'المنتزه',
+      'سموحة',
+      'السيوف',
+      'العصافرة',
+      'اللبان',
+      'الرمل',
+      'الشاطبي',
+      'الأزاريطة',
+      'كامب شيزار',
+      'الإبراهيمية',
+      'كوم الدكة',
+      'محرم بك',
+      'شرق الإسكندرية',
+      'لوران',
+      'زيزينيا',
+      'بولكلي',
+      'فلمنج',
+      'شوتس',
+      'سان ستيفانو',
+      'كفر عبده',
+    ],
+    'الدقهلية': [
+      'المنصورة',
+      'طلخا',
+      'ميت غمر',
+      'بلقاس',
+      'أجا',
+      'منية النصر',
+      'السنبلاوين',
+      'المنزلة',
+      'شربين',
+      'ميت سلسيل',
+      'بني عبيد',
+      'جمصة',
+      'نبروه',
+      'الكردي',
+      'محلة دمنة',
+      'الجمالية',
+    ],
+    'البحر الأحمر': ['مرسى علم', 'رأس غارب'],
+    'الغردقة': [
+      'سفاجا',
+    ],
+    'البحيرة': [
+      'دمنهور',
+      'كفر الدوار',
+      'إدكو',
+      'أبو المطامير',
+      'أبو حمص',
+      'حوش عيسى',
+      'الدلنجات',
+      'رشيد',
+      'إيتاي البارود',
+      'وادي النطرون',
+    ],
     'الفيوم': ['الفيوم', 'طامية', 'سنورس'],
-    'الغربية': ['طنطا', 'المحلة الكبرى', 'زفتى', 'سمنود'],
-    'الإسماعيلية': ['الإسماعيلية', 'فايد', 'القنطرة'],
-    'المنوفية': ['شبين الكوم', 'منوف', 'أشمون', 'الباجور'],
-    'المنيا': ['المنيا', 'ملوي', 'دير مواس'],
-    'القليوبية': ['بنها', 'قليوب', 'شبرا الخيمة'],
+    'الغربية': [
+      'طنطا',
+      'المحلة الكبرى',
+      'زفتى',
+      'سمنود',
+      'كفر الزيات',
+      'بسيون',
+      'قطور',
+      'السنطة',
+    ],
+    'الإسماعيلية': [
+      'الإسماعيلية',
+      'فايد',
+      'القنطرة',
+      'التل الكبير',
+      'القنطره شرق',
+      'القنطره غرب',
+    ],
+    'المنوفية': [
+      'شبين الكوم',
+      'منوف',
+      'أشمون',
+      'الباجور',
+      'مدينة السادات',
+      'قويسنا',
+      'تلا',
+      'الشهداء',
+      'بركة السبع',
+    ],
+    'المنيا': [
+      'المنيا',
+      'ملوي',
+      'دير مواس',
+      'العدوة',
+      'مغاغة',
+      'بني مزار',
+      'مطاي',
+      'سمالوط',
+      'أبو قرقاص',
+      'ملوي',
+    ],
+    'القليوبية': [
+      'بنها',
+      'قليوب',
+      'شبرا الخيمة',
+      'القناطر الخيرية',
+      'كفر شكر',
+      'طوخ',
+      'شبين القناطر',
+      'الخانكة',
+      'قها',
+      'مدينة العبور',
+      'الخصوص',
+    ],
     'الوادي الجديد': ['الخارجة', 'الداخلة', 'باريس'],
-    'السويس': ['السويس', 'الأربعين'],
-    'أسوان': ['أسوان', 'كوم أمبو', 'دراو'],
-    'أسيوط': ['أسيوط', 'أبنوب', 'ديروط'],
+    'السويس': [
+      'السويس',
+      'الأربعين',
+      'حي السويس',
+      'حي الأربعين',
+      'حي عتاقة',
+      'حي الجناين',
+      'العين السخنة',
+      'الجزيرة الخضراء',
+      'الشط',
+      'حوض الدرس',
+      'بورتوفيق',
+      'مدينة الحرفيين',
+      'الصباح',
+      'الأمل',
+      'مبارك',
+      'التعاونيات',
+      'السلام',
+      'النور',
+      'الفردوس',
+      'التوفيقية',
+      'منطقة عرب المعمل',
+    ],
+    'أسوان': [
+      'أسوان',
+      'كوم أمبو',
+      'دراو',
+      'مدينة أسوان الجديد',
+      'مركز أسوان',
+      'مركز أبو سمبل',
+      'مركز دراو',
+      'مركز كوم أمبو',
+      'مركز نصر النوبة',
+      'مركز إدفو',
+    ],
+    'أسيوط': ['أسيوط', 'أبنوب', 'ديروط', 'منفلوط'],
     'بني سويف': ['بني سويف', 'الواسطى', 'ناصر'],
     'بورسعيد': ['بورسعيد', 'حي الشرق', 'حي الغرب'],
     'دمياط': ['دمياط', 'فارسكور', 'الزرقا'],
-    'الشرقية': ['الزقازيق', 'بلبيس', 'ههيا', 'أبو حماد'],
+    'الشرقية': [
+      'الزقازيق',
+      'أبو حماد',
+      'بلبيس',
+      'ههيا',
+      'أبو كبير',
+      'الإبراهيمية',
+      'أولاد صقر',
+      'الحسينية',
+      'ديرب نجم',
+      'القرين',
+      'كفر صقر',
+      'منيا القمح',
+      'مشتول السوق',
+      'فاقوس',
+      'الصالحية الجديدة',
+      'العاشر من رمضان',
+    ],
     'جنوب سيناء': ['شرم الشيخ', 'دهب', 'نويبع'],
     'كفر الشيخ': ['كفر الشيخ', 'دسوق', 'فوه'],
-    'مطروح': ['مرسى مطروح', 'الحمام', 'النجيلة'],
+    'مطروح': [
+      'مرسى مطروح',
+      'الحمام',
+      'النجيلة',
+      'العلمين',
+      'الضبعة',
+      'مرسى مطروح',
+      'النجيلة',
+      'سيدي براني',
+      'السلوم',
+      'سيوة',
+    ],
     'الأقصر': ['الأقصر', 'القرنة', 'إسنا'],
     'قنا': ['قنا', 'قفط', 'نقادة'],
     'شمال سيناء': ['العريش', 'الشيخ زويد', 'رفح'],
     'سوهاج': ['سوهاج', 'جرجا', 'أخميم'],
   };
+
   void addBranch() {
     final addressController = TextEditingController();
     final phoneController = TextEditingController();
@@ -396,10 +670,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
       final updatedBranch = Branch(
         address: branchAddressControllers[i].text.trim(),
-        phoneNumber:
-            branchPhoneControllers[i].text.trim(), // Make sure this is set
-        whatsAppNumber:
-            branchWhatsappControllers[i].text.trim(), // Make sure this is set
+        phoneNumber: branchPhoneControllers[i].text.trim(),
+        // Make sure this is set
+        whatsAppNumber: branchWhatsappControllers[i].text.trim(),
+        // Make sure this is set
         selectedGovernorate: branchSelectedGovernorates[i].value,
         selectedCity: branchSelectedCities[i].value,
         workingHours: cleanedWorkingHours,
@@ -569,22 +843,31 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       veterinaryDoctorIsCard.value = discounts['home_discount'] == 'true';
     }
 
-    // Hospital fields (Human & Veterinary)
-    if (service.serviceType == 'human_hospital' ||
-        service.serviceType == 'veterinary_hospital') {
+    // Hospital fields (Human)
+    if (service.serviceType == 'human_hospital') {
       humanHospitalDiscountExaminations.text =
           discounts['examinations_discount']?.toString() ?? '';
       humanHospitalDiscountMedicalTest.text =
           discounts['medical_tests_discount']?.toString() ?? '';
       humanHospitalDiscountXRay.text =
-          discounts['xray_discount']?.toString() ?? '';
+          discounts['hospital_xray_discount']?.toString() ?? '';
       humanHospitalDiscountMedicines.text =
           discounts['medicines_discount']?.toString() ?? '';
     }
+    // Hospital fields (vet)
+    if (service.serviceType == 'veterinary_hospital') {
+      veterinaryHospitalDiscountExaminations.text =
+          discounts['examinations_discount']?.toString() ?? '';
+      veterinaryHospitalDiscountMedicalTest.text =
+          discounts['medical_tests_discount']?.toString() ?? '';
+      veterinaryHospitalDiscountXRay.text =
+          discounts['hospital_xray_discount']?.toString() ?? '';
+      veterinaryHospitalDiscountMedicines.text =
+          discounts['medicines_discount']?.toString() ?? '';
+    }
 
-    // Pharmacy fields (Human & Veterinary)
-    if (service.serviceType == 'human_pharmacy' ||
-        service.serviceType == 'veterinary_pharmacy') {
+    // Pharmacy fields (Human )
+    if (service.serviceType == 'human_pharmacy') {
       humanPharmacyDiscountLocalMedicine.text =
           discounts['local_medicines_discount']?.toString() ?? '';
       humanPharmacyDiscountImportedMedicine.text =
@@ -592,6 +875,19 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       humanPharmacyDiscountMedicalSupplies.text =
           discounts['medical_supplies_discount']?.toString() ?? '';
       humanPharmacyIsHome.value = discounts['is_home_delivery'] == 'true';
+      humanPharmacyIsCard.value = discounts['pharmacy_is_home_card'] == 'true';
+    }
+    // Pharmacy fields (Veterinary)
+    if (service.serviceType == 'veterinary_pharmacy') {
+      veterinaryPharmacyDiscountLocalMedicine.text =
+          discounts['local_medicines_discount']?.toString() ?? '';
+      veterinaryPharmacyDiscountImportedMedicine.text =
+          discounts['imported_medicines_discount']?.toString() ?? '';
+      veterinaryPharmacyDiscountMedicalSupplies.text =
+          discounts['medical_supplies_discount']?.toString() ?? '';
+      veterinaryPharmacyIsHome.value = discounts['is_home_delivery'] == 'true';
+      veterinaryPharmacyIsCard.value =
+          discounts['pharmacy_is_home_card'] == 'true';
     }
 
     // Lab Test fields
@@ -599,6 +895,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       labTestDiscountAllTypes.text =
           discounts['all_tests_discount']?.toString() ?? '';
       labTestIsHome.value = discounts['is_home_service'] == 'true';
+      labTestIsCard.value = discounts['is_home_card'] == 'true';
     }
 
     // Radiology fields
@@ -617,6 +914,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       eyeCareDiscountEyeExam.text =
           discounts['eye_exam_discount']?.toString() ?? '';
       eyeCareIsDelivery.value = discounts['is_delivery'] == 'true';
+      eyeCareIsCard.value = discounts['eye_care_is_card'] == 'true';
     }
 
     // Shared fields
@@ -629,6 +927,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
     final branchesData = branches.map((branch) => branch.toJson()).toList();
 
+    // Create base service data with only common fields
     final serviceData = ServiceData(
       // Basic info
       serviceName: serviceNameController.text.trim(),
@@ -643,91 +942,15 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       tiktok: tiktokController.text.trim(),
       youtube: youtubeController.text.trim(),
 
-      // Doctor fields
-      consultationPriceBefore: humanDoctorPriceBefore.text.trim().isNotEmpty
-          ? humanDoctorPriceBefore.text.trim()
-          : veterinaryDoctorPriceBefore.text.trim(),
-      consultationPriceAfter: humanDoctorPriceAfter.text.trim().isNotEmpty
-          ? humanDoctorPriceAfter.text.trim()
-          : veterinaryDoctorPriceAfter.text.trim(),
-      isHomeVisit: selectedService.value == 'human_doctor'
-          ? humanDoctorIsHome.value
-          : (selectedService.value == 'veterinarian'
-              ? veterinaryDoctorIsHome.value
-              : null),
-      homeDiscount: selectedService.value == 'human_doctor'
-          ? humanDoctorIsCard.value
-          : (selectedService.value == 'veterinarian'
-              ? veterinaryDoctorIsCard.value
-              : null),
-
-      // Hospital fields
-      examinationsDiscount:
-          humanHospitalDiscountExaminations.text.trim().isNotEmpty
-              ? humanHospitalDiscountExaminations.text.trim()
-              : veterinaryHospitalDiscountExaminations.text.trim(),
-      medicalTestsDiscount:
-          humanHospitalDiscountMedicalTest.text.trim().isNotEmpty
-              ? humanHospitalDiscountMedicalTest.text.trim()
-              : veterinaryHospitalDiscountMedicalTest.text.trim(),
-      xrayDiscount: humanHospitalDiscountXRay.text.trim().isNotEmpty
-          ? humanHospitalDiscountXRay.text.trim()
-          : veterinaryHospitalDiscountXRay.text.trim(),
-      medicinesDiscount: humanHospitalDiscountMedicines.text.trim().isNotEmpty
-          ? humanHospitalDiscountMedicines.text.trim()
-          : veterinaryHospitalDiscountMedicines.text.trim(),
-
-      // Shared
-      surgeriesOtherServicesDiscount:
-          surgeriesOtherServicesDiscount.text.trim(),
-
-      // Pharmacy fields
-      localMedicinesDiscount:
-          humanPharmacyDiscountLocalMedicine.text.trim().isNotEmpty
-              ? humanPharmacyDiscountLocalMedicine.text.trim()
-              : veterinaryPharmacyDiscountLocalMedicine.text.trim(),
-      importedMedicinesDiscount:
-          humanPharmacyDiscountImportedMedicine.text.trim().isNotEmpty
-              ? humanPharmacyDiscountImportedMedicine.text.trim()
-              : veterinaryPharmacyDiscountImportedMedicine.text.trim(),
-      medicalSuppliesDiscount:
-          humanPharmacyDiscountMedicalSupplies.text.trim().isNotEmpty
-              ? humanPharmacyDiscountMedicalSupplies.text.trim()
-              : veterinaryPharmacyDiscountMedicalSupplies.text.trim(),
-      isHomeDelivery: selectedService.value == 'human_pharmacy'
-          ? humanPharmacyIsHome.value
-          : (selectedService.value == 'veterinary_pharmacy'
-              ? veterinaryPharmacyIsHome.value
-              : null),
-
-      // Lab
-      allTestsDiscount: labTestDiscountAllTypes.text.trim(),
-      isHomeService: labTestIsHome.value,
-
-      // Radiology fields
-      xRayDiscount: xRayDiscount.text.trim(),
-
-      // Eye Care fields
-      glassesDiscount: eyeCareDiscountGlasses.text.trim(),
-      sunglassesDiscount: eyeCareDiscountSunGlasses.text.trim(),
-      contactLensesDiscount: contactLensesController.text.trim(),
-      eyeExamDiscount: eyeCareDiscountEyeExam.text.trim(),
-      isDelivery:
-          selectedService.value == 'optics' ? eyeCareIsDelivery.value : null,
-
-      // Gym fields
-      gymMonthSubPriceB: gymMonthSubPriceB.text.trim(),
-      gymMonthSubPriceA: gymMonthSubPriceA.text.trim(),
-      gymMonth3SubPriceB: gymMonth3SubPriceB.text.trim(),
-      gymMonth3SubPriceA: gymMonth3SubPriceA.text.trim(),
-      gymMonth6SubPriceB: gymMonth6SubPriceB.text.trim(),
-      gymMonth6SubPriceA: gymMonth6SubPriceA.text.trim(),
-      gymMonth12SubPriceB: gymMonth12SubPriceB.text.trim(),
-      gymMonth12SubPriceA: gymMonth12SubPriceA.text.trim(),
-      otherDiscount: discountOther.text.trim(),
-
       branches: branchesData,
     );
+
+    // ONLY set fields specific to the current service type
+    _setServiceSpecificFields(serviceData);
+
+    // Debug: Print what's being sent
+    _debugPrintServiceData(serviceData);
+
     if (isEditingMode) {
       updateService(
         serviceId: serviceToEdit!.id,
@@ -737,6 +960,176 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     } else {
       _createService(serviceData);
     }
+  }
+
+  void _setServiceSpecificFields(ServiceData serviceData) {
+    final currentService = selectedService.value;
+
+    // Helper function to add % to percentage fields
+    String? _formatPercentage(String value) {
+      if (value.trim().isEmpty) return null;
+      // Remove any existing % and add it back
+      final cleanedValue = value.replaceAll('%', '').trim();
+      return '$cleanedValue%';
+    }
+
+    // Helper function for regular fields
+    String? _getFieldValue(String value) {
+      if (value.trim().isEmpty) return null;
+      return value.trim();
+    }
+
+    // Now set only the fields for the current service type
+    switch (currentService) {
+      case 'human_doctor':
+        serviceData.consultationPriceBefore =
+            _getFieldValue(humanDoctorPriceBefore.text);
+        serviceData.consultationPriceAfter =
+            _getFieldValue(humanDoctorPriceAfter.text);
+        serviceData.isHomeVisit = humanDoctorIsHome.value;
+        serviceData.homeDiscount = humanDoctorIsCard.value;
+        serviceData.surgeriesOtherServicesDiscount =
+            _formatPercentage(surgeriesOtherServicesDiscount.text);
+        break;
+
+      case 'veterinarian':
+        serviceData.consultationPriceBefore =
+            _getFieldValue(veterinaryDoctorPriceBefore.text);
+        serviceData.consultationPriceAfter =
+            _getFieldValue(veterinaryDoctorPriceAfter.text);
+        serviceData.isHomeVisit = veterinaryDoctorIsHome.value;
+        serviceData.homeDiscount = veterinaryDoctorIsCard.value;
+        serviceData.surgeriesOtherServicesDiscount =
+            _formatPercentage(surgeriesOtherServicesDiscount.text);
+        break;
+
+      case 'human_hospital':
+        serviceData.examinationsDiscount =
+            _formatPercentage(humanHospitalDiscountExaminations.text);
+        serviceData.medicalTestsDiscount =
+            _formatPercentage(humanHospitalDiscountMedicalTest.text);
+        serviceData.hospitalXrayDiscount =
+            _formatPercentage(humanHospitalDiscountXRay.text);
+        serviceData.medicinesDiscount =
+            _formatPercentage(humanHospitalDiscountMedicines.text);
+        serviceData.surgeriesOtherServicesDiscount =
+            _formatPercentage(surgeriesOtherServicesDiscount.text);
+        break;
+
+      case 'veterinary_hospital':
+        serviceData.examinationsDiscount =
+            _formatPercentage(veterinaryHospitalDiscountExaminations.text);
+        serviceData.medicalTestsDiscount =
+            _formatPercentage(veterinaryHospitalDiscountMedicalTest.text);
+        serviceData.hospitalXrayDiscount =
+            _formatPercentage(veterinaryHospitalDiscountXRay.text);
+        serviceData.medicinesDiscount =
+            _formatPercentage(veterinaryHospitalDiscountMedicines.text);
+        serviceData.surgeriesOtherServicesDiscount =
+            _formatPercentage(surgeriesOtherServicesDiscount.text);
+        break;
+
+      case 'human_pharmacy':
+        serviceData.localMedicinesDiscount =
+            _formatPercentage(humanPharmacyDiscountLocalMedicine.text);
+        serviceData.importedMedicinesDiscount =
+            _formatPercentage(humanPharmacyDiscountImportedMedicine.text);
+        serviceData.medicalSuppliesDiscount =
+            _formatPercentage(humanPharmacyDiscountMedicalSupplies.text);
+        serviceData.isHomeDelivery = humanPharmacyIsHome.value;
+        serviceData.pharmacyIsHomeCard = humanPharmacyIsCard.value;
+        break;
+
+      case 'veterinary_pharmacy':
+        serviceData.localMedicinesDiscount =
+            _formatPercentage(veterinaryPharmacyDiscountLocalMedicine.text);
+        serviceData.importedMedicinesDiscount =
+            _formatPercentage(veterinaryPharmacyDiscountImportedMedicine.text);
+        serviceData.medicalSuppliesDiscount =
+            _formatPercentage(veterinaryPharmacyDiscountMedicalSupplies.text);
+        serviceData.isHomeDelivery = veterinaryPharmacyIsHome.value;
+        serviceData.pharmacyIsHomeCard = veterinaryPharmacyIsCard.value;
+        break;
+
+      case 'lab':
+        serviceData.allTestsDiscount =
+            _formatPercentage(labTestDiscountAllTypes.text);
+        serviceData.isHomeService = labTestIsHome.value;
+        serviceData.isHomeCard = labTestIsCard.value;
+        break;
+
+      case 'radiology_center':
+        serviceData.xRayDiscount = _formatPercentage(xRayDiscount.text);
+        break;
+
+      case 'optics':
+        serviceData.glassesDiscount =
+            _formatPercentage(eyeCareDiscountGlasses.text);
+        serviceData.sunglassesDiscount =
+            _formatPercentage(eyeCareDiscountSunGlasses.text);
+        serviceData.contactLensesDiscount =
+            _formatPercentage(contactLensesController.text);
+        serviceData.eyeExamDiscount =
+            _formatPercentage(eyeCareDiscountEyeExam.text);
+        serviceData.isDelivery = eyeCareIsDelivery.value;
+        serviceData.eyeCareIsCard = eyeCareIsCard.value;
+        break;
+
+      case 'gym':
+        serviceData.gymMonthSubPriceB = _getFieldValue(gymMonthSubPriceB.text);
+        serviceData.gymMonthSubPriceA = _getFieldValue(gymMonthSubPriceA.text);
+        serviceData.gymMonth3SubPriceB =
+            _getFieldValue(gymMonth3SubPriceB.text);
+        serviceData.gymMonth3SubPriceA =
+            _getFieldValue(gymMonth3SubPriceA.text);
+        serviceData.gymMonth6SubPriceB =
+            _getFieldValue(gymMonth6SubPriceB.text);
+        serviceData.gymMonth6SubPriceA =
+            _getFieldValue(gymMonth6SubPriceA.text);
+        serviceData.gymMonth12SubPriceB =
+            _getFieldValue(gymMonth12SubPriceB.text);
+        serviceData.gymMonth12SubPriceA =
+            _getFieldValue(gymMonth12SubPriceA.text);
+        serviceData.otherDiscount = _formatPercentage(discountOther.text);
+        break;
+
+      default:
+        // For any other service type, don't set any specific fields
+        break;
+    }
+  }
+
+  void _debugPrintServiceData(ServiceData serviceData) {
+    print('=== DEBUG SERVICE DATA ===');
+    print('Service Type: ${serviceData.serviceType}');
+    print('Consultation Price Before: ${serviceData.consultationPriceBefore}');
+    print('Consultation Price After: ${serviceData.consultationPriceAfter}');
+    print('Examinations Discount: ${serviceData.examinationsDiscount}');
+    print('Medical Tests Discount: ${serviceData.medicalTestsDiscount}');
+    print('Hospital XRay Discount: ${serviceData.hospitalXrayDiscount}');
+    print('Medicines Discount: ${serviceData.medicinesDiscount}');
+    print(
+        'Surgeries Other Services Discount: ${serviceData.surgeriesOtherServicesDiscount}');
+    print('Local Medicines Discount: ${serviceData.localMedicinesDiscount}');
+    print(
+        'Imported Medicines Discount: ${serviceData.importedMedicinesDiscount}');
+    print('Medical Supplies Discount: ${serviceData.medicalSuppliesDiscount}');
+    print('All Tests Discount: ${serviceData.allTestsDiscount}');
+    print('XRay Discount: ${serviceData.xRayDiscount}');
+    print('Glasses Discount: ${serviceData.glassesDiscount}');
+    print('Sunglasses Discount: ${serviceData.sunglassesDiscount}');
+    print('Contact Lenses Discount: ${serviceData.contactLensesDiscount}');
+    print('Eye Exam Discount: ${serviceData.eyeExamDiscount}');
+    print('Other Discount: ${serviceData.otherDiscount}');
+    print('Is Home Visit: ${serviceData.isHomeVisit}');
+    print('Home Discount: ${serviceData.homeDiscount}');
+    print('Is Home Delivery: ${serviceData.isHomeDelivery}');
+    print('Pharmacy Is Home Card: ${serviceData.pharmacyIsHomeCard}');
+    print('Is Home Service: ${serviceData.isHomeService}');
+    print('Is Home Card: ${serviceData.isHomeCard}');
+    print('Is Delivery: ${serviceData.isDelivery}');
+    print('Eye Care Is Card: ${serviceData.eyeCareIsCard}');
+    print('==========================');
   }
 
   void _createService(ServiceData serviceData) async {

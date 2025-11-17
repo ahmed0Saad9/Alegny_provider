@@ -273,7 +273,16 @@ class _Step1Content extends StatelessWidget {
                 child: CustomTextL(spec.tr, fontSize: 14.sp),
               ))
           .toList(),
-      onChanged: (value) => controller.setSelectedService(value),
+      onChanged: controller.isEditingMode
+          ? null // Disable dropdown in edit mode
+          : (value) => controller.setSelectedService(value),
+      disabledHint: controller.isEditingMode
+          ? CustomTextL(
+              controller.selectedService.value?.tr ?? 'Select_service',
+              fontSize: 14.sp,
+              color: Colors.grey[500],
+            )
+          : null,
     );
   }
 

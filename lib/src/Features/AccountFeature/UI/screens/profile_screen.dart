@@ -302,6 +302,15 @@ class ProfileScreen extends StatelessWidget {
                       16.ESH(),
                       // Contact Section
                       _buildSectionHeader('contact_us'),
+                      16.ESH(),
+                      CustomTextL(
+                        'Contact_us_on_these_numbers_daily_from_10_AM_to_10_PM',
+                        fontSize: 16.sp,
+                        fontWeight: FW.medium,
+                        color: Colors.grey[700],
+                        textAlign: TextAlign.center,
+                      ),
+                      16.ESH(),
                       _buildMenuItem(
                         icon: Icons.phone_outlined,
                         title: 'contact_phone_1',

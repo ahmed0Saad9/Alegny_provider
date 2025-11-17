@@ -111,6 +111,7 @@ class _Step3Content extends StatelessWidget {
             controller: controller.branchPhoneControllers[index],
             keyboardType: TextInputType.phone,
             hint: 'enter_phone_number'.tr,
+            maxLength: 11,
           ),
           24.ESH(),
 
@@ -121,6 +122,7 @@ class _Step3Content extends StatelessWidget {
             controller: controller.branchWhatsappControllers[index],
             keyboardType: TextInputType.phone,
             hint: 'enter_whatsapp_number'.tr,
+            maxLength: 11,
           ),
           24.ESH(),
 

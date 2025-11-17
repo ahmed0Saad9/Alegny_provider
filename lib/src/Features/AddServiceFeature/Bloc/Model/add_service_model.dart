@@ -2,74 +2,73 @@ import 'dart:io';
 
 class ServiceData {
   // Basic service information
-  final String serviceName;
-  final String? serviceType;
-  final String? specialization;
-  final String? serviceDescription;
-  final File? serviceImage;
+  String? serviceName;
+  String? serviceType;
+  String? specialization;
+  String? serviceDescription;
+  File? serviceImage;
 
   // Social media
-  final String? facebook;
-  final String? instagram;
-  final String? tiktok;
-  final String? youtube;
-
-  // Location
-  final String address;
-  final String city;
+  String? facebook;
+  String? instagram;
+  String? tiktok;
+  String? youtube;
 
   // Human Doctor & Veterinary Doctor fields
-  final String? consultationPriceBefore;
-  final String? consultationPriceAfter;
-  final bool? isHomeVisit;
-  final bool? homeDiscount;
+  String? consultationPriceBefore;
+  String? consultationPriceAfter;
+  bool? isHomeVisit;
+  bool? homeDiscount;
 
   // Hospital fields (Human & Veterinary)
-  final String? examinationsDiscount;
-  final String? medicalTestsDiscount;
-  final String? xrayDiscount;
-  final String? medicinesDiscount;
+  String? examinationsDiscount;
+  String? medicalTestsDiscount;
+  String? hospitalXrayDiscount;
+  String? medicinesDiscount;
 
   // Pharmacy fields (Human & Veterinary)
-  final String? localMedicinesDiscount;
-  final String? importedMedicinesDiscount;
-  final String? medicalSuppliesDiscount;
-  final bool? isHomeDelivery;
+  String? localMedicinesDiscount;
+  String? importedMedicinesDiscount;
+  String? medicalSuppliesDiscount;
+  bool? isHomeDelivery;
+  bool? pharmacyIsHomeCard;
 
   // Lab Test fields
-  final String? allTestsDiscount;
-  final bool? isHomeService;
+  String? allTestsDiscount;
+  bool? isHomeService;
+  bool? isHomeCard;
 
   // Radiology fields
-  final String? xRayDiscount;
+  String? xRayDiscount;
 
   // Eye Care fields
-  final String? glassesDiscount;
-  final String? sunglassesDiscount;
-  final String? contactLensesDiscount;
-  final String? eyeExamDiscount;
-  final bool? isDelivery;
+  String? glassesDiscount;
+  String? sunglassesDiscount;
+  String? contactLensesDiscount;
+  String? eyeExamDiscount;
+  bool? isDelivery;
+  bool? eyeCareIsCard;
 
   // Gym fields
-  final String? gymMonthSubPriceB;
-  final String? gymMonthSubPriceA;
-  final String? gymMonth3SubPriceB;
-  final String? gymMonth3SubPriceA;
-  final String? gymMonth6SubPriceB;
-  final String? gymMonth6SubPriceA;
-  final String? gymMonth12SubPriceB;
-  final String? gymMonth12SubPriceA;
-  final String? otherDiscount;
+  String? gymMonthSubPriceB;
+  String? gymMonthSubPriceA;
+  String? gymMonth3SubPriceB;
+  String? gymMonth3SubPriceA;
+  String? gymMonth6SubPriceB;
+  String? gymMonth6SubPriceA;
+  String? gymMonth12SubPriceB;
+  String? gymMonth12SubPriceA;
+  String? otherDiscount;
 
   //shared
-  final String? surgeriesOtherServicesDiscount;
+  String? surgeriesOtherServicesDiscount;
 
   //branches
-  final List<Map<String, dynamic>> branches;
+  List<Map<String, dynamic>> branches;
 
-  const ServiceData({
+  ServiceData({
     // Basic info
-    required this.serviceName,
+    this.serviceName,
     this.serviceDescription,
     this.serviceType,
     this.specialization,
@@ -81,10 +80,6 @@ class ServiceData {
     this.tiktok,
     this.youtube,
 
-    // Location
-    this.address = '',
-    this.city = '',
-
     // Doctor fields
     this.consultationPriceBefore,
     this.consultationPriceAfter,
@@ -94,7 +89,7 @@ class ServiceData {
     // Hospital fields
     this.examinationsDiscount,
     this.medicalTestsDiscount,
-    this.xrayDiscount,
+    this.hospitalXrayDiscount,
     this.medicinesDiscount,
 
     // Pharmacy fields
@@ -102,10 +97,12 @@ class ServiceData {
     this.importedMedicinesDiscount,
     this.medicalSuppliesDiscount,
     this.isHomeDelivery,
+    this.pharmacyIsHomeCard,
 
     // Lab Test fields
     this.allTestsDiscount,
     this.isHomeService,
+    this.isHomeCard,
 
     // Radiology fields
     this.xRayDiscount,
@@ -116,6 +113,7 @@ class ServiceData {
     this.contactLensesDiscount,
     this.eyeExamDiscount,
     this.isDelivery,
+    this.eyeCareIsCard,
 
     // Gym fields
     this.gymMonthSubPriceB,
@@ -147,10 +145,6 @@ class ServiceData {
         'tikTokUrl': tiktok,
         'youTubeUrl': youtube,
 
-        // Location
-        'address': address,
-        'city': city,
-
         // Doctor fields
         'consultation_price_before': consultationPriceBefore,
         'consultation_price_after': consultationPriceAfter,
@@ -160,7 +154,7 @@ class ServiceData {
         // Hospital fields
         'examinations_discount': examinationsDiscount,
         'medical_tests_discount': medicalTestsDiscount,
-        'xray_discount': xrayDiscount,
+        'hospital_xray_discount': hospitalXrayDiscount,
         'medicines_discount': medicinesDiscount,
 
         // Pharmacy fields
@@ -168,10 +162,12 @@ class ServiceData {
         'imported_medicines_discount': importedMedicinesDiscount,
         'medical_supplies_discount': medicalSuppliesDiscount,
         'is_home_delivery': isHomeDelivery,
+        'pharmacy_is_home_card': pharmacyIsHomeCard,
 
         // Lab Test fields
         'all_tests_discount': allTestsDiscount,
         'is_home_service': isHomeService,
+        'is_home_card': isHomeCard,
 
         // Radiology fields
         'xray_discount': xRayDiscount,
@@ -181,7 +177,8 @@ class ServiceData {
         'sunglasses_discount': sunglassesDiscount,
         'contact_lenses_discount': contactLensesDiscount,
         'eye_exam_discount': eyeExamDiscount,
-        'is_delivery': isDelivery ?? false,
+        'is_delivery': isDelivery,
+        'eye_care_is_card': eyeCareIsCard,
 
         // Gym fields
         'gym_month_sub_price_b': gymMonthSubPriceB,
