@@ -247,15 +247,6 @@ class _Step3Content extends StatelessWidget {
               color: AppColors.titleWhite,
               fontWeight: FW.medium,
             ),
-            if (hasExistingLocation) ...[
-              8.ESW(),
-              CustomTextL(
-                '(${controller.branchLatitudes[index].value!.toStringAsFixed(4)}, '
-                '${controller.branchLongitudes[index].value!.toStringAsFixed(4)})',
-                fontSize: 12.sp,
-                color: Colors.white,
-              ),
-            ],
           ],
         ),
       ),
@@ -353,7 +344,7 @@ class _Step3Content extends StatelessWidget {
             12.ESH(),
             Row(
               children: [
-                Expanded(flex: 1, child: SizedBox()),
+                const Expanded(flex: 1, child: SizedBox()),
                 8.ESW(),
                 Expanded(
                   flex: 4,
@@ -484,7 +475,7 @@ class _Step3Content extends StatelessWidget {
     String toTime = currentToTime;
 
     // Determine initial time for the picker
-    TimeOfDay initialTime = TimeOfDay(hour: 9, minute: 0);
+    TimeOfDay initialTime = const TimeOfDay(hour: 9, minute: 0);
 
     if (isFromTime) {
       if (fromTime.isNotEmpty) {
@@ -495,7 +486,7 @@ class _Step3Content extends StatelessWidget {
         initialTime = _parseTimeString(toTime);
       } else {
         // Default to 5:00 PM for "to" time if not set
-        initialTime = TimeOfDay(hour: 17, minute: 0);
+        initialTime = const TimeOfDay(hour: 17, minute: 0);
       }
     }
 
@@ -505,7 +496,7 @@ class _Step3Content extends StatelessWidget {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.light().copyWith(
-            colorScheme: ColorScheme.light(
+            colorScheme: const ColorScheme.light(
               primary: AppColors.main,
               onPrimary: Colors.white,
               surface: Colors.white,

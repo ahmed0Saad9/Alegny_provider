@@ -21,7 +21,6 @@ class LoginController extends BaseController<LogInRepository> {
   TextEditingController? emailController;
   TextEditingController? passwordController;
   UserModel? _userModel;
-  var rememberMe = false;
 
   final GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
 
@@ -37,6 +36,7 @@ class LoginController extends BaseController<LogInRepository> {
       closeEasyLoading();
       result.when(success: (Response response) {
         _userModel = UserModel.fromJson(response.data);
+
         LocalStorageCubit().storeUserModel(
             _userModel!); //stores the user data locally by GetStorage
         _navigatorAfterLogIn(_userModel!);
@@ -67,11 +67,6 @@ class LoginController extends BaseController<LogInRepository> {
   /// move To Register
   void moveToRegister() {
     Get.off(() => const RegisterScreen());
-  }
-
-  void toggleRememberMe() {
-    rememberMe = !rememberMe;
-    update();
   }
 
   @override

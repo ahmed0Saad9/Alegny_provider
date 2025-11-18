@@ -72,9 +72,8 @@ class LoginScreen extends StatelessWidget {
                       },
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        RememberMe(controller: _),
                         ButtonForgetPassword(controller: _),
                       ],
                     ),
@@ -95,32 +94,6 @@ class LoginScreen extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class RememberMe extends StatelessWidget {
-  final LoginController controller;
-  const RememberMe({
-    super.key,
-    required this.controller,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Checkbox(
-          value: controller.rememberMe,
-          onChanged: (value) => controller.toggleRememberMe(),
-          activeColor: AppColors.main,
-        ),
-        CustomTextL(
-          'Remember_me',
-          fontSize: 14.sp,
-          fontWeight: FW.medium,
-        )
-      ],
     );
   }
 }

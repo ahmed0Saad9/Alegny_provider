@@ -1,4 +1,3 @@
-import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,9 +6,8 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/base_scaffold.da
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/constants/sizes.dart';
-
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
-import 'package:video_player/video_player.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class AppIdeaScreen extends StatefulWidget {
   const AppIdeaScreen({super.key});
@@ -19,15 +17,12 @@ class AppIdeaScreen extends StatefulWidget {
 }
 
 class _AppIdeaScreenState extends State<AppIdeaScreen> {
-  late VideoPlayerController _videoPlayerController;
-  ChewieController? _chewieController;
+  late YoutubePlayerController _youtubeController;
   bool _isLoading = true;
   bool _hasError = false;
 
-  // Replace with your video URL (MP4, MOV, etc.)
-  // You can host it on Firebase Storage, AWS S3, or any CDN
-  // final String videoUrl =
-  //     'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4';
+  // YouTube video URL
+  final String videoUrl = 'https://youtu.be/CR7DWj8W8m4?si=3qXpQbHwYd4dT87d';
 
   @override
   void initState() {
@@ -35,62 +30,36 @@ class _AppIdeaScreenState extends State<AppIdeaScreen> {
     _initializePlayer();
   }
 
-  Future<void> _initializePlayer() async {
+  void _initializePlayer() {
     try {
-      // Initialize video player
-      _videoPlayerController = VideoPlayerController.asset(
-        'assets/videos/Alegny_App_Idea.mp4',
-      );
+      // Extract video ID from YouTube URL
+      final videoId = YoutubePlayer.convertUrlToId(videoUrl);
 
-      await _videoPlayerController.initialize();
-
-      // Create Chewie controller for better UI
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        autoPlay: false,
-        looping: false,
-        showControls: true,
-        materialProgressColors: ChewieProgressColors(
-          playedColor: AppColors.main,
-          handleColor: AppColors.main,
-          backgroundColor: Colors.grey,
-          bufferedColor: Colors.grey[300]!,
-        ),
-        placeholder: Container(
-          color: Colors.black,
-          child: const Center(
-            child: CircularProgressIndicator(
-              color: AppColors.main,
-            ),
+      if (videoId != null) {
+        _youtubeController = YoutubePlayerController(
+          initialVideoId: videoId,
+          flags: const YoutubePlayerFlags(
+            autoPlay: false,
+            mute: false,
+            enableCaption: true,
+            loop: false,
+            isLive: false,
+            forceHD: false,
+            controlsVisibleAtStart: true,
           ),
-        ),
-        errorBuilder: (context, errorMessage) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.error_outline,
-                  color: Colors.red,
-                  size: 48.sp,
-                ),
-                16.ESH(),
-                CustomTextL(
-                  'video_load_error'.tr,
-                  fontSize: 14.sp,
-                  color: Colors.red,
-                ),
-              ],
-            ),
-          );
-        },
-      );
+        );
 
-      setState(() {
-        _isLoading = false;
-      });
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        setState(() {
+          _isLoading = false;
+          _hasError = true;
+        });
+      }
     } catch (e) {
-      print('Error initializing video player: $e');
+      print('Error initializing YouTube player: $e');
       setState(() {
         _isLoading = false;
         _hasError = true;
@@ -100,8 +69,7 @@ class _AppIdeaScreenState extends State<AppIdeaScreen> {
 
   @override
   void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController?.dispose();
+    _youtubeController.dispose();
     super.dispose();
   }
 
@@ -147,7 +115,6 @@ class _AppIdeaScreenState extends State<AppIdeaScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Video Title
           Padding(
             padding: EdgeInsets.all(20.w),
             child: Row(
@@ -169,16 +136,11 @@ class _AppIdeaScreenState extends State<AppIdeaScreen> {
               ],
             ),
           ),
-
-          // Video Player - FIXED VERSION
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: _buildVideoPlayer(),
-              ),
+              child: _buildVideoPlayer(),
             ),
           ),
           20.ESH(),
@@ -189,69 +151,78 @@ class _AppIdeaScreenState extends State<AppIdeaScreen> {
 
   Widget _buildVideoPlayer() {
     if (_isLoading) {
-      return Container(
-        color: Colors.black,
-        child: const Center(
-          child: CircularProgressIndicator(
-            color: AppColors.main,
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+          color: Colors.black,
+          child: const Center(
+            child: CircularProgressIndicator(
+              color: AppColors.main,
+            ),
           ),
         ),
       );
     }
 
     if (_hasError) {
-      return Container(
-        color: Colors.grey[300],
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 48.sp,
-              color: Colors.red,
-            ),
-            12.ESH(),
-            CustomTextL(
-              'video_load_error'.tr,
-              fontSize: 14.sp,
-              color: Colors.red,
-            ),
-            16.ESH(),
-            ElevatedButton.icon(
-              onPressed: () {
-                setState(() {
-                  _isLoading = true;
-                  _hasError = false;
-                });
-                _initializePlayer();
-              },
-              icon: const Icon(Icons.refresh),
-              label: CustomTextL(
-                'retry'.tr,
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: Container(
+          color: Colors.grey[300],
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48.sp,
+                color: Colors.red,
+              ),
+              12.ESH(),
+              CustomTextL(
+                'video_load_error'.tr,
                 fontSize: 14.sp,
+                color: Colors.red,
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.main,
+              16.ESH(),
+              ElevatedButton.icon(
+                onPressed: () {
+                  setState(() {
+                    _isLoading = true;
+                    _hasError = false;
+                  });
+                  _initializePlayer();
+                },
+                icon: const Icon(Icons.refresh),
+                label: CustomTextL(
+                  'retry'.tr,
+                  fontSize: 14.sp,
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.main,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     }
 
-    if (_chewieController != null) {
-      return Chewie(controller: _chewieController!);
-    }
-
-    return Container(
-      color: Colors.black,
-      child: Center(
-        child: Icon(
-          Icons.video_library,
-          size: 48.sp,
-          color: Colors.white,
-        ),
+    return YoutubePlayer(
+      controller: _youtubeController,
+      showVideoProgressIndicator: true,
+      progressIndicatorColor: AppColors.main,
+      progressColors: ProgressBarColors(
+        playedColor: AppColors.main,
+        handleColor: AppColors.main,
+        bufferedColor: Colors.grey[300]!,
+        backgroundColor: Colors.grey[600]!,
       ),
+      onReady: () {
+        print('YouTube Player is ready');
+      },
+      onEnded: (data) {
+        print('Video ended');
+      },
     );
   }
 

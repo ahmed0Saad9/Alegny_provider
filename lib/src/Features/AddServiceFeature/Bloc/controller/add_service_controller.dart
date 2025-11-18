@@ -1149,7 +1149,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
                 : 'service_created_successfully'.tr));
         printDM('✅ Service Created: ${response.data}');
         printDM('result ${serviceData.toJson()}');
-        Get.offAll(const BaseBNBScreen());
+        Get.offAll(() => const BaseBNBScreen());
       },
       failure: (error) {
         actionNetworkExceptions(error);
@@ -1180,7 +1180,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
           );
 
           // Navigate back and let the parent screen refresh
-          Get.offAll(const BaseBNBScreen());
+          Get.offAll(() => const BaseBNBScreen());
 
           return true;
         },

@@ -1,4 +1,4 @@
-package com.example.alegny
+package com.blore.alegnyprovider
 
 import io.flutter.embedding.android.FlutterActivity
 
