@@ -6,12 +6,14 @@ import 'package:path/path.dart' as path;
 class EditProfileParam {
   final String firstName;
   final String lastName;
+  final String email;
   final String phoneNumber;
   final MediaType? image;
 
   EditProfileParam({
     required this.firstName,
     required this.lastName,
+    required this.email,
     required this.phoneNumber,
     this.image,
   });
@@ -22,6 +24,7 @@ class EditProfileParam {
     // Add text fields
     formData.fields.add(MapEntry('firstName', firstName));
     formData.fields.add(MapEntry('lastName', lastName));
+    formData.fields.add(MapEntry('email', email));
     formData.fields.add(MapEntry('phoneNumber', phoneNumber));
 
     // Add image file if exists
@@ -68,6 +71,7 @@ class EditProfileParam {
     return {
       'firstName': firstName,
       'lastName': lastName,
+      'email': email,
       'phoneNumber': phoneNumber,
     };
   }

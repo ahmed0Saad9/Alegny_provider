@@ -47,7 +47,7 @@ class AvatarWidget extends StatelessWidget {
         url: image,
         height: height.h,
         width: width.h,
-        boxFit: BoxFit.cover,
+        boxFit: BoxFit.contain,
       );
     }
 

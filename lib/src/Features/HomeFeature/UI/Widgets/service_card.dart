@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceModel service;
@@ -130,27 +131,23 @@ class ServiceCard extends StatelessWidget {
                       6.ESH(),
 
                       ...[
-                        Row(
-                          children: [
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 10.w,
-                                vertical: 4.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.main.withOpacity(0.15),
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              child: CustomTextR(
-                                service.serviceType.tr,
-                                fontSize: 14.sp,
-                                color: AppColors.main,
-                                fontWeight: FW.medium,
-                                maxLines: 2,
-                                isOverFlow: true,
-                              ),
-                            ),
-                          ],
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10.w,
+                            vertical: 4.h,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.main.withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          child: CustomTextL(
+                            service.serviceType,
+                            fontSize: 14.sp,
+                            color: AppColors.main,
+                            fontWeight: FW.medium,
+                            maxLines: 2,
+                            isOverFlow: true,
+                          ),
                         ),
                         6.ESH(),
                       ],
@@ -170,6 +167,104 @@ class ServiceCard extends StatelessWidget {
               ],
             ),
           ),
+          if (service.description != null && service.description!.isNotEmpty)
+            Container(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.description_outlined,
+                        size: 20.sp,
+                        color: AppColors.main,
+                      ),
+                      6.ESW(),
+                      CustomTextL(
+                        'service_description',
+                        fontSize: 14.sp,
+                        fontWeight: FW.bold,
+                        color: Colors.grey[800],
+                      ),
+                    ],
+                  ),
+                  6.ESH(),
+                  CustomTextR(
+                    service.description!,
+                    fontSize: 14.sp,
+                  ),
+                ],
+              ),
+            ),
+
+          // Social Media Section
+          if (_hasSocialMedia())
+            Container(
+              padding: EdgeInsets.all(16.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.public_outlined,
+                        size: 20.sp,
+                        color: AppColors.main,
+                      ),
+                      6.ESW(),
+                      CustomTextL(
+                        'social_media_links',
+                        fontSize: 14.sp,
+                        fontWeight: FW.bold,
+                        color: Colors.grey[800],
+                      ),
+                    ],
+                  ),
+                  12.ESH(),
+                  Row(
+                    children: [
+                      // Facebook
+                      if (service.facebookUrl != null &&
+                          service.facebookUrl!.isNotEmpty)
+                        _buildSocialMediaIcon(
+                          icon: 'Facebook',
+                          url: service.facebookUrl!,
+                          color: const Color(0xFF1877F2),
+                        ),
+
+                      // Instagram
+                      if (service.instagramUrl != null &&
+                          service.instagramUrl!.isNotEmpty)
+                        _buildSocialMediaIcon(
+                          icon: 'Instagram',
+                          url: service.instagramUrl!,
+                          color: const Color(0xFFE4405F),
+                        ),
+
+                      // TikTok
+                      if (service.tikTokUrl != null &&
+                          service.tikTokUrl!.isNotEmpty)
+                        _buildSocialMediaIcon(
+                          icon: 'Tiktok',
+                          url: service.tikTokUrl!,
+                          color: const Color(0xFF000000),
+                        ),
+
+                      // YouTube
+                      if (service.youTubeUrl != null &&
+                          service.youTubeUrl!.isNotEmpty)
+                        _buildSocialMediaIcon(
+                          icon: 'Youtube',
+                          url: service.youTubeUrl!,
+                          color: const Color(0xFFFF0000),
+                        ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+
           // discounts section
           if (service.discounts.isNotEmpty)
             Container(
@@ -198,7 +293,8 @@ class ServiceCard extends StatelessWidget {
                     (e) => Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        CustomTextL(e.key, fontSize: 14.sp),
+                        Expanded(child: CustomTextL(e.key, fontSize: 14.sp)),
+                        10.ESW(),
                         if (e.value == true || e.value == 'true')
                           Container(
                             margin: EdgeInsets.symmetric(
@@ -476,7 +572,7 @@ class ServiceCard extends StatelessWidget {
               6.ESW(),
               Expanded(
                 child: CustomTextR(
-                  '${branch.governorate} - ${branch.city}',
+                  '${branch.governorate.tr} - ${branch.city.tr}',
                   fontSize: 14.sp,
                   fontWeight: FW.medium,
                   color: Colors.grey[800],
@@ -1075,5 +1171,73 @@ class ServiceCard extends StatelessWidget {
       ),
       isScrollControlled: true,
     );
+  }
+
+  bool _hasSocialMedia() {
+    return (service.facebookUrl != null && service.facebookUrl!.isNotEmpty) ||
+        (service.instagramUrl != null && service.instagramUrl!.isNotEmpty) ||
+        (service.tikTokUrl != null && service.tikTokUrl!.isNotEmpty) ||
+        (service.youTubeUrl != null && service.youTubeUrl!.isNotEmpty);
+  }
+
+  Widget _buildSocialMediaIcon({
+    required String icon,
+    required String url,
+    required Color color,
+  }) {
+    return InkWell(
+      onTap: () => _launchSocialMedia(url),
+      borderRadius: BorderRadius.circular(12.r),
+      child: Container(
+        margin: EdgeInsetsDirectional.only(start: 12.w),
+        width: 50.w,
+        height: 50.h,
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: color.withOpacity(0.3),
+            width: 1.5,
+          ),
+        ),
+        child: Center(
+          child: IconSvg(
+            icon,
+            size: 24.sp,
+            color: color,
+            boxFit: BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _launchSocialMedia(String url) async {
+    try {
+      // Ensure the URL has a proper scheme
+      String formattedUrl = url;
+      if (!formattedUrl.startsWith('http://') &&
+          !formattedUrl.startsWith('https://')) {
+        formattedUrl = 'https://$formattedUrl';
+      }
+
+      if (await canLaunchUrl(Uri.parse(formattedUrl))) {
+        await launchUrl(Uri.parse(formattedUrl));
+      } else {
+        Get.snackbar(
+          'error'.tr,
+          'cannot_open_link'.tr,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'cannot_open_link'.tr,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 }

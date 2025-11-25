@@ -120,6 +120,7 @@ dependencies:
   bloc: ^9.0.0
   google_maps_flutter: ^2.14.0
   youtube_player_flutter: ^9.0.3
+  youtube_player_iframe: 5.2.0
 
 
 

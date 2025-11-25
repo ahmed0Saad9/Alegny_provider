@@ -78,7 +78,7 @@ class _Step1Content extends StatelessWidget {
         buildSectionLabel('Service_description', false),
         6.ESH(),
         TextFieldDefault(
-          hint: 'Enter_service_description',
+          hint: 'Enter_service_description'.tr,
           controller: controller.serviceDescriptionController,
           maxLines: 3,
         ),

@@ -150,7 +150,7 @@ class _Step3Content extends StatelessWidget {
       items: uniqueGovernorates.map((gov) {
         return DropdownMenuItem<String>(
           value: gov,
-          child: CustomTextL(gov, fontSize: 14.sp),
+          child: CustomTextL(gov.tr, fontSize: 14.sp),
         );
       }).toList(),
       onChanged: (value) {
@@ -189,7 +189,7 @@ class _Step3Content extends StatelessWidget {
       items: uniqueCities.map((city) {
         return DropdownMenuItem<String>(
           value: city,
-          child: CustomTextL(city, fontSize: 14.sp),
+          child: CustomTextL(city.tr, fontSize: 14.sp),
         );
       }).toList(),
       onChanged: (value) {
@@ -265,12 +265,51 @@ class _Step3Content extends StatelessWidget {
       'friday': 'friday'.tr,
     };
 
+    // Initialize default times for any empty days
+    _initializeDefaultTimes(workingHours);
+
     return Column(
       children: days.entries.map((day) {
         return _buildWorkingHoursField(
             context, workingHours, day.key, day.value, controller, branchIndex);
       }).toList(),
     );
+  }
+
+  void _initializeDefaultTimes(Map<String, String> workingHours) {
+    const defaultTime = '9:00 AM - 5:00 PM';
+
+    // Define all days that should have default times
+    final days = [
+      'saturday',
+      'sunday',
+      'monday',
+      'tuesday',
+      'wednesday',
+      'thursday',
+      'friday'
+    ];
+
+    for (final day in days) {
+      final currentHours = workingHours[day];
+
+      // Set Friday as closed by default
+      if (day == 'friday') {
+        if (currentHours == null || currentHours.isEmpty) {
+          workingHours[day] = 'closed'.tr;
+        }
+      } else {
+        // For other days, set default working hours if not already set
+        if (currentHours == null ||
+            currentHours.isEmpty ||
+            currentHours.toLowerCase() == 'closed'.tr.toLowerCase()) {
+          // Only set default if the day is not explicitly closed
+          if (currentHours?.toLowerCase() != 'closed'.tr.toLowerCase()) {
+            workingHours[day] = defaultTime;
+          }
+        }
+      }
+    }
   }
 
   Widget _buildWorkingHoursField(
@@ -280,22 +319,18 @@ class _Step3Content extends StatelessWidget {
       String dayLabel,
       AddServiceController controller,
       int branchIndex) {
-    final currentHours = workingHours[dayKey] ?? '';
+    // Always get the current value from the workingHours map
+    final currentHours = workingHours[dayKey] ?? '9:00 AM - 5:00 PM';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
-    String fromTime = '';
-    String toTime = '';
+    String fromTime = '9:00 AM';
+    String toTime = '5:00 PM';
 
-    if (!isClosed && currentHours.isNotEmpty) {
-      if (currentHours.contains(' - ')) {
-        final times = currentHours.split(' - ');
-        if (times.length == 2) {
-          fromTime = times[0].trim();
-          toTime = times[1].trim();
-        }
-      } else {
-        // Handle case where only one time is set
-        fromTime = currentHours.trim();
+    if (!isClosed && currentHours.isNotEmpty && currentHours.contains(' - ')) {
+      final times = currentHours.split(' - ');
+      if (times.length == 2) {
+        fromTime = times[0].trim();
+        toTime = times[1].trim();
       }
     }
 
@@ -307,7 +342,6 @@ class _Step3Content extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                flex: 2,
                 child: CustomTextL(dayLabel, fontSize: 14.sp),
               ),
               12.ESW(),
@@ -329,9 +363,10 @@ class _Step3Content extends StatelessWidget {
                         if (value) {
                           workingHours[dayKey] = 'closed'.tr;
                         } else {
-                          // When opening a day, set default times
+                          // When opening a day, set default times to 9:00 AM - 5:00 PM
                           workingHours[dayKey] = '9:00 AM - 5:00 PM';
                         }
+                        // Force update the controller to refresh the UI
                         controller.update();
                       },
                     ),
@@ -344,7 +379,6 @@ class _Step3Content extends StatelessWidget {
             12.ESH(),
             Row(
               children: [
-                const Expanded(flex: 1, child: SizedBox()),
                 8.ESW(),
                 Expanded(
                   flex: 4,
@@ -378,25 +412,20 @@ class _Step3Content extends StatelessWidget {
                               children: [
                                 Flexible(
                                   child: CustomTextL(
-                                    fromTime.isEmpty ? 'from'.tr : fromTime,
+                                    fromTime,
                                     fontSize: 15.sp,
-                                    color: fromTime.isEmpty
-                                        ? Colors.orange
-                                        : Colors.grey[800],
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                                 Icon(Icons.access_time,
-                                    size: 20.sp,
-                                    color: fromTime.isEmpty
-                                        ? Colors.orange
-                                        : AppColors.main),
+                                    size: 20.sp, color: AppColors.main),
                               ],
                             ),
                           ),
                         ),
                       ),
                       12.ESW(),
-                      CustomTextL('-',
+                      CustomTextL('to',
                           fontSize: 16.sp, color: Colors.grey[600]),
                       12.ESW(),
                       // To Time Picker
@@ -427,18 +456,13 @@ class _Step3Content extends StatelessWidget {
                               children: [
                                 Flexible(
                                   child: CustomTextL(
-                                    toTime.isEmpty ? 'to'.tr : toTime,
+                                    toTime,
                                     fontSize: 15.sp,
-                                    color: toTime.isEmpty
-                                        ? Colors.orange
-                                        : Colors.grey[800],
+                                    color: Colors.grey[800],
                                   ),
                                 ),
                                 Icon(Icons.access_time,
-                                    size: 20.sp,
-                                    color: toTime.isEmpty
-                                        ? Colors.orange
-                                        : AppColors.main),
+                                    size: 20.sp, color: AppColors.main),
                               ],
                             ),
                           ),
@@ -465,30 +489,26 @@ class _Step3Content extends StatelessWidget {
     AddServiceController controller,
     int branchIndex,
   ) async {
-    final currentHours = workingHours[dayKey] ?? '';
+    final currentHours = workingHours[dayKey] ?? '9:00 AM - 5:00 PM';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
     if (isClosed) return;
 
-    // Parse current times
-    String fromTime = currentFromTime;
-    String toTime = currentToTime;
+    // Parse current times from the actual working hours
+    String fromTime = '9:00 AM';
+    String toTime = '5:00 PM';
 
-    // Determine initial time for the picker
-    TimeOfDay initialTime = const TimeOfDay(hour: 9, minute: 0);
-
-    if (isFromTime) {
-      if (fromTime.isNotEmpty) {
-        initialTime = _parseTimeString(fromTime);
-      }
-    } else {
-      if (toTime.isNotEmpty) {
-        initialTime = _parseTimeString(toTime);
-      } else {
-        // Default to 5:00 PM for "to" time if not set
-        initialTime = const TimeOfDay(hour: 17, minute: 0);
+    if (currentHours.contains(' - ')) {
+      final times = currentHours.split(' - ');
+      if (times.length == 2) {
+        fromTime = times[0].trim();
+        toTime = times[1].trim();
       }
     }
+
+    // Determine initial time for the picker
+    TimeOfDay initialTime =
+        isFromTime ? _parseTimeString(fromTime) : _parseTimeString(toTime);
 
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -512,43 +532,30 @@ class _Step3Content extends StatelessWidget {
     if (picked != null) {
       final formattedTime = _formatTimeOfDay(picked);
 
-      // Update the appropriate time immediately
+      // Update the appropriate time
       if (isFromTime) {
         fromTime = formattedTime;
       } else {
         toTime = formattedTime;
       }
 
-      // Build the final time string - handle cases where only one time is set
-      String finalTimeString = '';
+      // Build the final time string and update the working hours
+      final finalTimeString = '$fromTime - $toTime';
 
-      if (fromTime.isNotEmpty && toTime.isNotEmpty) {
-        finalTimeString = '$fromTime - $toTime';
-      } else if (fromTime.isNotEmpty) {
-        finalTimeString = fromTime; // Only from time is set
-      } else if (toTime.isNotEmpty) {
-        finalTimeString = toTime; // Only to time is set
-      }
+      // This is the key fix - directly update the map and force controller update
+      workingHours[dayKey] = finalTimeString;
 
-      // Update working hours immediately
-      if (finalTimeString.isNotEmpty) {
-        workingHours[dayKey] = finalTimeString;
-        controller.update();
+      // Force update the controller to refresh the UI
+      controller.update();
 
-        // Debug print
-        print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
-        print('From: $fromTime, To: $toTime');
-      }
+      print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
     }
   }
 
-// Improved time parsing method
   TimeOfDay _parseTimeString(String timeString) {
     try {
-      // Remove any extra spaces and convert to lowercase
       final cleanedString = timeString.trim().toLowerCase();
 
-      // Check if it's in 12-hour format with AM/PM
       if (cleanedString.contains('am') || cleanedString.contains('pm')) {
         final parts = cleanedString.split(' ');
         final timeParts = parts[0].split(':');
@@ -558,7 +565,6 @@ class _Step3Content extends StatelessWidget {
         int hour = int.parse(timeParts[0]);
         int minute = int.parse(timeParts[1]);
 
-        // Handle AM/PM conversion
         if (cleanedString.contains('pm') && hour < 12) {
           hour += 12;
         } else if (cleanedString.contains('am') && hour == 12) {
@@ -567,7 +573,6 @@ class _Step3Content extends StatelessWidget {
 
         return TimeOfDay(hour: hour, minute: minute);
       } else {
-        // Assume 24-hour format
         final timeParts = cleanedString.split(':');
         if (timeParts.length < 2) return const TimeOfDay(hour: 9, minute: 0);
 
@@ -582,12 +587,10 @@ class _Step3Content extends StatelessWidget {
     }
   }
 
-// Improved time formatting method
   String _formatTimeOfDay(TimeOfDay timeOfDay) {
     final hour = timeOfDay.hour;
     final minute = timeOfDay.minute;
 
-    // Use 12-hour format with AM/PM
     final period = hour < 12 ? 'AM' : 'PM';
     final displayHour = hour == 0 ? 12 : (hour > 12 ? hour - 12 : hour);
     final displayMinute = minute.toString().padLeft(2, '0');

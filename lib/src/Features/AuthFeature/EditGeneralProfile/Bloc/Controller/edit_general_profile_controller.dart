@@ -31,6 +31,7 @@ class EditProfileController
   get repository => sl<EditGeneralProfileRepository>();
   late TextEditingController firstNameController;
   late TextEditingController lastNameController;
+  late TextEditingController emailController;
   late TextEditingController phoneController;
 
   bool isLoading = false; // Add loading state
@@ -58,6 +59,7 @@ class EditProfileController
   void initTextEditingController() {
     firstNameController = TextEditingController();
     lastNameController = TextEditingController();
+    emailController = TextEditingController();
     phoneController = TextEditingController();
   }
 
@@ -113,6 +115,7 @@ class EditProfileController
 
       _setControllerText(firstNameController, _profile!.firstName);
       _setControllerText(lastNameController, _profile!.lastName);
+      _setControllerText(emailController, _profile!.email);
       _setControllerText(phoneController, _profile!.phoneNumber);
     }
   }
@@ -138,6 +141,7 @@ class EditProfileController
     print('=== EDIT PROFILE DEBUG ===');
     print('First Name: ${firstNameController.text}');
     print('Last Name: ${lastNameController.text}');
+    print('email: ${emailController.text}');
     print('Phone: ${phoneController.text}');
     print('Image: ${_image?.media.path}');
 
@@ -146,6 +150,7 @@ class EditProfileController
         param: EditProfileParam(
           firstName: firstNameController.text.trim(),
           lastName: lastNameController.text.trim(),
+          email: emailController.text.trim(),
           phoneNumber: phoneController.text.trim(),
           image: _image,
         ),
@@ -168,7 +173,7 @@ class EditProfileController
                 firstNameController.text,
             lastName:
                 responseData['profile']['lastName'] ?? lastNameController.text,
-            email: responseData['profile']['email'] ?? _profile?.email ?? '',
+            email: responseData['profile']['email'] ?? emailController.text,
             phoneNumber:
                 responseData['profile']['phoneNumber'] ?? phoneController.text,
             profileImageUrl: responseData['profile']['profileImageUrl'],
@@ -237,6 +242,7 @@ class EditProfileController
   void onClose() {
     firstNameController.dispose();
     lastNameController.dispose();
+    emailController.dispose();
     phoneController.dispose();
     super.onClose();
   }

@@ -32,7 +32,7 @@ class EditProfileTFBody extends StatelessWidget {
       width: Get.width,
       child: Form(
         key: controller.globalKey,
-        child: Column(
+        child: BaseStaggeredColumn(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             50.ESH(),
@@ -122,17 +122,17 @@ class EditProfileTFBody extends StatelessWidget {
                 ),
               ],
             ),
-            // 24.ESH(),
-            // TextFieldDefault(
-            //   label: 'Email',
-            //   prefixIconUrl: 'Email',
-            //   controller: controller.emailController,
-            //   validation: emailValidator,
-            //   keyboardType: TextInputType.emailAddress,
-            //   onComplete: () {
-            //     node.nextFocus();
-            //   },
-            // ),
+            24.ESH(),
+            TextFieldDefault(
+              label: 'Email',
+              prefixIconUrl: 'Email',
+              controller: controller.emailController,
+              validation: emailValidator,
+              keyboardType: TextInputType.emailAddress,
+              onComplete: () {
+                node.nextFocus();
+              },
+            ),
             24.ESH(),
             TextFieldPhone(
               node: node,
