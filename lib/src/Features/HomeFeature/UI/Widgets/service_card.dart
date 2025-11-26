@@ -1,3 +1,5 @@
+import 'package:Alegny_provider/src/Features/AddServiceFeature/UI/screens/add_service_screen.dart';
+import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/controller/services_controller.dart';
 import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_model.dart';
 import 'package:Alegny_provider/src/core/services/svg_widget.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +9,8 @@ import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart'
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../../../AddServiceFeature/Bloc/controller/add_service_controller.dart';
 
 class ServiceCard extends StatelessWidget {
   final ServiceModel service;
@@ -561,7 +565,7 @@ class ServiceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Location
+          // Location with clickable URL
           Row(
             children: [
               Icon(
@@ -571,13 +575,22 @@ class ServiceCard extends StatelessWidget {
               ),
               6.ESW(),
               Expanded(
-                child: CustomTextR(
-                  '${branch.governorate.tr} - ${branch.city.tr}',
-                  fontSize: 14.sp,
-                  fontWeight: FW.medium,
-                  color: Colors.grey[800],
-                  maxLines: 2,
-                  isOverFlow: true,
+                child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 4.h),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: CustomTextR(
+                          '${branch.governorate.tr} - ${branch.city.tr}',
+                          fontSize: 14.sp,
+                          fontWeight: FW.medium,
+                          color: Colors.grey[800],
+                          maxLines: 2,
+                          isOverFlow: true,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -611,7 +624,39 @@ class ServiceCard extends StatelessWidget {
             ],
           ),
           8.ESH(),
-
+          // Location Button (only if URL exists)
+          if (branch.locationUrl.isNotEmpty) ...[
+            InkWell(
+              onTap: () => _launchLocationUrl(branch.locationUrl),
+              borderRadius: BorderRadius.circular(8.r),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                decoration: BoxDecoration(
+                  color: AppColors.main.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.location_on,
+                      size: 18.sp,
+                      color: AppColors.main,
+                    ),
+                    4.ESW(),
+                    CustomTextL(
+                      'view_location'.tr,
+                      fontSize: 16.sp,
+                      color: AppColors.main,
+                      fontWeight: FW.medium,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            8.ESW(),
+          ],
+          8.ESH(),
           // Contact Info
           ...[
             Row(
@@ -628,12 +673,15 @@ class ServiceCard extends StatelessWidget {
                         ),
                         6.ESW(),
                         Expanded(
-                          child: CustomTextR(
-                            branch.phoneNumber,
-                            fontSize: 13.sp,
-                            color: Colors.grey[600],
-                            maxLines: 1,
-                            isOverFlow: true,
+                          child: GestureDetector(
+                            onTap: () => _launchPhone(branch.phoneNumber),
+                            child: CustomTextR(
+                              branch.phoneNumber,
+                              fontSize: 14.sp,
+                              color: Colors.grey[600],
+                              maxLines: 1,
+                              isOverFlow: true,
+                            ),
                           ),
                         ),
                       ],
@@ -644,7 +692,6 @@ class ServiceCard extends StatelessWidget {
                 12.ESW(),
 
                 // WhatsApp
-
                 Expanded(
                   child: Row(
                     children: [
@@ -656,12 +703,15 @@ class ServiceCard extends StatelessWidget {
                       ),
                       6.ESW(),
                       Expanded(
-                        child: CustomTextR(
-                          branch.whatsapp,
-                          fontSize: 13.sp,
-                          color: Colors.green[600],
-                          maxLines: 1,
-                          isOverFlow: true,
+                        child: GestureDetector(
+                          onTap: () => _launchWhatsApp(branch.whatsapp),
+                          child: CustomTextR(
+                            branch.whatsapp,
+                            fontSize: 14.sp,
+                            color: Colors.green[600],
+                            maxLines: 1,
+                            isOverFlow: true,
+                          ),
                         ),
                       ),
                     ],
@@ -672,22 +722,30 @@ class ServiceCard extends StatelessWidget {
             8.ESH(),
           ],
 
-          // Working Hours Section (Simplified - no today's hours preview)
+          // Working Hours and Location Button
           Row(
             children: [
-              Icon(
-                Icons.access_time,
-                size: 18.sp,
-                color: AppColors.main,
+              // Working Hours
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 18.sp,
+                      color: AppColors.main,
+                    ),
+                    6.ESW(),
+                    CustomTextL(
+                      'working_hours'.tr,
+                      fontSize: 13.sp,
+                      fontWeight: FW.medium,
+                      color: Colors.grey[800],
+                    ),
+                  ],
+                ),
               ),
-              6.ESW(),
-              CustomTextL(
-                'working_hours'.tr,
-                fontSize: 13.sp,
-                fontWeight: FW.medium,
-                color: Colors.grey[800],
-              ),
-              const Spacer(),
+
+              // View All Hours Button
               InkWell(
                 onTap: () => _showBranchWorkingHours(branch, {
                   'saturday': 'saturday'.tr,
@@ -698,6 +756,7 @@ class ServiceCard extends StatelessWidget {
                   'thursday': 'thursday'.tr,
                   'friday': 'friday'.tr,
                 }),
+                borderRadius: BorderRadius.circular(8.r),
                 child: Container(
                   padding:
                       EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
@@ -947,7 +1006,15 @@ class ServiceCard extends StatelessWidget {
             ),
           ),
           12.ESW(),
-
+          Expanded(
+            child: _buildActionButton(
+              icon: Icons.add_location_outlined,
+              label: 'add_branch',
+              color: Colors.green[600]!,
+              onTap: () => _addBranchToService(context),
+            ),
+          ),
+          12.ESW(),
           // Delete Button
           Expanded(
             child: _buildActionButton(
@@ -1239,5 +1306,185 @@ class ServiceCard extends StatelessWidget {
         colorText: Colors.white,
       );
     }
+  }
+
+  Future<void> _launchLocationUrl(String url) async {
+    try {
+      // Ensure the URL has a proper scheme
+      String formattedUrl = url;
+      if (!formattedUrl.startsWith('http://') &&
+          !formattedUrl.startsWith('https://')) {
+        formattedUrl = 'https://$formattedUrl';
+      }
+
+      if (await canLaunchUrl(Uri.parse(formattedUrl))) {
+        await launchUrl(Uri.parse(formattedUrl));
+      } else {
+        Get.snackbar(
+          'error'.tr,
+          'cannot_open_location'.tr,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'cannot_open_location'.tr,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> _launchPhone(String phoneNumber) async {
+    try {
+      final url = 'tel:$phoneNumber';
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        Get.snackbar(
+          'error'.tr,
+          'cannot_make_call'.tr,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'cannot_make_call'.tr,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> _launchWhatsApp(String whatsappNumber) async {
+    try {
+      // Clean the phone number (remove any non-digit characters)
+      final cleanedNumber = whatsappNumber.replaceAll(RegExp(r'[^\d+]'), '');
+      final url = 'https://wa.me/$cleanedNumber';
+
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url));
+      } else {
+        Get.snackbar(
+          'error'.tr,
+          'cannot_open_whatsapp'.tr,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'cannot_open_whatsapp'.tr,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  void _addBranchToService(BuildContext context) {
+    // Show confirmation dialog
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(24.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 60.w,
+                height: 60.w,
+                decoration: BoxDecoration(
+                  color: Colors.green[50],
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.add_location_outlined,
+                  size: 30.sp,
+                  color: Colors.green[600],
+                ),
+              ),
+              20.ESH(),
+              CustomTextL(
+                'add_new_branch'.tr,
+                fontSize: 18.sp,
+                fontWeight: FW.bold,
+                color: Colors.grey[900],
+              ),
+              12.ESH(),
+              CustomTextR(
+                'add_branch_confirmation'.tr,
+                fontSize: 14.sp,
+                color: Colors.grey[600],
+                textAlign: TextAlign.center,
+              ),
+              24.ESH(),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () => Get.back(),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey[200],
+                        foregroundColor: Colors.grey[700],
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        elevation: 0,
+                      ),
+                      child: CustomTextL(
+                        'cancel'.tr,
+                        fontSize: 14.sp,
+                        color: Colors.grey[700],
+                      ),
+                    ),
+                  ),
+                  12.ESW(),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        _navigateToAddBranch();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green[600],
+                        padding: EdgeInsets.symmetric(vertical: 14.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: CustomTextL(
+                        'add_branch'.tr,
+                        fontSize: 14.sp,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _navigateToAddBranch() {
+    // Navigate to the add service screen with step 3 pre-selected
+    Get.to(
+      () => AddServiceScreen(serviceToEdit: service),
+      arguments: {'initialStep': 2}, // Step 3 is index 2 (0-based)
+    )?.then((_) {
+      // Refresh services list when returning
+      Get.find<ServicesController>().fetchServices();
+    });
   }
 }

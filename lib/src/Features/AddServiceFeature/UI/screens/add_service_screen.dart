@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part '../widgets/step_1_content.dart';
 
@@ -27,24 +28,31 @@ class AddServiceScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Get initial step from arguments, default to 0
+    final initialStep = Get.arguments?['initialStep'] ?? 0;
+    print('DEBUG: AddServiceScreen initialStep = $initialStep');
+
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBars.appBarBack(
         title: serviceToEdit != null ? 'Edit_service' : 'Add_Service',
       ),
       body: GetBuilder<AddServiceController>(
-        init: AddServiceController(serviceToEdit: serviceToEdit),
-        builder: (controller) => Column(
-          children: [
-            _buildStepperHeader(
-              controller,
-            ),
-            _buildStepContent(
-              controller,
-            ),
-            _buildNavigationButtons(controller, serviceToEdit),
-          ],
+        init: AddServiceController(
+          serviceToEdit: serviceToEdit,
+          initialStep: initialStep, // Pass initial step here
         ),
+        builder: (controller) {
+          print(
+              'DEBUG: Current step in builder = ${controller.currentStep.value}');
+          return Column(
+            children: [
+              _buildStepperHeader(controller),
+              _buildStepContent(controller),
+              _buildNavigationButtons(controller, serviceToEdit),
+            ],
+          );
+        },
       ),
     );
   }

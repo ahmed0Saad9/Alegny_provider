@@ -201,21 +201,19 @@ class Branch {
   final String address;
   final String phoneNumber;
   final String whatsAppNumber;
+  final String locationUrl;
   final String selectedGovernorate;
   final String selectedCity;
   final Map<String, String> workingHours;
-  final double? latitude;
-  final double? longitude;
 
   const Branch({
     required this.address,
     required this.phoneNumber,
     required this.whatsAppNumber,
+    required this.locationUrl,
     required this.selectedGovernorate,
     required this.selectedCity,
     required this.workingHours,
-    this.latitude,
-    this.longitude,
   });
 
   Map<String, dynamic> toJson() {
@@ -240,11 +238,10 @@ class Branch {
       'address': address,
       'phoneNumber': phoneNumber,
       'whatsapp': whatsAppNumber,
+      'locationUrl': locationUrl,
       'governorate': selectedGovernorate,
       'city': selectedCity,
       'workingHours': englishWorkingHours,
-      'latitude': latitude,
-      'longitude': longitude,
     };
   }
 }

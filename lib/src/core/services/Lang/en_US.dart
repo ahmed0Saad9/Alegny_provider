@@ -972,5 +972,14 @@ const Map<String, String> enUS = {
   "rafah": "Rafah",
   "sohag_city": "Sohag",
   "girga": "Girga",
-  "akhmim": "Akhmim"
+  "akhmim": "Akhmim",
+  'open_google_maps': 'Open Google Maps',
+  'cannot_open_google_maps': 'Cannot open Google Maps',
+  'view_location': 'View Location',
+  'cannot_open_location': 'Cannot open location',
+  'cannot_make_call': 'Cannot make call',
+  'cannot_open_whatsapp': 'Cannot open WhatsApp',
+  'add_new_branch': 'Add New Branch',
+  'add_branch_confirmation':
+      'Do you want to add a new branch to this service? You will be taken to the branch management screen.',
 };

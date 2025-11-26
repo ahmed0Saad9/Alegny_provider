@@ -23,6 +23,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   final ServiceModel? serviceToEdit;
   final RxInt currentStep = 0.obs;
   final bool isEditingMode;
+  final int? initialStep;
 
   //first step controllers
   final TextEditingController serviceNameController = TextEditingController();
@@ -42,11 +43,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   final List<TextEditingController> branchAddressControllers = [];
   final List<TextEditingController> branchPhoneControllers = [];
   final List<TextEditingController> branchWhatsappControllers = [];
+  final List<TextEditingController> branchLocationUrlControllers = [];
   final List<RxString> branchSelectedCities = [];
   final List<RxString> branchSelectedGovernorates = [];
   final List<Map<String, String>> branchWorkingHours = [];
-  final List<Rxn<double>> branchLatitudes = [];
-  final List<Rxn<double>> branchLongitudes = [];
 
   //second step controllers
   /// xRay
@@ -572,6 +572,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     final addressController = TextEditingController();
     final phoneController = TextEditingController();
     final whatsappController = TextEditingController();
+    final locationUrlController = TextEditingController();
     final selectedCity = ''.obs;
     final selectedGovernorate = ''.obs;
     final workingHours = <String, String>{}.obs;
@@ -579,21 +580,19 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     branchAddressControllers.add(addressController);
     branchPhoneControllers.add(phoneController);
     branchWhatsappControllers.add(whatsappController);
+    branchLocationUrlControllers.add(locationUrlController);
     branchSelectedCities.add(selectedCity);
     branchSelectedGovernorates.add(selectedGovernorate);
     branchWorkingHours.add(workingHours);
-    branchLatitudes.add(Rxn<double>());
-    branchLongitudes.add(Rxn<double>());
 
     final newBranch = Branch(
       address: '',
       phoneNumber: '',
       whatsAppNumber: '',
+      locationUrl: '',
       workingHours: workingHours,
       selectedCity: selectedCity.value,
       selectedGovernorate: selectedGovernorate.value,
-      latitude: null,
-      longitude: null,
     );
 
     branches.add(newBranch);
@@ -606,15 +605,15 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       branchAddressControllers[index].dispose();
       branchPhoneControllers[index].dispose();
       branchWhatsappControllers[index].dispose();
+      branchLocationUrlControllers[index].dispose();
 
       branchAddressControllers.removeAt(index);
       branchPhoneControllers.removeAt(index);
       branchWhatsappControllers.removeAt(index);
+      branchLocationUrlControllers.removeAt(index);
       branchSelectedCities.removeAt(index);
       branchSelectedGovernorates.removeAt(index);
       branchWorkingHours.removeAt(index);
-      branchLatitudes.removeAt(index);
-      branchLongitudes.removeAt(index);
 
       branches.removeAt(index);
       update();
@@ -631,24 +630,13 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         address: branchAddressControllers[index].text.trim(),
         phoneNumber: branchPhoneControllers[index].text.trim(),
         whatsAppNumber: branchWhatsappControllers[index].text.trim(),
+        locationUrl: branchLocationUrlControllers[index].text.trim(),
         selectedGovernorate: branchSelectedGovernorates[index].value,
         selectedCity: branchSelectedCities[index].value,
         workingHours: cleanedWorkingHours,
-        latitude: branchLatitudes[index].value,
-        longitude: branchLongitudes[index].value,
       );
 
       branches[index] = updatedBranch;
-    }
-  }
-
-  // Method to set location for a specific branch
-  void setBranchLocation(int branchIndex, double latitude, double longitude) {
-    if (branchIndex < branchLatitudes.length) {
-      branchLatitudes[branchIndex].value = latitude;
-      branchLongitudes[branchIndex].value = longitude;
-      updateBranchData(branchIndex);
-      update();
     }
   }
 
@@ -672,12 +660,11 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         phoneNumber: branchPhoneControllers[i].text.trim(),
         // Make sure this is set
         whatsAppNumber: branchWhatsappControllers[i].text.trim(),
+        locationUrl: branchLocationUrlControllers[i].text.trim(),
         // Make sure this is set
         selectedGovernorate: branchSelectedGovernorates[i].value,
         selectedCity: branchSelectedCities[i].value,
         workingHours: cleanedWorkingHours,
-        latitude: branchLatitudes[i].value,
-        longitude: branchLongitudes[i].value,
       );
 
       branches[i] = updatedBranch;
@@ -691,12 +678,17 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
   final List<bool Function()> _stepValidators = [];
 
-  AddServiceController({this.serviceToEdit})
+  AddServiceController({this.serviceToEdit, this.initialStep})
       : isEditingMode = serviceToEdit != null {
     _initializeValidators();
     addBranch(); // Create first branch
     if (isEditingMode) {
       _populateFormForEditing();
+    }
+
+    // Set initial step immediately if provided
+    if (initialStep != null) {
+      currentStep.value = initialStep!;
     }
   }
 
@@ -752,16 +744,18 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     for (var controller in branchWhatsappControllers) {
       controller.dispose();
     }
+    for (var controller in branchLocationUrlControllers) {
+      controller.dispose();
+    }
 
     // Clear all lists
     branchAddressControllers.clear();
     branchPhoneControllers.clear();
     branchWhatsappControllers.clear();
+    branchLocationUrlControllers.clear();
     branchSelectedCities.clear();
     branchSelectedGovernorates.clear();
     branchWorkingHours.clear();
-    branchLatitudes.clear();
-    branchLongitudes.clear();
     branches.clear();
   }
 
@@ -771,6 +765,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         TextEditingController(text: branchModel.phoneNumber);
     final whatsappController =
         TextEditingController(text: branchModel.whatsapp);
+    final locationUrlController =
+        TextEditingController(text: branchModel.locationUrl);
     final selectedCity = branchModel.city.obs;
     final selectedGovernorate = branchModel.governorate.obs;
     final workingHours = Map<String, String>.from(branchModel.workingHours);
@@ -778,21 +774,19 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     branchAddressControllers.add(addressController);
     branchPhoneControllers.add(phoneController);
     branchWhatsappControllers.add(whatsappController);
+    branchLocationUrlControllers.add(locationUrlController);
     branchSelectedCities.add(selectedCity);
     branchSelectedGovernorates.add(selectedGovernorate);
     branchWorkingHours.add(workingHours);
-    branchLatitudes.add(Rxn<double>(branchModel.latitude));
-    branchLongitudes.add(Rxn<double>(branchModel.longitude));
 
     final newBranch = Branch(
       address: branchModel.address,
       phoneNumber: branchModel.phoneNumber,
       whatsAppNumber: branchModel.whatsapp,
+      locationUrl: branchModel.locationUrl,
       workingHours: workingHours,
       selectedCity: branchModel.city,
       selectedGovernorate: branchModel.governorate,
-      latitude: branchModel.latitude,
-      longitude: branchModel.longitude,
     );
 
     branches.add(newBranch);
@@ -1273,6 +1267,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         _showError('${'please_enter_whatsapp'.tr} ${'for_branch'.tr} ${i + 1}');
         return false;
       }
+      if (branchLocationUrlControllers[i].text.trim().isEmpty) {
+        _showError('${'please_enter_location'.tr} ${'for_branch'.tr} ${i + 1}');
+        return false;
+      }
 
       if (!_validateWorkingHours(branchWorkingHours[i])) {
         _showError(
@@ -1399,6 +1397,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       controller.dispose();
     }
     for (var controller in branchWhatsappControllers) {
+      controller.dispose();
+    }
+    for (var controller in branchLocationUrlControllers) {
       controller.dispose();
     }
 

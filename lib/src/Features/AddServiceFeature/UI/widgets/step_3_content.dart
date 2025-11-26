@@ -42,8 +42,6 @@ class _Step3Content extends StatelessWidget {
 
   Widget _buildBranchCard(
       AddServiceController controller, int index, BuildContext context) {
-    final hasLocation = controller.branchLatitudes[index].value != null &&
-        controller.branchLongitudes[index].value != null;
     return Container(
       margin: EdgeInsets.only(bottom: 16.h),
       padding: EdgeInsets.all(16.w),
@@ -98,10 +96,16 @@ class _Step3Content extends StatelessWidget {
           ),
           24.ESH(),
 
-          // Location Selection Button
+          // Location Field
           _buildSectionLabel('location'.tr, true),
           12.ESH(),
-          _buildLocationSelector(controller, index, hasLocation),
+          TextFieldDefault(
+            controller: controller.branchLocationUrlControllers[index],
+            keyboardType: TextInputType.text,
+            hint: 'enter_location'.tr,
+          ),
+          8.ESH(),
+          _buildOpenMapsButton(controller, index),
           24.ESH(),
 
           // Phone Number Field
@@ -204,52 +208,6 @@ class _Step3Content extends StatelessWidget {
         }
         return null;
       },
-    );
-  }
-
-  Widget _buildLocationSelector(
-      AddServiceController controller, int index, bool hasLocation) {
-    final hasExistingLocation =
-        controller.branchLatitudes[index].value != null &&
-            controller.branchLongitudes[index].value != null;
-
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          Get.to(() => MapsLocationPickerScreen(
-                branchIndex: index,
-                initialLat: controller.branchLatitudes[index].value,
-                initialLng: controller.branchLongitudes[index].value,
-              ));
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: hasExistingLocation ? Colors.green : AppColors.main,
-          foregroundColor: Colors.white,
-          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 16.w),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              hasExistingLocation
-                  ? Icons.location_on
-                  : Icons.my_location_outlined,
-              size: 20.sp,
-            ),
-            8.ESW(),
-            CustomTextL(
-              hasExistingLocation ? 'Location_selected' : 'Select_location',
-              fontSize: 16.sp,
-              color: AppColors.titleWhite,
-              fontWeight: FW.medium,
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -379,7 +337,6 @@ class _Step3Content extends StatelessWidget {
             12.ESH(),
             Row(
               children: [
-                8.ESW(),
                 Expanded(
                   flex: 4,
                   child: Row(
@@ -671,5 +628,66 @@ class _Step3Content extends StatelessWidget {
         borderSide: const BorderSide(color: Colors.red, width: 1),
       ),
     );
+  }
+
+  Widget _buildOpenMapsButton(AddServiceController controller, int index) {
+    return SizedBox(
+      width: double.infinity,
+      child: TextButton(
+        onPressed: () {
+          _openGoogleMaps();
+        },
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.main,
+          padding: EdgeInsets.symmetric(
+            vertical: 12.h,
+          ),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+        ),
+        child: Row(
+          // mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.map_outlined,
+              size: 20.sp,
+              color: AppColors.main,
+            ),
+            8.ESW(),
+            CustomTextL(
+              'open_google_maps'.tr,
+              fontSize: 16.sp,
+              fontWeight: FW.bold,
+              color: AppColors.main,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _openGoogleMaps() async {
+    try {
+      // Try to open native Google Maps app first
+      const nativeMapsUrl = 'comgooglemaps://';
+      final Uri nativeUri = Uri.parse(nativeMapsUrl);
+
+      if (await canLaunchUrl(nativeUri)) {
+        await launchUrl(nativeUri, mode: LaunchMode.externalApplication);
+      } else {
+        // Fallback to web version
+        const webMapsUrl = 'https://www.google.com/maps';
+        final Uri webUri = Uri.parse(webMapsUrl);
+        await launchUrl(webUri, mode: LaunchMode.externalApplication);
+      }
+    } catch (e) {
+      Get.snackbar(
+        'error'.tr,
+        'cannot_open_google_maps'.tr,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 }

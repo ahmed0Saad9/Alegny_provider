@@ -341,6 +341,9 @@ const Map<String, String> arAE = {
   "please_enter_service_name": "يرجى إدخال اسم الخدمة",
   "please_enter_discount": "يرجى إدخال نسبة الخصم",
   "please_enter_location": "يرجى إدخال الموقع",
+  "enter_location": "إدخل الموقع",
+  "open_google_maps": "فتح خرائط جوجل",
+  "cannot_open_google_maps": "لا يمكن فتح خرائط جوجل",
   "service_added_successfully": "تمت إضافة الخدمة بنجاح",
   "success": "نجاح",
   "Profile_Update_Successfully": "تم تحديث الملف الشخصي بنجاح",
@@ -870,5 +873,12 @@ const Map<String, String> arAE = {
   "rafah": "رفح",
   "sohag_city": "سوهاج",
   "girga": "جرجا",
-  "akhmim": "أخميم"
+  "akhmim": "أخميم",
+  'view_location': 'عرض الموقع',
+  'cannot_open_location': 'لا يمكن فتح الموقع',
+  'cannot_make_call': 'لا يمكن إجراء المكالمة',
+  'cannot_open_whatsapp': 'لا يمكن فتح واتساب',
+  "add_new_branch": "إضافة فرع جديد",
+  "add_branch_confirmation":
+      "هل تريد إضافة فرع جديد لهذه الخدمة؟ سيتم نقل إلى شاشة إدارة الفروع.",
 };
