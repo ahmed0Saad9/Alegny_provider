@@ -64,9 +64,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                 const Spacer(),
                 ButtonDefault.main(
                   title: 'Continue',
-                  active: _.emailController.text.isNotEmpty,
                   onTap: () {
-                    _.sendOtp(); // Using the corrected method name
+                    _.sendOtp();
                   },
                 ),
                 33.ESH(),

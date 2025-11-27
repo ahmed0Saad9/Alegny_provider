@@ -113,7 +113,7 @@ class VerificationForgetPasswordScreen extends StatelessWidget {
   Widget _buildOtpCard(
       BuildContext context, ForgetPasswordController controller) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 40.h),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16.r),
         color: Colors.white,
@@ -136,45 +136,13 @@ class VerificationForgetPasswordScreen extends StatelessWidget {
 
           24.ESH(),
 
-          // Character Counter
-          _buildCharacterCounter(controller),
-
-          32.ESH(),
-
           // Confirm Button
           ButtonDefault.main(
             onTap: () => controller.checkCode(),
             title: "confirm_code",
-            active: controller.pinCodeController.text.length == 6,
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildCharacterCounter(ForgetPasswordController controller) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        CustomTextR(
-          '${controller.pinCodeController.text.length}',
-          fontSize: 16.sp,
-          fontWeight: FW.bold,
-          color: AppColors.main,
-        ),
-        CustomTextL(
-          ' / 6',
-          fontSize: 14.sp,
-          fontWeight: FW.medium,
-          color: AppColors.titleGray95,
-        ),
-        CustomTextL(
-          'characters',
-          fontSize: 14.sp,
-          fontWeight: FW.medium,
-          color: AppColors.titleGray95,
-        ),
-      ],
     );
   }
 

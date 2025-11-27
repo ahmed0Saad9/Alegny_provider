@@ -1,6 +1,8 @@
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/forget_password_screen.dart';
@@ -13,6 +15,7 @@ import 'package:Alegny_provider/src/core/services/Base/base_controller.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_exceptions.dart';
 import 'package:Alegny_provider/src/core/services/services_locator.dart';
 import 'package:Alegny_provider/src/core/utils/storage_util.dart';
+import 'package:get_storage/get_storage.dart';
 
 class LoginController extends BaseController<LogInRepository> {
   @override
@@ -21,6 +24,7 @@ class LoginController extends BaseController<LogInRepository> {
   TextEditingController? emailController;
   TextEditingController? passwordController;
   UserModel? _userModel;
+  RxBool rememberMe = false.obs;
 
   final GlobalKey<FormState> loginGlobalKey = GlobalKey<FormState>();
 
@@ -35,8 +39,13 @@ class LoginController extends BaseController<LogInRepository> {
       );
       closeEasyLoading();
       result.when(success: (Response response) {
+        if (rememberMe.value) {
+          TextInput.finishAutofillContext();
+        } else {
+          // Clear: do NOT save login info
+          TextInput.finishAutofillContext(shouldSave: false);
+        }
         _userModel = UserModel.fromJson(response.data);
-
         LocalStorageCubit().storeUserModel(
             _userModel!); //stores the user data locally by GetStorage
         _navigatorAfterLogIn(_userModel!);

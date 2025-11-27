@@ -32,7 +32,7 @@ class _ResendButtonState extends State<ResendButton> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         CustomTextL.subtitle(
-          'i_did_not_get_the_code',
+          'I_did_not_get_the_code',
           fontSize: 16,
         ),
         TextButton(
@@ -43,7 +43,7 @@ class _ResendButtonState extends State<ResendButton> {
                   }
                 : null,
             child: const CustomTextL(
-              'resend',
+              'Resend',
               fontWeight: FW.bold,
               fontSize: 16,
               color: AppColors.main,

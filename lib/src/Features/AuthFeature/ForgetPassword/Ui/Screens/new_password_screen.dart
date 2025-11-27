@@ -37,8 +37,7 @@ class NewPasswordScreen extends StatelessWidget {
           key: _.resetPasswordGlobalKey,
           child: Padding(
             padding: AppPadding.paddingScreenSH16,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: ListView(
               children: [
                 40.ESH(),
                 const CustomTextL(
@@ -53,7 +52,7 @@ class NewPasswordScreen extends StatelessWidget {
                 ),
                 40.ESH(),
                 TextFieldDefault(
-                  label: 'new_Password'.tr,
+                  label: 'New_Password'.tr,
                   controller: _.newPasswordController,
                   validation: passwordValidator,
                   secureType: SecureType.toggle,
@@ -74,7 +73,7 @@ class NewPasswordScreen extends StatelessWidget {
                     node.unfocus();
                   },
                 ),
-                const Spacer(),
+                350.ESH(),
                 ButtonDefault.main(
                   title: 'Continue',
                   onTap: () {

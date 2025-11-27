@@ -62,7 +62,6 @@ class _Body extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              // Wrap with Expanded to prevent overflow
               child: CustomTextL.subtitle(
                 'Create_your_account_for_a_better_experience',
                 fontWeight: FW.medium,
@@ -142,23 +141,17 @@ class _Body extends StatelessWidget {
           },
         ),
         _AcceptTermsAndConditions(controller: controller),
-        40.ESH(), // Reduced space to make button more accessible
+        40.ESH(),
         ButtonDefault.main(
           onTap: () {
             controller.createAccount();
           },
           title: 'Sign_up',
-          active: controller.firstNameController.text.isNotEmpty &&
-              controller.lastNameController.text.isNotEmpty &&
-              controller.emailController.text.isNotEmpty &&
-              controller.phoneController.text.isNotEmpty &&
-              controller.passwordController.text.isNotEmpty &&
-              controller.confirmPasswordController.text.isNotEmpty &&
-              controller.acceptTermsAndConditions == true,
+          active: controller.acceptTermsAndConditions == true,
         ),
         20.ESH(),
         _LoginWidget(controller: controller),
-        20.ESH(), // Add bottom padding for better scrolling
+        20.ESH(),
       ],
     );
   }

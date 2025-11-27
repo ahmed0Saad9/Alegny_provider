@@ -17,12 +17,10 @@ class AppIdeaScreen extends StatefulWidget {
   State<AppIdeaScreen> createState() => _AppIdeaScreenState();
 }
 
-class _AppIdeaScreenState extends State<AppIdeaScreen>
-    with WidgetsBindingObserver {
+class _AppIdeaScreenState extends State<AppIdeaScreen> {
   late YoutubePlayerController _youtubeController;
   bool _isLoading = true;
   bool _hasError = false;
-  bool _isFullScreen = false;
 
   // YouTube video URL
   final String videoUrl = 'https://youtu.be/CR7DWj8W8m4?si=3qXpQbHwYd4dT87d';
@@ -30,57 +28,20 @@ class _AppIdeaScreenState extends State<AppIdeaScreen>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
     _initializePlayer();
-
-    // Lock to portrait initially
-    _setPortraitOrientation();
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
     _youtubeController.dispose();
     // Reset to all orientations when leaving screen
-    _setAllOrientations();
-    super.dispose();
-  }
-
-  @override
-  void didChangeMetrics() {
-    final physicalSize = WidgetsBinding.instance.window.physicalSize;
-    final aspectRatio = physicalSize.width / physicalSize.height;
-
-    // Check if in landscape (fullscreen) mode
-    if (aspectRatio > 1.0) {
-      if (!_isFullScreen) {
-        setState(() {
-          _isFullScreen = true;
-        });
-      }
-    } else {
-      if (_isFullScreen) {
-        setState(() {
-          _isFullScreen = false;
-        });
-      }
-    }
-  }
-
-  void _setPortraitOrientation() {
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-  }
-
-  void _setAllOrientations() {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
+    super.dispose();
   }
 
   void _initializePlayer() {
@@ -94,24 +55,13 @@ class _AppIdeaScreenState extends State<AppIdeaScreen>
           flags: const YoutubePlayerFlags(
             autoPlay: false,
             mute: false,
-            enableCaption: true,
+            enableCaption: false,
             loop: false,
             isLive: false,
             forceHD: false,
-            controlsVisibleAtStart: true,
+            controlsVisibleAtStart: false,
           ),
         );
-
-        // Listen for fullscreen changes
-        _youtubeController.addListener(() {
-          if (_youtubeController.value.isFullScreen && !_isFullScreen) {
-            // Allow landscape when fullscreen
-            _setAllOrientations();
-          } else if (!_youtubeController.value.isFullScreen && _isFullScreen) {
-            // Lock to portrait when exiting fullscreen
-            _setPortraitOrientation();
-          }
-        });
 
         setState(() {
           _isLoading = false;
@@ -133,82 +83,52 @@ class _AppIdeaScreenState extends State<AppIdeaScreen>
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // If in fullscreen, exit fullscreen first
-        if (_youtubeController.value.isFullScreen) {
-          _youtubeController.toggleFullScreenMode();
-          return false;
-        }
-        return true;
+    return YoutubePlayerBuilder(
+      player: YoutubePlayer(
+        controller: _youtubeController,
+        showVideoProgressIndicator: true,
+        progressIndicatorColor: AppColors.main,
+        progressColors: ProgressBarColors(
+          playedColor: AppColors.main,
+          handleColor: AppColors.main,
+          bufferedColor: Colors.grey[300]!,
+          backgroundColor: Colors.grey[600]!,
+        ),
+        onReady: () {
+          print('YouTube Player is ready');
+        },
+        onEnded: (data) {
+          print('Video ended');
+        },
+      ),
+      builder: (context, player) {
+        return BaseScaffold(
+          appBar: AppBars.appBarBack(title: 'app_idea'.tr),
+          body: SingleChildScrollView(
+            padding: AppPadding.paddingScreenSH36,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                30.ESH(),
+                _buildVideoSection(player),
+                40.ESH(),
+                _buildAppDescriptionSection(),
+                40.ESH(),
+                _buildFeaturesSection(),
+                40.ESH(),
+                _buildHowItWorksSection(),
+                40.ESH(),
+                _buildTargetAudienceSection(),
+                40.ESH(),
+              ],
+            ),
+          ),
+        );
       },
-      child: BaseScaffold(
-        appBar: _isFullScreen ? null : AppBars.appBarBack(title: 'app_idea'.tr),
-        body: _isFullScreen ? _buildFullScreenVideo() : _buildNormalScreen(),
-      ),
     );
   }
 
-  Widget _buildNormalScreen() {
-    return SingleChildScrollView(
-      padding: AppPadding.paddingScreenSH36,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          30.ESH(),
-          _buildVideoSection(),
-          40.ESH(),
-          _buildAppDescriptionSection(),
-          40.ESH(),
-          _buildFeaturesSection(),
-          40.ESH(),
-          _buildHowItWorksSection(),
-          40.ESH(),
-          _buildTargetAudienceSection(),
-          40.ESH(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFullScreenVideo() {
-    return Container(
-      color: Colors.black,
-      child: Stack(
-        children: [
-          Center(
-            child: YoutubePlayer(
-              controller: _youtubeController,
-              showVideoProgressIndicator: true,
-              progressIndicatorColor: AppColors.main,
-              progressColors: ProgressBarColors(
-                playedColor: AppColors.main,
-                handleColor: AppColors.main,
-                bufferedColor: Colors.grey[300]!,
-                backgroundColor: Colors.grey[600]!,
-              ),
-            ),
-          ),
-          Positioned(
-            top: 40.h,
-            left: 20.w,
-            child: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-                size: 30.w,
-              ),
-              onPressed: () {
-                _youtubeController.toggleFullScreenMode();
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildVideoSection() {
+  Widget _buildVideoSection(Widget player) {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -250,7 +170,7 @@ class _AppIdeaScreenState extends State<AppIdeaScreen>
             padding: EdgeInsets.symmetric(horizontal: 20.w),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.r),
-              child: _buildVideoPlayer(),
+              child: _buildVideoPlayer(player),
             ),
           ),
           20.ESH(),
@@ -259,7 +179,7 @@ class _AppIdeaScreenState extends State<AppIdeaScreen>
     );
   }
 
-  Widget _buildVideoPlayer() {
+  Widget _buildVideoPlayer(Widget player) {
     if (_isLoading) {
       return AspectRatio(
         aspectRatio: 16 / 9,
@@ -317,23 +237,7 @@ class _AppIdeaScreenState extends State<AppIdeaScreen>
       );
     }
 
-    return YoutubePlayer(
-      controller: _youtubeController,
-      showVideoProgressIndicator: true,
-      progressIndicatorColor: AppColors.main,
-      progressColors: ProgressBarColors(
-        playedColor: AppColors.main,
-        handleColor: AppColors.main,
-        bufferedColor: Colors.grey[300]!,
-        backgroundColor: Colors.grey[600]!,
-      ),
-      onReady: () {
-        print('YouTube Player is ready');
-      },
-      onEnded: (data) {
-        print('Video ended');
-      },
-    );
+    return player;
   }
 
   // ... Keep all your other existing methods (_buildAppDescriptionSection, etc.)

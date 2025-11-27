@@ -881,4 +881,14 @@ const Map<String, String> arAE = {
   "add_new_branch": "إضافة فرع جديد",
   "add_branch_confirmation":
       "هل تريد إضافة فرع جديد لهذه الخدمة؟ سيتم نقل إلى شاشة إدارة الفروع.",
+  "Example": "مثال",
+  "Phone_number_required": "رقم الهاتف مطلوب",
+  "Please_select_country": "الرجاء تحديد البلد",
+  "Phone_number_too_short": "رقم الهاتف قصير جدًا",
+  "Phone_number_too_long": "رقم الهاتف طويل جدًا",
+  "Invalid_phone_format": "تنسيق الهاتف غير صالح",
+  "Phone_number_contains_invalid_characters":
+      "يحتوي رقم الهاتف على أحرف غير صالحة",
+  "I_did_not_get_the_code": "لم أحصل على الرمز",
+  "Resend": "إعادة الإرسال",
 };

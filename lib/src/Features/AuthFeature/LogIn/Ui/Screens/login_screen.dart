@@ -50,7 +50,10 @@ class LoginScreen extends StatelessWidget {
                     TextFieldDefault(
                       label: 'Email',
                       prefixIconUrl: 'Email',
-                      autoFillHints: const [AutofillHints.email],
+                      autoFillHints: const [
+                        // AutofillHints.username,
+                        AutofillHints.email
+                      ],
                       controller: _.emailController,
                       validation: emailValidator,
                       keyboardType: TextInputType.emailAddress,
@@ -74,6 +77,15 @@ class LoginScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Obx(() => Checkbox(
+                              value: _.rememberMe.value,
+                              onChanged: (v) => _.rememberMe.value = v!,
+                            )),
+                        CustomTextL(
+                          'Remember_me',
+                          fontSize: 16.sp,
+                        ),
+                        const Spacer(),
                         ButtonForgetPassword(controller: _),
                       ],
                     ),
@@ -81,8 +93,6 @@ class LoginScreen extends StatelessWidget {
                     ButtonDefault.main(
                       onTap: () => _.logIn(),
                       title: 'login',
-                      active: _.emailController!.text.isNotEmpty &&
-                          _.passwordController!.text.isNotEmpty,
                     ),
                     _DoNotHaveAccountWidget(
                       controller: _,
@@ -112,7 +122,7 @@ class _DoNotHaveAccountWidget extends StatelessWidget {
       children: [
         CustomTextL(
           'dont_have_account_register',
-          fontSize: 14.sp,
+          fontSize: 16.sp,
           color: AppColors.titleMain,
         ),
         TextButton(
@@ -123,7 +133,7 @@ class _DoNotHaveAccountWidget extends StatelessWidget {
           child: CustomTextL(
             decoration: CustomTextDecoration.underLine,
             'join_us',
-            fontSize: 14.sp,
+            fontSize: 16.sp,
             fontWeight: FW.medium,
             color: AppColors.main,
           ),
@@ -152,7 +162,7 @@ class ButtonForgetPassword extends StatelessWidget {
             style: TextButton.styleFrom(padding: EdgeInsets.zero),
             child: CustomTextL(
               'Forget_password',
-              fontSize: 14.sp,
+              fontSize: 16.sp,
               fontWeight: FW.medium,
               color: AppColors.main,
             )),
