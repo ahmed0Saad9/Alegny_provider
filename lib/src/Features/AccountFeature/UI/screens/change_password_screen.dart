@@ -78,9 +78,6 @@ class ChangePasswordScreen extends StatelessWidget {
                         24.ESH(),
                         ButtonDefault.main(
                           title: 'change_password',
-                          active: _.currentPasswordController.text.isNotEmpty &&
-                              _.newPasswordController.text.isNotEmpty &&
-                              _.confirmPasswordController.text.isNotEmpty,
                           onTap: () => _.changePassword(),
                         ),
                         24.ESH(),

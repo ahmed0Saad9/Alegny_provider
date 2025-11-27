@@ -446,6 +446,13 @@ class _Step3Content extends StatelessWidget {
     AddServiceController controller,
     int branchIndex,
   ) async {
+    // Store the current focus and unfocus it
+    final currentFocus = FocusScope.of(context);
+    final unfocused = currentFocus.unfocus();
+
+    // Wait a bit for unfocus to complete
+    await Future.delayed(Duration(milliseconds: 100));
+
     final currentHours = workingHours[dayKey] ?? '9:00 AM - 5:00 PM';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
@@ -507,6 +514,14 @@ class _Step3Content extends StatelessWidget {
 
       print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
     }
+
+    // Ensure no field gets focus after time picker closes
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final focusScope = FocusScope.of(context);
+      if (!focusScope.hasPrimaryFocus) {
+        focusScope.unfocus();
+      }
+    });
   }
 
   TimeOfDay _parseTimeString(String timeString) {

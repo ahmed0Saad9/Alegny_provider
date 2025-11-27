@@ -950,8 +950,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         serviceData: serviceData,
         imageFile: serviceImage.value,
       );
+      Get.find<ServicesController>().fetchServices();
     } else {
       _createService(serviceData);
+      Get.find<ServicesController>().fetchServices();
     }
   }
 

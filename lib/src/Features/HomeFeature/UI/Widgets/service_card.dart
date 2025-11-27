@@ -84,7 +84,7 @@ class ServiceCard extends StatelessWidget {
                         child: service.imageUrl != null
                             ? Image.network(
                                 service.imageUrl!,
-                                fit: BoxFit.cover,
+                                fit: BoxFit.contain,
                                 errorBuilder: (context, error, stackTrace) =>
                                     _buildPlaceholderImage(),
                               )
@@ -791,11 +791,12 @@ class ServiceCard extends StatelessWidget {
   }
 
   void _showBranchWorkingHours(BranchModel branch, Map<String, String> days) {
-    final formattedHours = branch.getFormattedWorkingHours();
+    final workingHours = branch.workingHours;
     final bool isArabic = Get.locale?.languageCode == 'ar';
 
     Get.bottomSheet(
       Container(
+        height: Get.height * 0.75,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.only(
@@ -805,7 +806,7 @@ class ServiceCard extends StatelessWidget {
         ),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: [
             // Drag indicator
             Container(
@@ -835,7 +836,7 @@ class ServiceCard extends StatelessWidget {
 
             // Location
             CustomTextR(
-              '${branch.governorate} - ${branch.city}',
+              '${branch.governorate.tr} - ${branch.city.tr}',
               fontSize: 14.sp,
               color: Colors.grey[600],
               textAlign: TextAlign.center,
@@ -889,18 +890,71 @@ class ServiceCard extends StatelessWidget {
 
             16.ESH(),
 
+            // Column Headers
+            Padding(
+              padding: EdgeInsets.symmetric(vertical: 8.h),
+              child: Row(
+                children: [
+                  20.ESW(),
+                  Expanded(
+                    child: CustomTextL(
+                      'Day'.tr,
+                      fontSize: 13.sp,
+                      color: Colors.grey[600],
+                      fontWeight: FW.bold,
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        CustomTextL(
+                          'from'.tr,
+                          fontSize: 13.sp,
+                          color: Colors.grey[600],
+                          fontWeight: FW.bold,
+                          textAlign: TextAlign.center,
+                        ),
+                        70.ESW(),
+                        CustomTextL(
+                          'to'.tr,
+                          fontSize: 13.sp,
+                          color: Colors.grey[600],
+                          fontWeight: FW.bold,
+                          textAlign: TextAlign.center,
+                        ),
+                        30.ESW(),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // Divider
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Divider(height: 1, color: Colors.grey[300]),
+            ),
+
+            8.ESH(),
+
             // Working hours list
             Expanded(
               child: ListView.builder(
-                shrinkWrap: true,
-                physics: const BouncingScrollPhysics(),
+                shrinkWrap: false,
+                physics: const AlwaysScrollableScrollPhysics(),
                 itemCount: days.length,
                 itemBuilder: (context, index) {
                   final dayKey = days.keys.elementAt(index);
                   final dayLabel = days.values.elementAt(index);
-                  final hours = _formatWorkingHoursForDisplay(
-                      formattedHours[dayKey]!, context);
-                  final isClosed = _isClosed(formattedHours[dayKey]!);
+                  // Get hours directly from backend without formatting
+                  final hours =
+                      workingHours[dayKey] ?? (isArabic ? 'مغلق' : 'Closed');
+                  final isClosed = _isClosed(hours);
+
+                  // Split the times
+                  final timeParts = _splitWorkingHours(hours);
 
                   return Container(
                     margin: EdgeInsets.only(bottom: 8.h),
@@ -918,24 +972,39 @@ class ServiceCard extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Expanded(
-                          child: CustomTextR(
-                            dayLabel,
-                            fontSize: 14.sp,
-                            fontWeight: FW.medium,
-                            color: Colors.grey[800],
-                          ),
+                        CustomTextR(
+                          dayLabel,
+                          fontSize: 14.sp,
+                          fontWeight: FW.medium,
+                          color: Colors.grey[800],
                         ),
                         Expanded(
-                          child: CustomTextR(
-                            hours,
-                            fontSize: 14.sp,
-                            color: isClosed
-                                ? Colors.red[600]!
-                                : Colors.green[700]!,
-                            fontWeight: FW.medium,
-                            textAlign: TextAlign.end,
-                          ),
+                          child: isClosed
+                              ? CustomTextL(
+                                  timeParts['closed']!,
+                                  fontSize: 14.sp,
+                                  color: Colors.red[600]!,
+                                  fontWeight: FW.medium,
+                                  textAlign: TextAlign.end,
+                                )
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    CustomTextR(
+                                      timeParts['from']!,
+                                      fontSize: 14.sp,
+                                      color: Colors.green[700]!,
+                                      fontWeight: FW.medium,
+                                    ),
+                                    30.ESW(),
+                                    CustomTextR(
+                                      timeParts['to']!,
+                                      fontSize: 14.sp,
+                                      color: Colors.green[700]!,
+                                      fontWeight: FW.medium,
+                                    ),
+                                  ],
+                                ),
                         ),
                       ],
                     ),
@@ -951,40 +1020,39 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
-  String _formatWorkingHoursForDisplay(String hours, BuildContext context) {
-    final bool isArabic = Localizations.localeOf(context).languageCode == 'ar';
-
+  // Split working hours into from and to times
+  Map<String, String> _splitWorkingHours(String hours) {
     if (_isClosed(hours)) {
-      return isArabic ? 'مغلق' : 'Closed';
+      final bool isArabic = Get.locale?.languageCode == 'ar';
+      return {
+        'closed': hours.isEmpty ? (isArabic ? 'مغلق' : 'Closed') : hours,
+        'from': '',
+        'to': '',
+      };
     }
 
-    String cleaned = hours.trim();
+    // Split by dash or hyphen
+    final parts = hours.split(RegExp(r'\s*[-–—]\s*'));
 
-    // Handle language-specific formatting
-    if (isArabic) {
-      // Format for Arabic
-      cleaned = cleaned.replaceAll('AM', 'ص');
-      cleaned = cleaned.replaceAll('PM', 'م');
-      cleaned = cleaned.replaceAll('a', 'ص');
-      cleaned = cleaned.replaceAll('p', 'م');
-    } else {
-      // Format for English
-      cleaned = cleaned.replaceAll('ص', 'AM');
-      cleaned = cleaned.replaceAll('م', 'PM');
-      // Ensure proper AM/PM formatting
-      cleaned = cleaned.replaceAll(
-          RegExp(r'(\d{1,2}:\d{2})\s*([ap])'), r'$1 $2m'.toUpperCase());
+    if (parts.length >= 2) {
+      return {
+        'from': parts[0].trim(),
+        'to': parts[1].trim(),
+        'closed': '',
+      };
     }
 
-    // Clean up spacing
-    cleaned = cleaned.replaceAll('  ', ' ');
-
-    return cleaned;
+    // If no dash found, return the whole string as is
+    return {
+      'from': hours.trim(),
+      'to': '',
+      'closed': '',
+    };
   }
 
+// Simplified closed check
   bool _isClosed(String hours) {
-    final bool isArabic = Get.locale?.languageCode == 'ar';
-    final closedIndicators = ['مغلق', 'قام', 'closed', 'close', 'مقفول'];
+    final closedIndicators = ['مغلق', 'closed'];
 
     return hours.isEmpty ||
         closedIndicators.any((indicator) =>
@@ -1062,10 +1130,6 @@ class ServiceCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
   }
 
   void _showDeleteConfirmation(BuildContext context, VoidCallback onConfirm) {

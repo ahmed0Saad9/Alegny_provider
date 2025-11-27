@@ -105,7 +105,7 @@ class _AppIdeaScreenState extends State<AppIdeaScreen> {
         return BaseScaffold(
           appBar: AppBars.appBarBack(title: 'app_idea'.tr),
           body: SingleChildScrollView(
-            padding: AppPadding.paddingScreenSH36,
+            padding: AppPadding.paddingScreenSH16,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
