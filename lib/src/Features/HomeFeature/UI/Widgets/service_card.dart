@@ -1426,8 +1426,17 @@ class ServiceCard extends StatelessWidget {
 
   Future<void> _launchWhatsApp(String whatsappNumber) async {
     try {
-      // Clean the phone number (remove any non-digit characters)
-      final cleanedNumber = whatsappNumber.replaceAll(RegExp(r'[^\d+]'), '');
+      // Clean the phone number (remove any non-digit characters except +)
+      String cleanedNumber = whatsappNumber.replaceAll(RegExp(r'[^\d+]'), '');
+
+      // Add +20 country code if not already present
+      if (!cleanedNumber.startsWith('+')) {
+        // Remove leading zeros if present
+        cleanedNumber = cleanedNumber.replaceFirst(RegExp(r'^0+'), '');
+        // Add +20 for Egyptian numbers
+        cleanedNumber = '+20$cleanedNumber';
+      }
+
       final url = 'https://wa.me/$cleanedNumber';
 
       if (await canLaunchUrl(Uri.parse(url))) {

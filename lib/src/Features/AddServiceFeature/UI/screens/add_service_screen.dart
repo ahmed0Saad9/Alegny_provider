@@ -6,6 +6,7 @@ import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_mode
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Appbars/app_bars.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_default.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/buttons/button_default.dart';
+import 'package:Alegny_provider/src/core/services/svg_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

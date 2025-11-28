@@ -462,7 +462,6 @@ const Map<String, String> enUS = {
   "please_select_specialization": "Please select a specialization",
   "please_enter_service_name_or_doctor": "Please enter service name or doctor",
   "please_enter_discount": "Please enter discount percentage",
-  "please_enter_location": "Please enter location details",
   "Enter_location": "Enter Location",
   "service_added_successfully": "Service added successfully",
   // "success": "Success",
@@ -673,7 +672,6 @@ const Map<String, String> enUS = {
   // Branch validation messages
   "please_enter_whatsapp": "Please enter WhatsApp number",
   "please_set_proper_working_hours": "Please set proper working hours",
-  "at_least_one_open_day_required": "At least one open day is required",
   "for_branch": "for branch",
 
   // Success messages
@@ -983,4 +981,29 @@ const Map<String, String> enUS = {
   'add_new_branch': 'Add New Branch',
   'add_branch_confirmation':
       'Do you want to add a new branch to this service? You will be taken to the branch management screen.',
+// Step 3 validations
+  'address_required': 'Address is required',
+  'address_too_short': 'Address must be at least 10 characters',
+  'location_required': 'Location URL is required',
+  'invalid_url': 'Please enter a valid URL',
+  'phone_required': 'Phone number is required',
+  'phone_must_be_11_digits': 'Phone number must be exactly 11 digits',
+  'phone_must_start_with_01': 'Phone number must start with 01',
+  'whatsapp_required': 'WhatsApp number is required',
+  'whatsapp_must_be_11_digits': 'WhatsApp number must be exactly 11 digits',
+  'whatsapp_must_start_with_01': 'WhatsApp number must start with 01',
+  'please_enter_location': 'Please enter location URL',
+  'at_least_one_open_day_required': 'At least one day must be open',
+
+  // Step 1 validations
+  'service_name_required': 'Service name is required',
+  'service_name_too_short': 'Service name must be at least 3 characters',
+  'service_name_too_long': 'Service name cannot exceed 100 characters',
+  'description_too_short': 'Description must be at least 10 characters',
+  'description_too_long': 'Description cannot exceed 500 characters',
+  'invalid_facebook_link': 'Please enter a valid Facebook link',
+  'invalid_instagram_link': 'Please enter a valid Instagram link',
+  'invalid_tiktok_link': 'Please enter a valid TikTok link',
+  'invalid_youtube_link': 'Please enter a valid YouTube link',
+  'invalid_url_format': 'Invalid URL format',
 };

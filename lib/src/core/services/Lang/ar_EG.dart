@@ -340,7 +340,6 @@ const Map<String, String> arAE = {
   "please_select_specialization": "يرجى اختيار التخصص",
   "please_enter_service_name": "يرجى إدخال اسم الخدمة",
   "please_enter_discount": "يرجى إدخال نسبة الخصم",
-  "please_enter_location": "يرجى إدخال الموقع",
   "Enter_location": "إدخل الموقع",
   "open_google_maps": "فتح خرائط جوجل",
   "cannot_open_google_maps": "لا يمكن فتح خرائط جوجل",
@@ -566,7 +565,6 @@ const Map<String, String> arAE = {
 
   "please_enter_whatsapp": "يرجى إدخال رقم الواتساب",
   "please_set_proper_working_hours": "يرجى تحديد أوقات العمل بشكل صحيح",
-  "at_least_one_open_day_required": "يجب تحديد يوم عمل واحد على الأقل",
   "for_branch": "للفرع",
 
   // Success messages
@@ -894,4 +892,29 @@ const Map<String, String> arAE = {
   "Resend_in": "إعادة الإرسال خلال",
   "S": "ثانية",
   "Day": "اليوم",
+  // Step 3 validations
+  'address_required': 'العنوان مطلوب',
+  'address_too_short': 'يجب أن يكون العنوان 10 أحرف على الأقل',
+  'location_required': 'رابط الموقع مطلوب',
+  'invalid_url': 'يرجى إدخال رابط صحيح',
+  'phone_required': 'رقم الهاتف مطلوب',
+  'phone_must_be_11_digits': 'يجب أن يتكون رقم الهاتف من 11 رقمًا بالضبط',
+  'phone_must_start_with_01': 'يجب أن يبدأ رقم الهاتف بـ 01',
+  'whatsapp_required': 'رقم الواتساب مطلوب',
+  'whatsapp_must_be_11_digits': 'يجب أن يتكون رقم الواتساب من 11 رقمًا بالضبط',
+  'whatsapp_must_start_with_01': 'يجب أن يبدأ رقم الواتساب بـ 01',
+  'please_enter_location': 'يرجى إدخال رابط الموقع',
+  'at_least_one_open_day_required': 'يجب أن يكون يوم واحد على الأقل مفتوحًا',
+
+  // Step 1 validations
+  'service_name_required': 'اسم الخدمة مطلوب',
+  'service_name_too_short': 'يجب أن يكون اسم الخدمة 3 أحرف على الأقل',
+  'service_name_too_long': 'لا يمكن أن يتجاوز اسم الخدمة 100 حرف',
+  'description_too_short': 'يجب أن يكون الوصف 10 أحرف على الأقل',
+  'description_too_long': 'لا يمكن أن يتجاوز الوصف 500 حرف',
+  'invalid_facebook_link': 'يرجى إدخال رابط فيسبوك صحيح',
+  'invalid_instagram_link': 'يرجى إدخال رابط إنستغرام صحيح',
+  'invalid_tiktok_link': 'يرجى إدخال رابط تيك توك صحيح',
+  'invalid_youtube_link': 'يرجى إدخال رابط يوتيوب صحيح',
+  'invalid_url_format': 'صيغة الرابط غير صحيحة',
 };

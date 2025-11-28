@@ -9,23 +9,26 @@ class _Step3Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AddServiceController>(
       builder: (controller) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextL(
-              'branches',
-              fontSize: 20.sp,
-              fontWeight: FW.bold,
-              color: Colors.grey[800],
-            ),
-            24.ESH(),
+        return Form(
+          key: controller.step3FormKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CustomTextL(
+                'branches',
+                fontSize: 20.sp,
+                fontWeight: FW.bold,
+                color: Colors.grey[800],
+              ),
+              24.ESH(),
 
-            // Branches List
-            ..._buildBranchesList(controller, context),
+              // Branches List
+              ..._buildBranchesList(controller, context),
 
-            // Add Branch Button
-            _buildAddBranchButton(controller),
-          ],
+              // Add Branch Button
+              _buildAddBranchButton(controller),
+            ],
+          ),
         );
       },
     );
@@ -72,13 +75,13 @@ class _Step3Content extends StatelessWidget {
           ),
           16.ESH(),
 
-          // Governorate Dropdown - FIXED
+          // Governorate Dropdown
           _buildSectionLabel('governorate'.tr, true),
           12.ESH(),
           _buildGovernorateDropdown(controller, index),
           24.ESH(),
 
-          // City Dropdown (only show if governorate is selected)
+          // City Dropdown
           if (controller.branchSelectedGovernorates[index].isNotEmpty) ...[
             _buildSectionLabel('city'.tr, true),
             12.ESH(),
@@ -86,29 +89,51 @@ class _Step3Content extends StatelessWidget {
             24.ESH(),
           ],
 
-          // Address Field
+          // Address Field with validation
           _buildSectionLabel('address'.tr, true),
           12.ESH(),
           TextFieldDefault(
             controller: controller.branchAddressControllers[index],
             hint: 'enter_address'.tr,
             maxLines: 3,
+            validation: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'address_required'.tr;
+              }
+              if (value.trim().length < 10) {
+                return 'address_too_short'.tr;
+              }
+              return null;
+            },
           ),
           24.ESH(),
 
-          // Location Field
+          // Location Field with URL validation
           _buildSectionLabel('location'.tr, true),
           12.ESH(),
           TextFieldDefault(
             controller: controller.branchLocationUrlControllers[index],
             keyboardType: TextInputType.text,
             hint: 'Enter_location'.tr,
+            validation: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'location_required'.tr;
+              }
+              final urlPattern = RegExp(
+                r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+                caseSensitive: false,
+              );
+              if (!urlPattern.hasMatch(value.trim())) {
+                return 'invalid_url'.tr;
+              }
+              return null;
+            },
           ),
           8.ESH(),
           _buildOpenMapsButton(controller, index),
           24.ESH(),
 
-          // Phone Number Field
+          // Phone Number Field with validation
           _buildSectionLabel('phone_number'.tr, true),
           12.ESH(),
           TextFieldDefault(
@@ -116,10 +141,22 @@ class _Step3Content extends StatelessWidget {
             keyboardType: TextInputType.phone,
             hint: 'enter_phone_number'.tr,
             maxLength: 11,
+            validation: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'phone_required'.tr;
+              }
+              if (value.trim().length != 11) {
+                return 'phone_must_be_11_digits'.tr;
+              }
+              if (!value.startsWith('01')) {
+                return 'phone_must_start_with_01'.tr;
+              }
+              return null;
+            },
           ),
           24.ESH(),
 
-          // WhatsApp Number Field (REPLACED Branch Phone)
+          // WhatsApp Number Field with validation
           _buildSectionLabel('whatsapp_number'.tr, true),
           12.ESH(),
           TextFieldDefault(
@@ -127,6 +164,18 @@ class _Step3Content extends StatelessWidget {
             keyboardType: TextInputType.phone,
             hint: 'enter_whatsapp_number'.tr,
             maxLength: 11,
+            validation: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'whatsapp_required'.tr;
+              }
+              if (value.trim().length != 11) {
+                return 'whatsapp_must_be_11_digits'.tr;
+              }
+              if (!value.startsWith('01')) {
+                return 'whatsapp_must_start_with_01'.tr;
+              }
+              return null;
+            },
           ),
           24.ESH(),
 
@@ -141,7 +190,6 @@ class _Step3Content extends StatelessWidget {
   }
 
   Widget _buildGovernorateDropdown(AddServiceController controller, int index) {
-    // Get unique governorates to avoid duplicates
     final uniqueGovernorates = controller.uniqueGovernorates;
 
     return DropdownButtonFormField<String>(
@@ -160,8 +208,7 @@ class _Step3Content extends StatelessWidget {
       onChanged: (value) {
         if (value != null) {
           controller.branchSelectedGovernorates[index].value = value;
-          controller.branchSelectedCities[index].value =
-              ''; // Reset city when governorate changes
+          controller.branchSelectedCities[index].value = '';
           controller.update();
         }
       },
@@ -179,8 +226,6 @@ class _Step3Content extends StatelessWidget {
         controller.branchSelectedGovernorates[index].value;
     final cities =
         AddServiceController.citiesByGovernorate[selectedGovernorate] ?? [];
-
-    // Get unique cities to avoid duplicates
     final uniqueCities = cities.toSet().toList();
 
     return DropdownButtonFormField<String>(
@@ -223,7 +268,6 @@ class _Step3Content extends StatelessWidget {
       'friday': 'friday'.tr,
     };
 
-    // Initialize default times for any empty days
     _initializeDefaultTimes(workingHours);
 
     return Column(
@@ -236,8 +280,6 @@ class _Step3Content extends StatelessWidget {
 
   void _initializeDefaultTimes(Map<String, String> workingHours) {
     const defaultTime = '9:00 AM - 5:00 PM';
-
-    // Define all days that should have default times
     final days = [
       'saturday',
       'sunday',
@@ -251,17 +293,14 @@ class _Step3Content extends StatelessWidget {
     for (final day in days) {
       final currentHours = workingHours[day];
 
-      // Set Friday as closed by default
       if (day == 'friday') {
         if (currentHours == null || currentHours.isEmpty) {
           workingHours[day] = 'closed'.tr;
         }
       } else {
-        // For other days, set default working hours if not already set
         if (currentHours == null ||
             currentHours.isEmpty ||
             currentHours.toLowerCase() == 'closed'.tr.toLowerCase()) {
-          // Only set default if the day is not explicitly closed
           if (currentHours?.toLowerCase() != 'closed'.tr.toLowerCase()) {
             workingHours[day] = defaultTime;
           }
@@ -277,7 +316,6 @@ class _Step3Content extends StatelessWidget {
       String dayLabel,
       AddServiceController controller,
       int branchIndex) {
-    // Always get the current value from the workingHours map
     final currentHours = workingHours[dayKey] ?? '9:00 AM - 5:00 PM';
     final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
@@ -303,7 +341,6 @@ class _Step3Content extends StatelessWidget {
                 child: CustomTextL(dayLabel, fontSize: 14.sp),
               ),
               12.ESW(),
-              // Closed Switch
               Row(
                 children: [
                   CustomTextL(
@@ -321,10 +358,8 @@ class _Step3Content extends StatelessWidget {
                         if (value) {
                           workingHours[dayKey] = 'closed'.tr;
                         } else {
-                          // When opening a day, set default times to 9:00 AM - 5:00 PM
                           workingHours[dayKey] = '9:00 AM - 5:00 PM';
                         }
-                        // Force update the controller to refresh the UI
                         controller.update();
                       },
                     ),
@@ -341,7 +376,6 @@ class _Step3Content extends StatelessWidget {
                   flex: 4,
                   child: Row(
                     children: [
-                      // From Time Picker
                       Expanded(
                         child: InkWell(
                           onTap: () => _showTimePicker(
@@ -385,7 +419,6 @@ class _Step3Content extends StatelessWidget {
                       CustomTextL('to',
                           fontSize: 16.sp, color: Colors.grey[600]),
                       12.ESW(),
-                      // To Time Picker
                       Expanded(
                         child: InkWell(
                           onTap: () => _showTimePicker(
@@ -446,11 +479,8 @@ class _Step3Content extends StatelessWidget {
     AddServiceController controller,
     int branchIndex,
   ) async {
-    // Store the current focus and unfocus it
     final currentFocus = FocusScope.of(context);
     final unfocused = currentFocus.unfocus();
-
-    // Wait a bit for unfocus to complete
     await Future.delayed(Duration(milliseconds: 100));
 
     final currentHours = workingHours[dayKey] ?? '9:00 AM - 5:00 PM';
@@ -458,7 +488,6 @@ class _Step3Content extends StatelessWidget {
 
     if (isClosed) return;
 
-    // Parse current times from the actual working hours
     String fromTime = '9:00 AM';
     String toTime = '5:00 PM';
 
@@ -470,7 +499,6 @@ class _Step3Content extends StatelessWidget {
       }
     }
 
-    // Determine initial time for the picker
     TimeOfDay initialTime =
         isFromTime ? _parseTimeString(fromTime) : _parseTimeString(toTime);
 
@@ -496,26 +524,19 @@ class _Step3Content extends StatelessWidget {
     if (picked != null) {
       final formattedTime = _formatTimeOfDay(picked);
 
-      // Update the appropriate time
       if (isFromTime) {
         fromTime = formattedTime;
       } else {
         toTime = formattedTime;
       }
 
-      // Build the final time string and update the working hours
       final finalTimeString = '$fromTime - $toTime';
-
-      // This is the key fix - directly update the map and force controller update
       workingHours[dayKey] = finalTimeString;
-
-      // Force update the controller to refresh the UI
       controller.update();
 
       print('Updated working hours for $dayKey: ${workingHours[dayKey]}');
     }
 
-    // Ensure no field gets focus after time picker closes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final focusScope = FocusScope.of(context);
       if (!focusScope.hasPrimaryFocus) {
@@ -662,7 +683,6 @@ class _Step3Content extends StatelessWidget {
           ),
         ),
         child: Row(
-          // mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.map_outlined,
@@ -684,14 +704,12 @@ class _Step3Content extends StatelessWidget {
 
   Future<void> _openGoogleMaps() async {
     try {
-      // Try to open native Google Maps app first
       const nativeMapsUrl = 'comgooglemaps://';
       final Uri nativeUri = Uri.parse(nativeMapsUrl);
 
       if (await canLaunchUrl(nativeUri)) {
         await launchUrl(nativeUri, mode: LaunchMode.externalApplication);
       } else {
-        // Fallback to web version
         const webMapsUrl = 'https://www.google.com/maps';
         final Uri webUri = Uri.parse(webMapsUrl);
         await launchUrl(webUri, mode: LaunchMode.externalApplication);

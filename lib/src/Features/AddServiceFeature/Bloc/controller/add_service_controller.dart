@@ -1216,6 +1216,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   }
 
   bool _validateStep1() {
+    if (step1FormKey.currentState != null &&
+        !step1FormKey.currentState!.validate()) {
+      return false;
+    }
     // For editing: if we have an image URL, it's valid even if serviceImage.value is null
     // For creating: we need an actual image file
     if (isEditingMode) {
@@ -1255,6 +1259,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   }
 
   bool _validateStep3() {
+    if (step3FormKey.currentState != null &&
+        !step3FormKey.currentState!.validate()) {
+      return false;
+    }
     for (int i = 0; i < branches.length; i++) {
       if (branchSelectedGovernorates[i].value.isEmpty) {
         _showError(
@@ -1286,10 +1294,12 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         return false;
       }
 
-      if (!_validateWorkingHours(branchWorkingHours[i])) {
-        _showError(
-            '${'please_set_proper_working_hours'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
+      for (int i = 0; i < branches.length; i++) {
+        if (!_validateWorkingHours(branchWorkingHours[i])) {
+          _showError(
+              '${'please_set_proper_working_hours'.tr} ${'for_branch'.tr} ${i + 1}');
+          return false;
+        }
       }
     }
     return true;
@@ -1475,4 +1485,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
     super.onClose();
   }
+
+  final GlobalKey<FormState> step1FormKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> step3FormKey = GlobalKey<FormState>();
 }

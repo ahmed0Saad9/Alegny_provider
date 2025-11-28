@@ -5,7 +5,6 @@ class _Step1Content extends StatelessWidget {
 
   const _Step1Content({required this.controller});
 
-  // Helper method to get platform URLs
   String _getPlatformUrl(String platform) {
     switch (platform) {
       case 'facebook':
@@ -21,74 +20,138 @@ class _Step1Content extends StatelessWidget {
     }
   }
 
+  String? _validateSocialMediaUrl(String? value, String platform) {
+    if (value == null || value.trim().isEmpty) {
+      return null; // Optional field
+    }
+
+    final trimmedValue = value.trim().toLowerCase();
+
+    switch (platform) {
+      case 'facebook':
+        if (!trimmedValue.contains('facebook.com') &&
+            !trimmedValue.contains('fb.com') &&
+            !trimmedValue.startsWith('fb://')) {
+          return 'invalid_facebook_link'.tr;
+        }
+        break;
+      case 'instagram':
+        if (!trimmedValue.contains('instagram.com') &&
+            !trimmedValue.startsWith('instagram://')) {
+          return 'invalid_instagram_link'.tr;
+        }
+        break;
+      case 'tiktok':
+        if (!trimmedValue.contains('tiktok.com') &&
+            !trimmedValue.startsWith('tiktok://')) {
+          return 'invalid_tiktok_link'.tr;
+        }
+        break;
+      case 'youtube':
+        if (!trimmedValue.contains('youtube.com') &&
+            !trimmedValue.contains('youtu.be') &&
+            !trimmedValue.startsWith('vnd.youtube://')) {
+          return 'invalid_youtube_link'.tr;
+        }
+        break;
+    }
+
+    final urlPattern = RegExp(
+      r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+      caseSensitive: false,
+    );
+
+    if (!urlPattern.hasMatch(trimmedValue) && !trimmedValue.contains('://')) {
+      return 'invalid_url_format'.tr;
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CustomTextL(
-          'let_us_know_about_you',
-          fontSize: 20.sp,
-          fontWeight: FW.bold,
-          color: Colors.grey[800],
-        ),
-        24.ESH(),
-
-        // Upload Picture
-        buildSectionLabel('upload_picture', true),
-        12.ESH(),
-        _buildImageUploadSection(),
-        24.ESH(),
-
-        // Service Name
-        buildSectionLabel('service_name', true),
-        6.ESH(),
-        TextFieldDefault(
-          hint: 'enter_service_name_or_doctor',
-          controller: controller.serviceNameController,
-        ),
-        24.ESH(),
-
-        //Service
-
-        buildSectionLabel('Service', true),
-        12.ESH(),
-        _buildServiceDropdown(),
-        24.ESH(),
-
-        //specialization(if visible)
-        GetBuilder<AddServiceController>(
-          builder: (controller) {
-            return (controller.selectedService.value == 'human_doctor') ||
-                    (controller.selectedService.value == 'human_hospital' ||
-                        controller.selectedService.value == 'human_pharmacy')
-                ? Column(
-                    children: [
-                      buildSectionLabel('specialization', true),
-                      12.ESH(),
-                      _buildSpecializationDropdown(),
-                      24.ESH(),
-                    ],
-                  )
-                : const SizedBox.shrink();
-          },
-        ),
-
-        // Service description
-        buildSectionLabel('Service_description', false),
-        6.ESH(),
-        TextFieldDefault(
-          hint: 'Enter_service_description'.tr,
-          controller: controller.serviceDescriptionController,
-          maxLines: 3,
-        ),
-        24.ESH(),
-
-        // Social Media Links
-        buildSectionLabel('social_media_links', false),
-        16.ESH(),
-        ..._buildSocialMediaFields(),
-      ],
+    return Form(
+      key: controller.step1FormKey,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomTextL(
+            'let_us_know_about_you',
+            fontSize: 20.sp,
+            fontWeight: FW.bold,
+            color: Colors.grey[800],
+          ),
+          24.ESH(),
+          buildSectionLabel('upload_picture', true),
+          12.ESH(),
+          _buildImageUploadSection(),
+          24.ESH(),
+          // Service Name
+          buildSectionLabel('service_name', true),
+          6.ESH(),
+          TextFieldDefault(
+            hint: 'enter_service_name_or_doctor',
+            controller: controller.serviceNameController,
+            validation: (value) {
+              if (value == null || value.trim().isEmpty) {
+                return 'service_name_required'.tr;
+              }
+              if (value.trim().length < 3) {
+                return 'service_name_too_short'.tr;
+              }
+              if (value.trim().length > 100) {
+                return 'service_name_too_long'.tr;
+              }
+              return null;
+            },
+          ),
+          24.ESH(),
+          buildSectionLabel('Service', true),
+          12.ESH(),
+          _buildServiceDropdown(),
+          24.ESH(),
+          GetBuilder<AddServiceController>(
+            builder: (controller) {
+              return (controller.selectedService.value == 'human_doctor') ||
+                      (controller.selectedService.value == 'human_hospital' ||
+                          controller.selectedService.value == 'human_pharmacy')
+                  ? Column(
+                      children: [
+                        buildSectionLabel('specialization', true),
+                        12.ESH(),
+                        _buildSpecializationDropdown(),
+                        24.ESH(),
+                      ],
+                    )
+                  : const SizedBox.shrink();
+            },
+          ),
+          // Service description
+          buildSectionLabel('Service_description', false),
+          6.ESH(),
+          TextFieldDefault(
+            hint: 'Enter_service_description'.tr,
+            controller: controller.serviceDescriptionController,
+            maxLines: 3,
+            validation: (value) {
+              if (value != null && value.trim().isNotEmpty) {
+                if (value.trim().length < 10) {
+                  return 'description_too_short'.tr;
+                }
+                if (value.trim().length > 500) {
+                  return 'description_too_long'.tr;
+                }
+              }
+              return null;
+            },
+          ),
+          24.ESH(),
+          24.ESH(),
+          buildSectionLabel('social_media_links', false),
+          16.ESH(),
+          ..._buildSocialMediaFields(),
+        ],
+      ),
     );
   }
 
@@ -113,16 +176,11 @@ class _Step1Content extends StatelessWidget {
   }
 
   Widget _buildImageContent() {
-    // Show selected image first
     if (controller.serviceImage.value != null) {
       return _buildImagePreview(controller.serviceImage.value!);
-    }
-    // Show existing image from URL
-    else if (controller.serviceImageUrl.value.isNotEmpty) {
+    } else if (controller.serviceImageUrl.value.isNotEmpty) {
       return _buildNetworkImagePreview(controller.serviceImageUrl.value);
-    }
-    // Show upload placeholder
-    else {
+    } else {
       return _buildUploadPlaceholder();
     }
   }
@@ -154,7 +212,6 @@ class _Step1Content extends StatelessWidget {
             height: double.infinity,
           ),
         ),
-        // Add remove button
         Positioned(
           top: 8.w,
           right: 8.w,
@@ -252,10 +309,9 @@ class _Step1Content extends StatelessWidget {
 
   String _getSpecializationDisplayText(String specialization) {
     if (specialization == 'جميع التخصصات') {
-      return 'all_specializations'.tr; // Make sure to add this translation
+      return 'all_specializations'.tr;
     }
-    return specialization
-        .tr; // Assuming you have translations for other specializations
+    return specialization.tr;
   }
 
   Widget _buildServiceDropdown() {
@@ -334,6 +390,7 @@ class _Step1Content extends StatelessWidget {
           controller: textController,
           hint: '${label.tr} ${'link'.tr}',
           prefixIconUrl: icon,
+          validation: (value) => _validateSocialMediaUrl(value, platform),
         ),
         Align(
           alignment: AlignmentDirectional.centerStart,
@@ -355,7 +412,7 @@ class _Step1Content extends StatelessWidget {
                 4.ESW(),
                 CustomTextL(
                   'Open_in_app',
-                  fontSize: 12.sp,
+                  fontSize: 14.sp,
                   color: color,
                   fontWeight: FW.medium,
                 ),
@@ -364,6 +421,34 @@ class _Step1Content extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  InputDecoration _dropdownDecoration() {
+    return InputDecoration(
+      filled: true,
+      fillColor: Colors.white,
+      contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: Colors.grey[300]!),
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: BorderSide(color: Colors.grey[300]!),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: const BorderSide(color: AppColors.main, width: 1),
+      ),
+      errorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
+      ),
+      focusedErrorBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12.r),
+        borderSide: const BorderSide(color: Colors.red, width: 1),
+      ),
     );
   }
 }
