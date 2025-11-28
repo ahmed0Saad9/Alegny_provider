@@ -11,6 +11,7 @@ class _Step3Content extends StatelessWidget {
       builder: (controller) {
         return Form(
           key: controller.step3FormKey,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -141,14 +142,21 @@ class _Step3Content extends StatelessWidget {
             keyboardType: TextInputType.phone,
             hint: 'enter_phone_number'.tr,
             maxLength: 11,
+            onChanged: (value) {
+              // Trigger validation on every change
+              controller.step3FormKey.currentState?.validate();
+            },
             validation: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'phone_required'.tr;
               }
-              if (value.trim().length != 11) {
+              // Remove any spaces or special characters for validation
+              final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
+
+              if (cleanValue.length != 11) {
                 return 'phone_must_be_11_digits'.tr;
               }
-              if (!value.startsWith('01')) {
+              if (!cleanValue.startsWith('01')) {
                 return 'phone_must_start_with_01'.tr;
               }
               return null;
@@ -164,14 +172,21 @@ class _Step3Content extends StatelessWidget {
             keyboardType: TextInputType.phone,
             hint: 'enter_whatsapp_number'.tr,
             maxLength: 11,
+            onChanged: (value) {
+              // Trigger validation on every change
+              controller.step3FormKey.currentState?.validate();
+            },
             validation: (value) {
               if (value == null || value.trim().isEmpty) {
                 return 'whatsapp_required'.tr;
               }
-              if (value.trim().length != 11) {
+              // Remove any spaces or special characters for validation
+              final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
+
+              if (cleanValue.length != 11) {
                 return 'whatsapp_must_be_11_digits'.tr;
               }
-              if (!value.startsWith('01')) {
+              if (!cleanValue.startsWith('01')) {
                 return 'whatsapp_must_start_with_01'.tr;
               }
               return null;
