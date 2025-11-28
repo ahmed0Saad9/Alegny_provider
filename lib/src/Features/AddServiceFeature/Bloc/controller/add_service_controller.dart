@@ -950,10 +950,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         serviceData: serviceData,
         imageFile: serviceImage.value,
       );
-      Get.find<ServicesController>().fetchServices();
     } else {
       _createService(serviceData);
-      Get.find<ServicesController>().fetchServices();
     }
   }
 
@@ -1144,6 +1142,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
                 : 'service_created_successfully'.tr));
         printDM('✅ Service Created: ${response.data}');
         printDM('result ${serviceData.toJson()}');
+        _fetchUpdatedServices();
+
         Get.offAll(() => const BaseBNBScreen());
       },
       failure: (error) {
@@ -1173,6 +1173,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
           successEasyLoading(
             response.data['message'] ?? 'service_updated_successfully'.tr,
           );
+          _fetchUpdatedServices();
 
           // Navigate back and let the parent screen refresh
           Get.offAll(() => const BaseBNBScreen());
@@ -1193,6 +1194,17 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       closeEasyLoading();
       errorEasyLoading('failed_to_update_service'.tr);
       return false;
+    }
+  }
+
+  void _fetchUpdatedServices() {
+    try {
+      // Find the ServicesController and refresh data
+      final servicesController = Get.find<ServicesController>();
+      servicesController.fetchServices();
+    } catch (e) {
+      print('Error fetching updated services: $e');
+      // If controller is not found, it's okay - it will refresh on next init
     }
   }
 

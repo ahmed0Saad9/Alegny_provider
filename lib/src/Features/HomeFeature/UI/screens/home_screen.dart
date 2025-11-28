@@ -27,70 +27,38 @@ class HomeScreen extends StatelessWidget {
       ),
       body: GetBuilder<ServicesController>(
         init: ServicesController(),
-        builder: (controller) => Padding(
-          padding: AppPadding.paddingScreenSH16SV16,
-          child: Stack(
-            children: [
-              // Use RefreshIndicator for both empty and non-empty states
-              RefreshIndicator(
-                onRefresh: () async => controller.fetchServices(),
-                child: controller.services.isEmpty
-                    ? _buildEmptyStateWithScroll() // Use scrollable empty state
-                    : _buildServicesList(controller),
-              ),
-              Align(
-                alignment: AlignmentDirectional.bottomStart,
-                child: Row(
-                  children: [
-                    Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16.r),
-                          color: AppColors.main),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(() => const AddServiceScreen());
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: AppColors.iconWight,
-                        ),
-                      ),
-                    ),
-                    10.ESW(),
-                    CustomTextL(
-                      'Add_Service',
-                      fontSize: 18.sp,
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+        builder: (controller) => Stack(
+          children: [
+            // Use RefreshIndicator for both empty and non-empty states
+            RefreshIndicator(
+              onRefresh: () async => controller.fetchServices(),
+              child: controller.services.isEmpty
+                  ? _buildEmptyStateWithScroll() // Use scrollable empty state
+                  : _buildServicesList(controller),
+            ),
+          ],
         ),
       ),
     );
   }
 
   Widget _buildServicesList(ServicesController controller) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 60.h),
-      child: ListView.builder(
-        padding: EdgeInsets.zero,
-        itemCount: controller.services.length,
-        itemBuilder: (context, index) {
-          return ServiceCard(
-            service: controller.services[index],
-            onEdit: () {
-              print('Edit service: ${controller.services[index].id}');
-              Get.to(() =>
-                  AddServiceScreen(serviceToEdit: controller.services[index]));
-            },
-            onDelete: () {
-              controller.deleteService(controller.services[index].id);
-            },
-          );
-        },
-      ),
+    return ListView.builder(
+      padding: AppPadding.paddingScreenSV16,
+      itemCount: controller.services.length,
+      itemBuilder: (context, index) {
+        return ServiceCard(
+          service: controller.services[index],
+          onEdit: () {
+            print('Edit service: ${controller.services[index].id}');
+            Get.to(() =>
+                AddServiceScreen(serviceToEdit: controller.services[index]));
+          },
+          onDelete: () {
+            controller.deleteService(controller.services[index].id);
+          },
+        );
+      },
     );
   }
 

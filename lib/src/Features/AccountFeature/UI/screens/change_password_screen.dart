@@ -71,7 +71,10 @@ class ChangePasswordScreen extends StatelessWidget {
                         24.ESH(),
                         TextFieldDefault(
                           label: "Confirm_New_Password",
-                          validation: passwordValidator,
+                          validation: (value) {
+                            return confirmPasswordValidator(
+                                value, _.newPasswordController.text);
+                          },
                           controller: _.confirmPasswordController,
                           secureType: SecureType.toggle,
                         ),

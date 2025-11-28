@@ -463,6 +463,7 @@ const Map<String, String> enUS = {
   "please_enter_service_name_or_doctor": "Please enter service name or doctor",
   "please_enter_discount": "Please enter discount percentage",
   "please_enter_location": "Please enter location details",
+  "Enter_location": "Enter Location",
   "service_added_successfully": "Service added successfully",
   // "success": "Success",
   "failed_to_pick_image": "Failed to pick image",

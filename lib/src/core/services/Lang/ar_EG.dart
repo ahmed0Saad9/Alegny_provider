@@ -341,7 +341,7 @@ const Map<String, String> arAE = {
   "please_enter_service_name": "يرجى إدخال اسم الخدمة",
   "please_enter_discount": "يرجى إدخال نسبة الخصم",
   "please_enter_location": "يرجى إدخال الموقع",
-  "enter_location": "إدخل الموقع",
+  "Enter_location": "إدخل الموقع",
   "open_google_maps": "فتح خرائط جوجل",
   "cannot_open_google_maps": "لا يمكن فتح خرائط جوجل",
   "service_added_successfully": "تمت إضافة الخدمة بنجاح",

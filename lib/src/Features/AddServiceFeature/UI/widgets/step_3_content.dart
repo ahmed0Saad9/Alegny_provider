@@ -102,7 +102,7 @@ class _Step3Content extends StatelessWidget {
           TextFieldDefault(
             controller: controller.branchLocationUrlControllers[index],
             keyboardType: TextInputType.text,
-            hint: 'enter_location'.tr,
+            hint: 'Enter_location'.tr,
           ),
           8.ESH(),
           _buildOpenMapsButton(controller, index),

@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+import 'package:Alegny_provider/src/Features/BaseBNBFeature/Bloc/Controller/base_BNB_controller.dart';
 import 'package:Alegny_provider/src/Features/NotificationFeature/Bloc/Controller/notification_controller.dart';
 import 'package:Alegny_provider/src/Features/NotificationFeature/UI/screens/notifications_screen.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Other/avatar_widget.dart';
@@ -239,28 +240,33 @@ class AppBars {
         child: Row(
           children: [
             // Avatar
-            Container(
-              width: 45.w,
-              height: 45.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.white,
-                  width: 2,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
+            GetBuilder<BaseNBNController>(
+              builder: (controller) => InkWell(
+                onTap: () => controller.updateIndex(1),
+                child: Container(
+                  width: 45.w,
+                  height: 45.h,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: Colors.white,
+                      width: 2,
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.15),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              child: ClipOval(
-                child: AvatarWidget(
-                  height: 45,
-                  width: 45,
-                  image: sl<GetStorage>().read("userImage"),
+                  child: ClipOval(
+                    child: AvatarWidget(
+                      height: 45,
+                      width: 45,
+                      image: sl<GetStorage>().read("userImage"),
+                    ),
+                  ),
                 ),
               ),
             ),

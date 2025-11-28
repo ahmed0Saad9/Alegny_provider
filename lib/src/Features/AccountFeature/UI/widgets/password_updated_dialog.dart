@@ -1,11 +1,11 @@
 import 'package:Alegny_provider/src/Features/BaseBNBFeature/Bloc/Controller/base_BNB_controller.dart';
+import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/buttons/button_default.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
 import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/route_manager.dart';
 import 'package:lottie/lottie.dart';
 
 class PasswordUpdatedDialog extends StatelessWidget {
@@ -23,7 +23,7 @@ class PasswordUpdatedDialog extends StatelessWidget {
           SizedBox(
             height: 150,
             child: Lottie.asset(
-              'assets/lottie/DoneAnimation.json', // Add your Lottie file
+              'assets/lottie/DoneAnimation.json',
               fit: BoxFit.contain,
             ),
           ),
@@ -39,8 +39,7 @@ class PasswordUpdatedDialog extends StatelessWidget {
             builder: (controller) => ButtonDefault.main(
                 title: 'ok',
                 onTap: () {
-                  Get.back();
-                  controller.updateIndex(0);
+                  Get.offAll(() => const BaseBNBScreen());
                 }),
           ),
         ]),
