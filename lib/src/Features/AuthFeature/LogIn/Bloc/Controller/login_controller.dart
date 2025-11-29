@@ -6,16 +6,13 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/forget_password_screen.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Model/user_model.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Ui/Screens/register_screen.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/Verification/Bloc/Controller/send_otp_controller.dart';
 import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
 import 'package:Alegny_provider/src/core/services/Base/base_controller.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_exceptions.dart';
 import 'package:Alegny_provider/src/core/services/services_locator.dart';
 import 'package:Alegny_provider/src/core/utils/storage_util.dart';
-import 'package:get_storage/get_storage.dart';
 
 class LoginController extends BaseController<LogInRepository> {
   @override
@@ -51,6 +48,7 @@ class LoginController extends BaseController<LogInRepository> {
         _navigatorAfterLogIn(_userModel!);
       }, failure: (NetworkExceptions error) {
         actionNetworkExceptions(error);
+        // Get.snackbar("Login Failed", error.toString());
       });
     }
   }
@@ -60,7 +58,7 @@ class LoginController extends BaseController<LogInRepository> {
   }
 
   /// check OTP is Verified
-  final SendOTPController _sendOTPController = sl<SendOTPController>();
+  // final SendOTPController _sendOTPController = sl<SendOTPController>();
 
   void _navigatorAfterLogIn(UserModel user) async {
     navigatorToBaseBNBScreen();

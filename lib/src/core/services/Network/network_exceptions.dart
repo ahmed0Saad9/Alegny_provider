@@ -197,12 +197,14 @@ RequestStatus actionNetworkExceptions(NetworkExceptions e) {
   if (e is DefaultError) {
     showToast(e.error, isError: true);
     return RequestStatus.done;
-  } else if (e ==
-      NetworkExceptions.unauthorizedRequest(
-          NetworkExceptions.getErrorMessage(e))) {
-    sl<GetStorage>().erase();
-    Get.offAll(() => const LoginScreen());
-    showToast(NetworkExceptions.getErrorMessage(e), isError: true);
+  } else if (e.maybeWhen(
+    unauthorizedRequest: (_) => true,
+    orElse: () => false,
+  )) {
+    showToast(
+      NetworkExceptions.getErrorMessage(e),
+      isError: true,
+    );
     return RequestStatus.unauthorized;
   } else if (e == const NetworkExceptions.noInternetConnection()) {
     showToast(NetworkExceptions.getErrorMessage(e), isError: true);

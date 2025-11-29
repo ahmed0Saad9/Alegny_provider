@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Controller/login_controller.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Ui/Screens/login_screen.dart';
 import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_screen.dart';
 import 'package:Alegny_provider/src/core/services/services_locator.dart';
@@ -62,7 +63,7 @@ class SplashController extends GetxController {
   }
 
   void moveToLogin() {
-    Get.off(() => LoginScreen());
+    Get.off(() => const LoginScreen());
   }
 
   @override
@@ -71,5 +72,6 @@ class SplashController extends GetxController {
     super.onClose();
     _animationTimer?.cancel();
     _visibleTimer?.cancel();
+    _splashTimer?.cancel();
   }
 }

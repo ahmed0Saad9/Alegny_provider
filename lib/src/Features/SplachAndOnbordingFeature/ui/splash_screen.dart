@@ -27,16 +27,6 @@ class SplashScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // AnimatedContainer(
-              //   curve: Curves.easeInOut,
-              //   duration: const Duration(seconds: 1),
-              //   width: controller.width.w,
-              //   height: controller.height.h,
-              //   child: Image.asset(
-              //     'assets/images/Logo.png',
-              //     // fit: BoxFit.contain,
-              //   ),
-              // ),
               AnimatedOpacity(
                 opacity: controller.isWidgetVisible ? 1.0 : 0.0,
                 duration: const Duration(seconds: 1),
