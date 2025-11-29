@@ -31,6 +31,7 @@ class ForgetPasswordController
 
   String _token = '';
   String _email = '';
+  String _verifiedCode = ''; // Store verified code
 
   final ValidateOtpAndChangePasswordRepo _validateOtpAndChangePasswordRepo =
       sl<ValidateOtpAndChangePasswordRepo>();
@@ -116,26 +117,30 @@ class ForgetPasswordController
     }
   }
 
-  // Verify OTP code
+  // Verify OTP code and navigate to password screen
   void checkCode() {
     if (!areControllersValid) {
       _initTextEditing(); // Reinitialize if disposed
     }
 
     if (pinCodeController.text.length == 6) {
+      // Store the code for later verification
+      _verifiedCode = pinCodeController.text;
+
       // Clear password fields when navigating to new screen
       resetPasswordFields();
       Get.to(() => NewPasswordScreen(
             token: _token,
             email: _email,
-            code: pinCodeController.text,
+            code: _verifiedCode,
           ));
     } else {
       errorEasyLoading("Please enter complete OTP code");
+      errorController.add(ErrorAnimationType.shake);
     }
   }
 
-  // Reset password with OTP
+  // Reset password with OTP - This will verify the OTP at the backend
   Future<void> resetPassword({
     required String token,
     required String email,
@@ -163,13 +168,21 @@ class ForgetPasswordController
       result.when(success: (Response response) {
         // Clear all fields after successful password reset
         clearAllFields();
+        _verifiedCode = '';
         Get.offAll(() => const LoginScreen());
         successEasyLoading(
             response.data["message"] ?? "Password reset successfully");
       }, failure: (NetworkExceptions error) {
+        // Check if it's an invalid/expired OTP error
         actionNetworkExceptions(error);
+
+        // If OTP is invalid, suggest going back to re-enter OTP
+        // You can add a dialog here to ask user if they want to go back
+        errorEasyLoading(
+          "Invalid or expired reset code. Please verify your OTP and try again.",
+        );
       });
-    } else {
+    } else if (newPasswordController.text != confirmPasswordController.text) {
       errorEasyLoading("Passwords do not match");
     }
   }

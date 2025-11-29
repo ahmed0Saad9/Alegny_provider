@@ -1020,43 +1020,29 @@ class ServiceCard extends StatelessWidget {
     );
   }
 
-  // Split working hours into from and to times
+  bool _isClosed(String hours) {
+    return hours == 'مغلق' || hours.toLowerCase() == 'closed';
+  }
+
   Map<String, String> _splitWorkingHours(String hours) {
-    if (_isClosed(hours)) {
-      final bool isArabic = Get.locale?.languageCode == 'ar';
-      return {
-        'closed': hours.isEmpty ? (isArabic ? 'مغلق' : 'Closed') : hours,
-        'from': '',
-        'to': '',
-      };
+    final bool isArabic = Get.locale?.languageCode == 'ar';
+
+    // Check if closed in either language
+    if (hours == 'مغلق' || hours.toLowerCase() == 'closed') {
+      return {'closed': isArabic ? 'مغلق' : 'Closed'};
     }
 
-    // Split by dash or hyphen
-    final parts = hours.split(RegExp(r'\s*[-–—]\s*'));
-
-    if (parts.length >= 2) {
+    // Handle open hours
+    final parts = hours.split(' - ');
+    if (parts.length == 2) {
       return {
         'from': parts[0].trim(),
         'to': parts[1].trim(),
-        'closed': '',
       };
     }
 
-    // If no dash found, return the whole string as is
-    return {
-      'from': hours.trim(),
-      'to': '',
-      'closed': '',
-    };
-  }
-
-// Simplified closed check
-  bool _isClosed(String hours) {
-    final closedIndicators = ['مغلق', 'closed'];
-
-    return hours.isEmpty ||
-        closedIndicators.any((indicator) =>
-            hours.toLowerCase().contains(indicator.toLowerCase()));
+    // Fallback
+    return {'closed': isArabic ? 'مغلق' : 'Closed'};
   }
 
   Widget _buildActionButtons(BuildContext context) {
@@ -1555,9 +1541,7 @@ class ServiceCard extends StatelessWidget {
     Get.to(
       () => AddServiceScreen(serviceToEdit: service),
       arguments: {'initialStep': 2}, // Step 3 is index 2 (0-based)
-    )?.then((_) {
-      // Refresh services list when returning
-      Get.find<ServicesController>().fetchServices();
-    });
+    );
+    // Remove the .then() callback - controller will refresh automatically
   }
 }
