@@ -1,4 +1,5 @@
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
+import 'package:Alegny_provider/src/GeneralWidget/Widgets/SnackBar/custom_toast.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -47,8 +48,9 @@ class LoginController extends BaseController<LogInRepository> {
             _userModel!); //stores the user data locally by GetStorage
         _navigatorAfterLogIn(_userModel!);
       }, failure: (NetworkExceptions error) {
-        actionNetworkExceptions(error);
+        // actionNetworkExceptions(error);
         // Get.snackbar("Login Failed", error.toString());
+        showToast('Invalid Email or Password', isError: true);
       });
     }
   }
