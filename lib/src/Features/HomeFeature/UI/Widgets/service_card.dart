@@ -1,3 +1,4 @@
+import 'package:Alegny_provider/src/Features/AddServiceFeature/UI/screens/add_branch_screen.dart';
 import 'package:Alegny_provider/src/Features/AddServiceFeature/UI/screens/add_service_screen.dart';
 import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/controller/services_controller.dart';
 import 'package:Alegny_provider/src/Features/HomeFeature/Bloc/model/service_model.dart';
@@ -1537,11 +1538,6 @@ class ServiceCard extends StatelessWidget {
   }
 
   void _navigateToAddBranch() {
-    // Navigate to the add service screen with step 3 pre-selected
-    Get.to(
-      () => AddServiceScreen(serviceToEdit: service),
-      arguments: {'initialStep': 2}, // Step 3 is index 2 (0-based)
-    );
-    // Remove the .then() callback - controller will refresh automatically
+    Get.to(() => AddBranchScreen(service: service));
   }
 }

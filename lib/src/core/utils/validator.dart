@@ -39,7 +39,7 @@ String? passwordValidator(String? text) {
   }
 
   RegExp regex = RegExp(
-    r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
+    r'^(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$',
   );
 
   if (!regex.hasMatch(text)) {

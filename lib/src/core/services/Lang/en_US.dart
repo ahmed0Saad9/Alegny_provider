@@ -343,7 +343,7 @@ const Map<String, String> enUS = {
   "Upload_Complete": "Upload Complete!",
   "Upload_Failed": "Upload Failed!",
   "Password_must_contain_symbols_Letters_numbers":
-      "Password must contain at least:\n- 8 characters\n- 1 uppercase letter\n- 1 lowercase letter\n- 1 number\n- 1 special character (!@#\$&*~)",
+      "Password must contain at least:\n- 8 characters\n- 1 lowercase letter\n- 1 number\n- 1 special character (!@#\$&*~)",
 
 // en.arb
   "Please enter your name": "Please enter your name",
@@ -1006,4 +1006,5 @@ const Map<String, String> enUS = {
   'invalid_tiktok_link': 'Please enter a valid TikTok link',
   'invalid_youtube_link': 'Please enter a valid YouTube link',
   'invalid_url_format': 'Invalid URL format',
+  'adding_branch_to': 'Adding Branch to',
 };

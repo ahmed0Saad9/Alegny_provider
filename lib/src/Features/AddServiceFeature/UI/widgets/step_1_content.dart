@@ -113,8 +113,7 @@ class _Step1Content extends StatelessWidget {
           GetBuilder<AddServiceController>(
             builder: (controller) {
               return (controller.selectedService.value == 'human_doctor') ||
-                      (controller.selectedService.value == 'human_hospital' ||
-                          controller.selectedService.value == 'human_pharmacy')
+                      (controller.selectedService.value == 'human_hospital')
                   ? Column(
                       children: [
                         buildSectionLabel('specialization', true),

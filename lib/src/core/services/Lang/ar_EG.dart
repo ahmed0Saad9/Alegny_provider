@@ -207,7 +207,7 @@ const Map<String, String> arAE = {
   "Language": "اللغة",
   "No_files_uploaded": "لم يتم رفع أي ملفات",
   "Password_must_contain_symbols_Letters_numbers":
-      "يجب أن تحتوي كلمة المرور على:\n- 8 أحرف على الأقل\n- حرف كبير واحد على الأقل (A-Z)\n- حرف صغير واحد على الأقل (a-z)\n- رقم واحد على الأقل (0-9)\n- رمز خاص واحد على الأقل (!@#\\\$&*~)",
+      "يجب أن تحتوي كلمة المرور على:\n- 8 أحرف على الأقل\n- حرف صغير واحد على الأقل (a-z)\n- رقم واحد على الأقل (0-9)\n- رمز خاص واحد على الأقل (!@#\\\$&*~)",
   "Please enter your name": "الرجاء إدخال الاسم",
   "Please enter alphabets only": "الرجاء إدخال أحرف فقط",
   "Minimum 6 characters required": "مطلوب 6 أحرف على الأقل",
@@ -917,4 +917,5 @@ const Map<String, String> arAE = {
   'invalid_tiktok_link': 'يرجى إدخال رابط تيك توك صحيح',
   'invalid_youtube_link': 'يرجى إدخال رابط يوتيوب صحيح',
   'invalid_url_format': 'صيغة الرابط غير صحيحة',
+  'adding_branch_to': 'إضافة فرع إلى',
 };

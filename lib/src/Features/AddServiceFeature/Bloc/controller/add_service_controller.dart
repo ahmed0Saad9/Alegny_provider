@@ -289,7 +289,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   List<String> getSpecializationsForService(String? serviceType) {
     if (serviceType == null) return [];
 
-    if (serviceType == 'human_hospital' || serviceType == 'human_pharmacy') {
+    if (serviceType == 'human_hospital') {
       // Return list with "جميع التخصصات" first, then the rest
       return ['all_specializations', ...specializations];
     } else if (serviceType == 'human_doctor') {
@@ -1240,8 +1240,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       return false;
     }
     if (selectedService.value == 'human_doctor' ||
-        selectedService.value == 'human_hospital' ||
-        selectedService.value == 'human_pharmacy') {
+        selectedService.value == 'human_hospital') {
       if (selectedSpecialization.value == null) {
         _showError('please_select_specialization'.tr);
         return false;
