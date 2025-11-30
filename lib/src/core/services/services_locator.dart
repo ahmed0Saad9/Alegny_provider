@@ -5,7 +5,8 @@ import 'package:Alegny_provider/src/Features/AuthFeature/DeleteAccount/Bloc/Repo
 import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Bloc/Repo/account_details_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/EditGeneralProfile/Bloc/Repo/efit_profile_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/check_email_and_send_otp_repo.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/validate-otp-and-change-password_repo.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/change_password_repo.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/verify_otp_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Bloc/Repo/login_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogOut/Bloc/Repo/log_out_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/Register/Bloc/Repo/get_company_categories_repo.dart';
@@ -49,7 +50,8 @@ class ServicesLocator {
     sl.registerLazySingleton(() => SendOTPRepository());
     sl.registerLazySingleton(() => VerifyOTPRepository());
     sl.registerLazySingleton(() => GetCompanyCategoriesRepository());
-    sl.registerLazySingleton(() => ValidateOtpAndChangePasswordRepo());
+    sl.registerLazySingleton(() => ChangePasswordRepo());
+    sl.registerLazySingleton(() => VerifyOtpRepo());
     sl.registerLazySingleton(() => CheckEmailAndSendOtpRepo());
     sl.registerLazySingleton(() => EditGeneralProfileRepository());
     // sl.registerLazySingleton(() => ChangePasswordRepository());

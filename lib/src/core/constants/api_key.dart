@@ -13,10 +13,12 @@ mixin ApiKey {
   final String uRLRegister = "$apiBaseUrl${providerAuth}register";
   final String uRLLogout = "$apiBaseUrl${providerAuth}logout";
   final String uRLChangePassword = "$apiBaseUrl${providerAuth}change-password";
-  final String uRLResetPassword = "$apiBaseUrl${providerAuth}reset-password";
   final String uRLForgetPassword = "$apiBaseUrl${providerAuth}forgot-password";
+  final String uRLVerifyOtp = "$apiBaseUrl${providerAuth}verify-otp";
+  final String uRLResetPassword = "$apiBaseUrl${providerAuth}reset-password";
   final String uRLGetMyAccountData = "$apiBaseUrl${providerAuth}profile";
   final String uRLUpdateMyAccountData = "$apiBaseUrl${providerAuth}profile";
+
   final String uRLVerifyAccount =
       "$apiBaseUrl${account}my-account/verify-account";
   final String uRLSendOTP = "$apiBaseUrl${account}send-verify-otp";

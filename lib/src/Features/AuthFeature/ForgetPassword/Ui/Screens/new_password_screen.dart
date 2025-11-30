@@ -16,13 +16,13 @@ import '../../../../../core/services/svg_widget.dart';
 import '../../../../../core/utils/validator.dart';
 
 class NewPasswordScreen extends StatelessWidget {
-  final String token;
+  final String resetToken;
   final String email;
   final String code;
 
   const NewPasswordScreen({
     super.key,
-    required this.token,
+    required this.resetToken,
     required this.email,
     required this.code,
   });
@@ -78,7 +78,7 @@ class NewPasswordScreen extends StatelessWidget {
                   title: 'Continue',
                   onTap: () {
                     _.resetPassword(
-                      token: token,
+                      resetToken: resetToken,
                       email: email,
                       code: code,
                     );

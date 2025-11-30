@@ -1,11 +1,12 @@
 import 'dart:async';
 
+import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/verify_otp_repo.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/check_email_and_send_otp_repo.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/validate-otp-and-change-password_repo.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/change_password_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/new_password_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/pin_code.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Ui/Screens/login_screen.dart';
@@ -32,10 +33,10 @@ class ForgetPasswordController
   String _token = '';
   String _email = '';
   String _verifiedCode = ''; // Store verified code
+  final VerifyOtpRepo _verifyOtpRepo = sl<VerifyOtpRepo>();
 
-  final ValidateOtpAndChangePasswordRepo _validateOtpAndChangePasswordRepo =
-      sl<ValidateOtpAndChangePasswordRepo>();
-
+  final ChangePasswordRepo _changePasswordRepo = sl<ChangePasswordRepo>();
+  String _resetToken = '';
   bool _isDisposed = false;
 
   // Initialize controllers
@@ -118,36 +119,59 @@ class ForgetPasswordController
   }
 
   // Verify OTP code and navigate to password screen
-  void checkCode() {
+  Future<void> checkCode() async {
     if (!areControllersValid) {
-      _initTextEditing(); // Reinitialize if disposed
+      _initTextEditing();
     }
 
     if (pinCodeController.text.length == 6) {
-      // Store the code for later verification
-      _verifiedCode = pinCodeController.text;
+      showEasyLoading();
 
-      // Clear password fields when navigating to new screen
-      resetPasswordFields();
-      Get.to(() => NewPasswordScreen(
-            token: _token,
-            email: _email,
-            code: _verifiedCode,
-          ));
+      var result = await _verifyOtpRepo.verifyOtp(
+        email: _email,
+        code: pinCodeController.text,
+      );
+
+      closeEasyLoading();
+
+      result.when(success: (Response response) {
+        // Store the reset token from the response
+        _resetToken = response.data['resetToken'] ?? '';
+        _verifiedCode = pinCodeController.text;
+
+        if (_resetToken.isNotEmpty) {
+          // Clear password fields when navigating to new screen
+          resetPasswordFields();
+          Get.to(() => NewPasswordScreen(
+                resetToken: _resetToken,
+                email: _email,
+                code: _verifiedCode,
+              ));
+          successEasyLoading(
+              response.data["message"] ?? "OTP verified successfully");
+        } else {
+          errorEasyLoading("Failed to get reset token");
+          errorController.add(ErrorAnimationType.shake);
+        }
+      }, failure: (NetworkExceptions error) {
+        errorEasyLoading("Invalid OTP code");
+        errorController.add(ErrorAnimationType.shake);
+        actionNetworkExceptions(error);
+      });
     } else {
       errorEasyLoading("Please enter complete OTP code");
       errorController.add(ErrorAnimationType.shake);
     }
   }
 
-  // Reset password with OTP - This will verify the OTP at the backend
+  // Reset password with the reset token
   Future<void> resetPassword({
-    required String token,
+    required String resetToken,
     required String email,
     required String code,
   }) async {
     if (!areControllersValid) {
-      _initTextEditing(); // Reinitialize if disposed
+      _initTextEditing();
     }
 
     if (resetPasswordGlobalKey.currentState!.validate() &&
@@ -155,10 +179,8 @@ class ForgetPasswordController
       resetPasswordGlobalKey.currentState!.save();
       showEasyLoading();
 
-      var result =
-          await _validateOtpAndChangePasswordRepo.validateOtpAndChangePassword(
-        email: email,
-        code: code,
+      var result = await _changePasswordRepo.validateOtpAndChangePassword(
+        resetToken: resetToken,
         newPassword: newPasswordController.text,
         confirmNewPassword: confirmPasswordController.text,
       );
@@ -169,18 +191,13 @@ class ForgetPasswordController
         // Clear all fields after successful password reset
         clearAllFields();
         _verifiedCode = '';
+        _resetToken = '';
         Get.offAll(() => const LoginScreen());
         successEasyLoading(
             response.data["message"] ?? "Password reset successfully");
       }, failure: (NetworkExceptions error) {
-        // Check if it's an invalid/expired OTP error
         actionNetworkExceptions(error);
-
-        // If OTP is invalid, suggest going back to re-enter OTP
-        // You can add a dialog here to ask user if they want to go back
-        errorEasyLoading(
-          "Invalid or expired reset code. Please verify your OTP and try again.",
-        );
+        errorEasyLoading("Failed to reset password. Please try again.");
       });
     } else if (newPasswordController.text != confirmPasswordController.text) {
       errorEasyLoading("Passwords do not match");
