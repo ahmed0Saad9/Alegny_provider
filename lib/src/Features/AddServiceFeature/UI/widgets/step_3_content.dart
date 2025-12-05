@@ -110,23 +110,35 @@ class _Step3Content extends StatelessWidget {
           24.ESH(),
 
           // Location Field with URL validation
-          _buildSectionLabel('location'.tr, true),
+          _buildSectionLabel('location'.tr, false),
           12.ESH(),
           TextFieldDefault(
             controller: controller.branchLocationUrlControllers[index],
             keyboardType: TextInputType.text,
             hint: 'Enter_location'.tr,
             validation: (value) {
+              // Allow empty field - return null (no error)
               if (value == null || value.trim().isEmpty) {
-                return 'location_required'.tr;
+                return null;
               }
+
+              // Only validate if something is entered
+              final trimmedValue = value.trim();
+
+              // Enhanced URL pattern that handles more cases
               final urlPattern = RegExp(
-                r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
+                r'^(https?:\/\/)?' // http:// or https:// (optional)
+                r'([\da-z\.-]+)\.' // domain name
+                r'([a-z]{2,})' // top level domain
+                r'(:[0-9]{1,5})?' // optional port
+                r'(\/[^\s]*)?$', // optional path
                 caseSensitive: false,
               );
-              if (!urlPattern.hasMatch(value.trim())) {
+
+              if (!urlPattern.hasMatch(trimmedValue)) {
                 return 'invalid_url'.tr;
               }
+
               return null;
             },
           ),
