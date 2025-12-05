@@ -31,9 +31,6 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs location access to set branch locations on the map</string>
 
-	<!-- ADD THESE LOCATION PERMISSIONS FOR GOOGLE MAPS -->
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs location access to set branch locations on the map</string>
 
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>This app needs location access to set branch locations on the map</string>
@@ -43,9 +40,6 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>We need camera or gallery access in order to get a photo for your profile</string>
 
-	<!-- ADD GOOGLE MAPS API KEY CONFIGURATION -->
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
 
 	<!-- ADD URL SCHEMES HERE - Place it after permissions but before UI configurations -->
 	<key>LSApplicationQueriesSchemes</key>
