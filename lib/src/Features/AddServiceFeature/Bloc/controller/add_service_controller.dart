@@ -1288,11 +1288,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         _showError('${'please_enter_whatsapp'.tr} ${'for_branch'.tr} ${i + 1}');
         return false;
       }
-      if (branchLocationUrlControllers[i].text.trim().isEmpty) {
-        _showError('${'please_enter_location'.tr} ${'for_branch'.tr} ${i + 1}');
-        return false;
-      }
-
       for (int i = 0; i < branches.length; i++) {
         if (!_validateWorkingHours(branchWorkingHours[i])) {
           _showError(
