@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/check_email_and_send_otp_repo.dart';
-import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/change_password_repo.dart';
+import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Bloc/repo/reset_password_repo.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/new_password_screen.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/ForgetPassword/Ui/Screens/pin_code.dart';
 import 'package:Alegny_provider/src/Features/AuthFeature/LogIn/Ui/Screens/login_screen.dart';
@@ -35,7 +35,7 @@ class ForgetPasswordController
   String _verifiedCode = ''; // Store verified code
   final VerifyOtpRepo _verifyOtpRepo = sl<VerifyOtpRepo>();
 
-  final ChangePasswordRepo _changePasswordRepo = sl<ChangePasswordRepo>();
+  final ResetPasswordRepo _changePasswordRepo = sl<ResetPasswordRepo>();
   String _resetToken = '';
   bool _isDisposed = false;
 

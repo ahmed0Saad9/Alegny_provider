@@ -21,16 +21,17 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Add Scaffold for proper keyboard handling
       backgroundColor: AppColors.scaffoldBackGround,
       body: GetBuilder<RegisterController>(
         init: RegisterController(),
-        builder: (_) => Form(
-          key: _.registerGlobalKey,
-          child: SingleChildScrollView(
-            // Use only one scroll view
-            padding: AppPadding.paddingScreenSH16,
-            child: _Body(controller: _),
+        builder: (_) => AutofillGroup(
+          // ✅ Wrap with AutofillGroup
+          child: Form(
+            key: _.registerGlobalKey,
+            child: SingleChildScrollView(
+              padding: AppPadding.paddingScreenSH16,
+              child: _Body(controller: _),
+            ),
           ),
         ),
       ),
@@ -76,8 +77,12 @@ class _Body extends StatelessWidget {
               child: TextFieldDefault(
                 label: 'First_Name',
                 prefixIconUrl: 'Profile',
+                autoFillHints: const [
+                  AutofillHints.givenName
+                ], // ✅ Add autofill hint
                 controller: controller.firstNameController,
                 validation: nameValidator,
+                textInputAction: TextInputAction.next,
                 onComplete: () {
                   node.nextFocus();
                 },
@@ -88,8 +93,12 @@ class _Body extends StatelessWidget {
               child: TextFieldDefault(
                 label: 'Family_Name',
                 prefixIconUrl: 'Profile',
+                autoFillHints: const [
+                  AutofillHints.familyName
+                ], // ✅ Add autofill hint
                 controller: controller.lastNameController,
                 validation: nameValidator,
+                textInputAction: TextInputAction.next,
                 onComplete: () {
                   node.nextFocus();
                 },
@@ -101,9 +110,14 @@ class _Body extends StatelessWidget {
         TextFieldDefault(
           label: 'Email',
           prefixIconUrl: 'Email',
+          autoFillHints: const [
+            AutofillHints.email,
+            // AutofillHints.newUsername, // ✅ Indicates new account
+          ],
           controller: controller.emailController,
           validation: emailValidator,
           keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
           onComplete: () {
             node.nextFocus();
           },
@@ -119,9 +133,13 @@ class _Body extends StatelessWidget {
         TextFieldDefault(
           label: 'Password',
           prefixIconUrl: 'Lock',
+          autoFillHints: const [
+            AutofillHints.newPassword
+          ], // ✅ Indicates new password
           controller: controller.passwordController,
           validation: passwordValidator,
           secureType: SecureType.toggle,
+          textInputAction: TextInputAction.next,
           onComplete: () {
             node.nextFocus();
           },
@@ -130,14 +148,18 @@ class _Body extends StatelessWidget {
         TextFieldDefault(
           label: 'Confirm_Password',
           prefixIconUrl: 'Lock',
+          autoFillHints: const [
+            AutofillHints.newPassword
+          ], // ✅ Same hint for confirmation
           controller: controller.confirmPasswordController,
           validation: (value) {
             return confirmPasswordValidator(
                 value, controller.passwordController.text);
           },
           secureType: SecureType.toggle,
+          textInputAction: TextInputAction.done,
           onComplete: () {
-            node.nextFocus();
+            node.unfocus();
           },
         ),
         _AcceptTermsAndConditions(controller: controller),

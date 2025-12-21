@@ -76,17 +76,3 @@ class EditProfileParam {
     };
   }
 }
-
-// "nationalityId": 25715549,
-// "firstNameEn": "adipisicing",
-// "lastNameEn": "minim ullamco",
-// "familyNameEn": "nisi do",
-// "qId": "ullamco Lorem labore",
-// "genderId": 41742021,
-// "email": "consectetur ipsum Lorem velit",
-// "mobile": "eu",
-// "address": "eius",
-// "username": "aute id commo",
-// "birthDate": "2016-09-26T08:12:26.159Z",
-// "passport": "in",
-// "userPassword": "aute adipisicing et"

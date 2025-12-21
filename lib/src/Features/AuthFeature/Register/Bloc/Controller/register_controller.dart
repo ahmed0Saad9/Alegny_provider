@@ -3,6 +3,7 @@ import 'package:Alegny_provider/src/Features/BaseBNBFeature/UI/screens/base_BNB_
 import 'package:Alegny_provider/src/core/utils/storage_util.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
@@ -16,8 +17,8 @@ import 'package:Alegny_provider/src/core/services/services_locator.dart';
 
 class RegisterController extends BaseController<RegisterRepository> {
   @override
-  // TODO: implement repository
   get repository => sl<RegisterRepository>();
+
   final GlobalKey<FormState> registerGlobalKey = GlobalKey<FormState>();
   var acceptTermsAndConditions = false;
   late TextEditingController firstNameController;
@@ -32,6 +33,7 @@ class RegisterController extends BaseController<RegisterRepository> {
     if (registerGlobalKey.currentState!.validate()) {
       registerGlobalKey.currentState!.save();
       showEasyLoading();
+
       var result = await repository!.register(
         registerParams: RegisterParams(
           firstName: firstNameController.text,
@@ -41,16 +43,22 @@ class RegisterController extends BaseController<RegisterRepository> {
           phoneNumber: phoneController.text,
         ),
       );
+
       closeEasyLoading();
+
       result.when(success: (Response response) {
+        // ✅ Tell OS to save credentials to system password manager
+        // This will prompt: "Save password for Alegny?"
+        TextInput.finishAutofillContext(shouldSave: true);
+
         _userModel = UserModel.fromJson(response.data);
         LocalStorageCubit().storeUserModel(_userModel!);
-        Get.off(
-          () => const BaseBNBScreen(),
-        );
 
+        Get.off(() => const BaseBNBScreen());
         successEasyLoading(response.data['message'] ?? "success");
       }, failure: (NetworkExceptions error) {
+        // Don't save if registration fails
+        TextInput.finishAutofillContext(shouldSave: false);
         actionNetworkExceptions(error);
       });
     }
@@ -78,5 +86,16 @@ class RegisterController extends BaseController<RegisterRepository> {
     passwordController = TextEditingController();
     confirmPasswordController = TextEditingController();
     phoneController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    lastNameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    phoneController.dispose();
+    super.dispose();
   }
 }

@@ -38,7 +38,7 @@ class LoginController extends BaseController<LogInRepository> {
       closeEasyLoading();
       result.when(success: (Response response) {
         if (rememberMe.value) {
-          TextInput.finishAutofillContext();
+          TextInput.finishAutofillContext(shouldSave: true);
         } else {
           // Clear: do NOT save login info
           TextInput.finishAutofillContext(shouldSave: false);

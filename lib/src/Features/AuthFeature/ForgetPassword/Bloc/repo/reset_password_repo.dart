@@ -5,7 +5,7 @@ import 'package:Alegny_provider/src/core/services/Network/api_result.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_exceptions.dart';
 import 'package:Alegny_provider/src/core/services/Network/network_services.dart';
 
-class ChangePasswordRepo with ApiKey {
+class ResetPasswordRepo with ApiKey {
   final NetworkService _networkService = Get.find();
 
   Future<ApiResult<Response>> validateOtpAndChangePassword({

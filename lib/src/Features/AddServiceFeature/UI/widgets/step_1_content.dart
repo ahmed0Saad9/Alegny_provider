@@ -137,9 +137,6 @@ class _Step1Content extends StatelessWidget {
                 if (value.trim().length < 10) {
                   return 'description_too_short'.tr;
                 }
-                if (value.trim().length > 500) {
-                  return 'description_too_long'.tr;
-                }
               }
               return null;
             },
@@ -285,29 +282,42 @@ class _Step1Content extends StatelessWidget {
 
   Widget _buildSpecializationDropdown() {
     return DropdownButtonFormField<String>(
-        value: controller.selectedSpecialization.value,
-        decoration: _dropdownDecoration(),
-        hint: CustomTextL(
-          'select_specialization',
-          color: Colors.grey[600],
-          fontSize: 18.sp,
-        ),
-        items: controller
-            .getSpecializationsForService(controller.selectedService.value)
-            .map((spec) => DropdownMenuItem(
-                  value: spec,
-                  child: CustomTextL(_getSpecializationDisplayText(spec),
-                      fontSize: 14.sp),
-                ))
-            .toList(),
-        onChanged: (value) {
-          controller.selectedSpecialization.value = value;
-          controller.update();
-        });
+      value: controller.selectedSpecialization.value,
+      decoration: _dropdownDecoration(),
+      hint: CustomTextL(
+        'select_specialization',
+        color: Colors.grey[600],
+        fontSize: 18.sp,
+      ),
+      items: controller
+          .getSpecializationsForService(controller.selectedService.value)
+          .map((spec) => DropdownMenuItem(
+                value: spec,
+                child: CustomTextL(_getSpecializationDisplayText(spec),
+                    fontSize: 14.sp),
+              ))
+          .toList(),
+      onChanged: (value) {
+        controller.selectedSpecialization.value = value;
+        controller.update();
+      },
+      validator: (value) {
+        // Add validation to ensure specialization is selected when required
+        if ((controller.selectedService.value == 'human_doctor' ||
+                controller.selectedService.value == 'human_hospital') &&
+            (value == null || value.isEmpty)) {
+          return 'specialization_required'.tr;
+        }
+        return null;
+      },
+    );
   }
 
   String _getSpecializationDisplayText(String specialization) {
-    if (specialization == 'جميع التخصصات') {
+    if (specialization.isEmpty) {
+      return 'select_specialization'.tr; // Show hint for empty specialization
+    }
+    if (specialization == 'all_specializations') {
       return 'all_specializations'.tr;
     }
     return specialization.tr;

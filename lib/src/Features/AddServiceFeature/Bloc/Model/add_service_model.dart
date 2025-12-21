@@ -201,7 +201,7 @@ class Branch {
   final String address;
   final String phoneNumber;
   final String whatsAppNumber;
-  final String locationUrl;
+  final String? locationUrl;
   final String selectedGovernorate;
   final String selectedCity;
   final Map<String, String> workingHours;
@@ -210,7 +210,7 @@ class Branch {
     required this.address,
     required this.phoneNumber,
     required this.whatsAppNumber,
-    required this.locationUrl,
+    this.locationUrl,
     required this.selectedGovernorate,
     required this.selectedCity,
     required this.workingHours,

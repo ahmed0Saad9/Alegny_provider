@@ -50,7 +50,7 @@ class ChangePasswordController
       closeEasyLoading();
       result.when(success: (Response response) {
         Get.dialog(
-          PasswordUpdatedDialog(),
+          const PasswordUpdatedDialog(),
         );
       }, failure: (NetworkExceptions error) {
         actionNetworkExceptions(error);

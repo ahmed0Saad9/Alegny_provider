@@ -309,6 +309,7 @@ class ProfileScreen extends StatelessWidget {
                         fontWeight: FW.medium,
                         color: Colors.grey[700],
                         textAlign: TextAlign.center,
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
                       ),
                       16.ESH(),
                       _buildMenuItem(

@@ -24,82 +24,85 @@ class LoginScreen extends StatelessWidget {
     return BaseScaffold(
       body: GetBuilder<LoginController>(
         init: LoginController(),
-        builder: (_) => Form(
-          key: _.loginGlobalKey,
-          child: Padding(
-            padding: AppPadding.paddingScreenSH16,
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                BaseStaggeredColumn(
-                  children: [
-                    20.ESH(),
-                    Row(
-                      children: [
-                        const CustomTextL('welcome_back', fontWeight: FW.bold),
-                        SizedBox(
-                          height: 40.h,
-                          child: Lottie.asset(
-                            'assets/lottie/HandWave.json',
-                            fit: BoxFit.contain,
+        builder: (_) => AutofillGroup(
+          child: Form(
+            key: _.loginGlobalKey,
+            child: Padding(
+              padding: AppPadding.paddingScreenSH16,
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  BaseStaggeredColumn(
+                    children: [
+                      20.ESH(),
+                      Row(
+                        children: [
+                          const CustomTextL('welcome_back',
+                              fontWeight: FW.bold),
+                          SizedBox(
+                            height: 40.h,
+                            child: Lottie.asset(
+                              'assets/lottie/HandWave.json',
+                              fit: BoxFit.contain,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    50.ESH(),
-                    TextFieldDefault(
-                      label: 'Email',
-                      prefixIconUrl: 'Email',
-                      autoFillHints: const [
-                        // AutofillHints.username,
-                        AutofillHints.email
-                      ],
-                      controller: _.emailController,
-                      validation: emailValidator,
-                      keyboardType: TextInputType.emailAddress,
-                      onComplete: () {
-                        node.nextFocus();
-                      },
-                    ),
-                    24.ESH(),
-                    TextFieldDefault(
-                      label: 'Password',
-                      prefixIconUrl: 'Lock',
-                      autoFillHints: const [AutofillHints.password],
-                      controller: _.passwordController,
-                      validation: passwordValidator,
-                      secureType: SecureType.toggle,
-                      onComplete: () {
-                        node.unfocus();
-                        _.logIn();
-                      },
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Obx(() => Checkbox(
-                              value: _.rememberMe.value,
-                              onChanged: (v) => _.rememberMe.value = v!,
-                            )),
-                        CustomTextL(
-                          'Remember_me',
-                          fontSize: 16.sp,
-                        ),
-                        const Spacer(),
-                        ButtonForgetPassword(controller: _),
-                      ],
-                    ),
-                    410.ESH(),
-                    ButtonDefault.main(
-                      onTap: () => _.logIn(),
-                      title: 'login',
-                    ),
-                    _DoNotHaveAccountWidget(
-                      controller: _,
-                    ),
-                  ],
-                ),
-              ],
+                        ],
+                      ),
+                      50.ESH(),
+                      TextFieldDefault(
+                        label: 'Email',
+                        prefixIconUrl: 'Email',
+                        autoFillHints: const [
+                          AutofillHints.email,
+                          // AutofillHints.username,
+                        ],
+                        controller: _.emailController,
+                        validation: emailValidator,
+                        keyboardType: TextInputType.emailAddress,
+                        onComplete: () {
+                          node.nextFocus();
+                        },
+                      ),
+                      24.ESH(),
+                      TextFieldDefault(
+                        label: 'Password',
+                        prefixIconUrl: 'Lock',
+                        autoFillHints: const [AutofillHints.password],
+                        controller: _.passwordController,
+                        validation: passwordValidator,
+                        secureType: SecureType.toggle,
+                        onComplete: () {
+                          node.unfocus();
+                          _.logIn();
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Obx(() => Checkbox(
+                                value: _.rememberMe.value,
+                                onChanged: (v) => _.rememberMe.value = v!,
+                              )),
+                          CustomTextL(
+                            'Remember_me',
+                            fontSize: 16.sp,
+                          ),
+                          const Spacer(),
+                          ButtonForgetPassword(controller: _),
+                        ],
+                      ),
+                      410.ESH(),
+                      ButtonDefault.main(
+                        onTap: () => _.logIn(),
+                        title: 'login',
+                      ),
+                      _DoNotHaveAccountWidget(
+                        controller: _,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),

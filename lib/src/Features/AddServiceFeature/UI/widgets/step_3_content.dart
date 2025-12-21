@@ -320,19 +320,15 @@ class _Step3Content extends StatelessWidget {
     for (final day in days) {
       final currentHours = workingHours[day];
 
-      if (day == 'friday') {
-        if (currentHours == null || currentHours.isEmpty) {
+      // Only set default if no value exists
+      if (currentHours == null || currentHours.isEmpty) {
+        if (day == 'friday') {
           workingHours[day] = 'closed'.tr;
-        }
-      } else {
-        if (currentHours == null ||
-            currentHours.isEmpty ||
-            currentHours.toLowerCase() == 'closed'.tr.toLowerCase()) {
-          if (currentHours?.toLowerCase() != 'closed'.tr.toLowerCase()) {
-            workingHours[day] = defaultTime;
-          }
+        } else {
+          workingHours[day] = defaultTime;
         }
       }
+      // If there's already a value, keep it (even for Friday)
     }
   }
 
@@ -344,7 +340,9 @@ class _Step3Content extends StatelessWidget {
       AddServiceController controller,
       int branchIndex) {
     final currentHours = workingHours[dayKey] ?? '9:00 AM - 5:00 PM';
-    final isClosed = currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
+    final isClosed = currentHours.toLowerCase().contains('closed') ||
+        currentHours.trim().isEmpty ||
+        currentHours.toLowerCase() == 'closed'.tr.toLowerCase();
 
     String fromTime = '9:00 AM';
     String toTime = '5:00 PM';

@@ -301,64 +301,37 @@ class AppBars {
       ),
       actions: [
         // Notification Button
-        GetBuilder<NotificationsController>(
-          init: NotificationsController(),
-          builder: (controller) => Padding(
-            padding: EdgeInsetsDirectional.only(end: 16.w, top: 10.h),
-            child: Stack(
-              clipBehavior: Clip.none,
-              children: [
-                InkWell(
-                  onTap: () => Get.to(() => const NotificationsScreen()),
-                  borderRadius: BorderRadius.circular(12.r),
-                  child: Container(
-                    width: 45.w,
-                    height: 45.w,
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(12.r),
-                      border: Border.all(
-                        color: Colors.white.withOpacity(0.2),
-                        width: 1,
-                      ),
+
+        Padding(
+          padding: EdgeInsetsDirectional.only(end: 16.w, top: 10.h),
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              InkWell(
+                onTap: () => Get.to(() => const NotificationsScreen()),
+                borderRadius: BorderRadius.circular(12.r),
+                child: Container(
+                  width: 45.w,
+                  height: 45.w,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(12.r),
+                    border: Border.all(
+                      color: Colors.white.withOpacity(0.2),
+                      width: 1,
                     ),
-                    child: Center(
-                      child: IconSvg(
-                        'Notification',
-                        color: AppColors.iconWight,
-                        height: 22.h,
-                        boxFit: BoxFit.contain,
-                      ),
+                  ),
+                  child: Center(
+                    child: IconSvg(
+                      'Notification',
+                      color: AppColors.iconWight,
+                      height: 22.h,
+                      boxFit: BoxFit.contain,
                     ),
                   ),
                 ),
-                // Notification Dot Indicator
-                if (controller.hasUnreadNotifications.value)
-                  PositionedDirectional(
-                    top: 5.h,
-                    start: 5.w,
-                    child: Container(
-                      width: 10.w,
-                      height: 10.w,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: AppColors.main,
-                          width: 1,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.red.withOpacity(0.5),
-                            blurRadius: 4,
-                            spreadRadius: 1,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],

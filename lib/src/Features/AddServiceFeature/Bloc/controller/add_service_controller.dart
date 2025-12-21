@@ -290,10 +290,10 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     if (serviceType == null) return [];
 
     if (serviceType == 'human_hospital') {
-      // Return list with "جميع التخصصات" first, then the rest
+      // Return list with "all_specializations" first, then the rest
       return ['all_specializations', ...specializations];
     } else if (serviceType == 'human_doctor') {
-      // Return original list for human doctor (without "جميع التخصصات")
+      // Return original list for human doctor (without "all_specializations")
       return List.from(specializations);
     }
     return [];
@@ -336,8 +336,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'nasr_city',
       'heliopolis',
       'zamalek',
-      'dokki',
-      'mohandessin',
       'downtown',
       'ramses',
       'bab_el_shaaria',
@@ -350,26 +348,105 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'ezbet_el_nakhl',
       'hadayek_el_qobbah',
       'old_cairo',
+      'sayeda_zeinab',
+      'shubra',
+      'helwan',
+      'st_may',
+      'new_cairo',
+      'rehab_city',
+      'madinaty',
+      'sheraton',
+      'agakhan',
+      'ekhsas',
+      'amerya',
+      'tahrir',
+      'helmiya',
+      'tenth_district',
+      'khalfawy',
+      'khalifa_mamoun',
+      'demerdash',
+      'sawah',
+      'sharabia',
+      'shorouk',
+      'daher',
+      'abbassia',
+      'fosat',
+      'katameya',
+      'korba',
+      'almazah',
+      'merghany',
+      'maassara',
+      'maqrizi',
+      'manyal',
+      'meriland',
+      'meray',
+      'ahly_club',
+      'nozha',
+      'helal',
+      'waha',
+      'wayli',
+      'badr',
+      'triumph',
+      'gesr_suez',
+      'hadayek_zaitoun',
+      'hadayek_maadi',
+      'helmiyet_el_zaitoun',
+      'hamamat_qobbah',
+      'dar_elsalam',
+      'st_fatima',
+      'saray_el_qobbah',
+      'city_stars',
+      'sakr_quraish',
+      'salah_salem',
+      'carrefour_maadi',
+      'monshiyet_el_sadr',
+      'shams_club',
+      'bab_ellouq'
     ],
     'giza': [
       'dokki',
       'mohandessin',
       'agouza',
-      'harram',
+      'haram',
       'faisal',
       'october_city',
+      'sheikh_zayed_city',
       'omrania',
       'warraq',
-      'sheikh_zayed_city',
-      'mansheyat_al_qanater',
       'osim',
       'kerdasa',
-      'abu_el_nomros',
       'hawamdeya',
       'badrashin',
       'ayyat',
       'saf',
-      'atfih',
+      'hadayek_ahram',
+      'imbaba',
+      'boulaq_dakrour',
+      'ard_ellawa',
+      'arkan_mall',
+      'bahr_aazam',
+      'hosary',
+      'sheikh_zayed',
+      'talbia',
+      'smart_village',
+      'kit_kat',
+      'lobini',
+      'maryoutiya',
+      'mounib',
+      'mounira',
+      'bashtil',
+      'beverly_hills',
+      'tarsa',
+      'khatem_morsalin',
+      'zayed',
+      'kafr_taharmes',
+      'court_yard',
+      'moussadak',
+      'lebanon_square',
+      'new_giza',
+      'gezira_plaza',
+      'park_street',
+      'cairo_medical'
     ],
     'alexandria': [
       'montaza',
@@ -392,6 +469,31 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'shots',
       'san_stefano',
       'kafr_abdo',
+      'sidi_gaber',
+      'sidi_bishr',
+      'bitash',
+      'hanoville',
+      'amreya',
+      'km_21',
+      'abou_qir',
+      'borg_el_arab',
+      'wardian',
+      'falaki',
+      'gomrok',
+      'miami',
+      'mandara',
+      'manshia',
+      'victoria',
+      'agami',
+      'bab_sharq',
+      'bahary',
+      'gleem',
+      'gianaclis',
+      'rashdy',
+      'sporting',
+      'mahatet_el_raml',
+      'mostafa_kamel',
+      'mamoura'
     ],
     'dakahlia': [
       'mansoura',
@@ -399,52 +501,56 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'mit_ghamr',
       'belqas',
       'aga',
-      'menia_el_nasr',
       'sinbillawin',
-      'el_manzala',
       'sherbin',
+      'beni_ebeid',
+      'dekernes',
+      'samanoud',
+      'delta',
+      'menia_el_nasr',
+      'el_manzala',
       'mit_salsil',
-      'bani_ebeid',
       'gamasa',
       'nabaroh',
       'el_kurdi',
       'mahalet_demna',
-      'gamalia',
+      'gamalia'
     ],
-    'red_sea': ['marsa_alam', 'ras_ghareb'],
-    'hurghada': [
-      'safaga',
-    ],
+    'red_sea': ['hurghada', 'marsa_alam', 'ras_ghareb', 'safaga', 'ain_sokhna'],
     'beheira': [
-      'damanhur',
+      'damanhour',
       'kafr_el_dawar',
-      'edko',
-      'abu_el_matamir',
       'abu_hummus',
       'hosh_essa',
       'delengat',
-      'rashid',
       'itay_el_barud',
-      'wadi_el_natrun',
+      'shubrakhit',
+      'edko',
+      'rashid',
+      'rahmaniya',
+      'noubaria',
+      'kom_hamada',
+      'abu_el_matamir',
+      'wadi_el_natrun'
     ],
-    'faiyum': ['faiyum_city', 'tamiya', 'sinnuris'],
+    'faiyum': ['faiyum_city', 'sinnuris', 'etsa', 'abubakk', 'mosalla'],
     'gharbia': [
       'tanta',
-      'el_mahalla_el_kubra',
+      'mahalla',
       'zefta',
-      'samannoud',
+      'samanoud',
       'kafr_el_zayat',
       'basion',
       'qutour',
-      'santah',
+      'santah'
     ],
     'ismailia': [
       'ismailia_city',
+      'qantera_west',
+      'tal_el_kebir',
       'fayed',
-      'qantara',
-      'el_tal_el_kebir',
-      'qantara_east',
-      'qantara_west',
+      'qantera',
+      'qantera_east'
     ],
     'monufia': [
       'shebin_el_kom',
@@ -453,111 +559,108 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'bagour',
       'sadat_city',
       'quesna',
+      'shohada',
+      'baranya',
+      'sadat',
+      'begeirm',
+      'mit_bere',
       'tala',
-      'el_shohada',
-      'berket_el_sabaa',
+      'berket_el_sabaa'
     ],
     'minya': [
       'minya_city',
       'malawi',
-      'deir_mawas',
-      'el_edwa',
       'maghagha',
       'beni_mazar',
-      'matai',
       'samalout',
       'abu_qurqas',
-      'malawi',
+      'deir_mawas',
+      'el_edwa',
+      'matai'
     ],
     'qalyubia': [
       'banha',
       'qalyub',
       'shubra_el_kheima',
-      'el_khanka',
       'kafr_shukr',
       'tukh',
       'shibin_el_qanater',
       'khanka',
       'qaha',
       'obour_city',
-      'khosous',
+      'khusus',
+      'qanatir',
+      'abour'
     ],
     'new_valley': ['kharga', 'dakhla', 'paris'],
     'suez': [
       'suez_city',
+      'ain_sokhna',
       'arbaeen',
       'suez_district',
-      'arbaeen_district',
       'attaka_district',
-      'el_ganayen_district',
-      'ain_sokhna',
-      'green_island',
-      'shatt',
-      'houd_el_dars',
-      'port_tawfik',
-      'craftsmen_city',
-      'el_sabah',
-      'el_amal',
-      'mubarak',
-      'cooperations',
-      'salam',
-      'nour',
-      'ferdous',
-      'tawfiqia',
-      'arab_el_maamal_area',
+      'el_ganayen_district'
     ],
     'aswan': [
       'aswan_city',
       'kom_ombo',
       'daraw',
       'new_aswan_city',
-      'aswan_center',
-      'abu_simbel_center',
-      'daraw_center',
-      'kom_ombo_center',
-      'nasr_el_nuba_center',
-      'edfu_center',
+      'edfu_center'
     ],
-    'asyut': ['asyut_city', 'abnub', 'dayrout', 'manfalut'],
-    'beni_suef': ['beni_suef_city', 'el_wasta', 'naser'],
-    'port_said': ['port_said_city', 'east_district', 'west_district'],
-    'damietta': ['damietta_city', 'faraskour', 'zarqa'],
+    'asyut': [
+      'asyut_city',
+      'abu_tis',
+      'nomiss',
+      'abnub',
+      'dayrout',
+      'manfalut'
+    ],
+    'beni_suef': ['beni_suef_city', 'wasta', 'naser'],
+    'port_said': [
+      'port_said_city',
+      'port_fouad',
+      'east_district',
+      'west_district'
+    ],
+    'damietta': ['damietta_city', 'faraskour', 'kafr_saad', 'zarqa'],
     'sharqia': [
       'zagazig',
-      'abu_hamad',
       'belbeis',
-      'hehya',
       'abu_kabir',
+      'kafr_saqr',
+      'menia_el_qamh',
+      'faques',
+      'tenth_of_ramadan_city',
+      'abu_hammad',
+      'salheya',
+      'qanayat',
+      'hehya',
       'ibrahimia_sharqia',
       'awlad_saqr',
       'husseiniya',
       'deirb_negm',
-      'el_qurin',
-      'kafr_saqr',
-      'menia_el_qamh',
-      'mashtool_el_souk',
-      'faques',
-      'new_salheya',
-      'tenth_of_ramadan_city',
+      'el_qurin'
     ],
     'south_sinai': ['sharm_el_sheikh', 'dahab', 'nuweiba'],
-    'kafr_el_sheikh': ['kafr_el_sheikh_city', 'desouk', 'fuwa'],
+    'kafr_el_sheikh': ['kafr_el_sheikh_city', 'desouk', 'sidi_salem', 'fuwa'],
     'matrouh': [
       'marsa_matrouh',
+      'north_coast',
+      'hacienda',
+      'amwaj',
       'hamam',
       'nagila',
       'el_alamein',
       'dabaa',
-      'marsa_matrouh',
-      'nagila',
       'sidi_barrani',
       'salloum',
-      'siwa',
+      'siwa'
     ],
-    'luxor': ['luxor_city', 'qurna', 'esna'],
-    'qena': ['qena_city', 'qift', 'naqada'],
+    'luxor': ['luxor_city', 'esna', 'qurna'],
+    'qena': ['qena_city', 'qift', 'qous', 'nag_hamadi', 'deshna', 'naqada'],
     'north_sinai': ['el_arish', 'sheikh_zuweid', 'rafah'],
-    'sohag': ['sohag_city', 'girga', 'akhmim'],
+    'sohag': ['sohag_city', 'girga', 'tahta', 'asierat', 'akhmim'],
   };
 
   // Helper method to get unique governorates
@@ -700,7 +803,11 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     // Step 1: Basic Information
     serviceNameController.text = service.serviceName;
     selectedService.value = service.serviceType;
-    selectedSpecialization.value = service.specialization;
+    if (service.specialization != null && service.specialization!.isNotEmpty) {
+      selectedSpecialization.value = service.specialization;
+    } else {
+      selectedSpecialization.value = null;
+    }
     serviceDescriptionController.text = service.description ?? '';
     facebookController.text = service.facebookUrl ?? '';
     instagramController.text = service.instagramUrl ?? '';
@@ -770,7 +877,11 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     final selectedCity = branchModel.city.obs;
     final selectedGovernorate = branchModel.governorate.obs;
     final workingHours = Map<String, String>.from(branchModel.workingHours);
-
+    // Debug print to see what's being loaded
+    print('DEBUG: Loading working hours for edit:');
+    workingHours.forEach((key, value) {
+      print('  $key: $value');
+    });
     branchAddressControllers.add(addressController);
     branchPhoneControllers.add(phoneController);
     branchWhatsappControllers.add(whatsappController);
@@ -926,7 +1037,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       serviceName: serviceNameController.text.trim(),
       serviceDescription: serviceDescriptionController.text.trim(),
       serviceType: selectedService.value,
-      specialization: selectedSpecialization.value,
+      specialization: selectedSpecialization.value?.trim().isEmpty ?? true
+          ? null
+          : selectedSpecialization.value,
       serviceImage: serviceImage.value,
 
       // Social media
@@ -1222,26 +1335,27 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     }
     // For editing: if we have an image URL, it's valid even if serviceImage.value is null
     // For creating: we need an actual image file
-    if (isEditingMode) {
-      // In edit mode, it's valid if we have either an existing image URL OR a new image file
-      if (serviceImageUrl.value.isEmpty && serviceImage.value == null) {
-        _showError('please_upload_picture'.tr);
-        return false;
-      }
-    } else {
-      // In create mode, we must have an image file
-      if (serviceImage.value == null) {
-        _showError('please_upload_picture'.tr);
-        return false;
-      }
-    }
+    // if (isEditingMode) {
+    //   // In edit mode, it's valid if we have either an existing image URL OR a new image file
+    //   if (serviceImageUrl.value.isEmpty && serviceImage.value == null) {
+    //     _showError('please_upload_picture'.tr);
+    //     return false;
+    //   }
+    // } else {
+    //   // In create mode, we must have an image file
+    //   if (serviceImage.value == null) {
+    //     _showError('please_upload_picture'.tr);
+    //     return false;
+    //   }
+    // }
     if (selectedService.value == null) {
       _showError('please_select_service'.tr);
       return false;
     }
     if (selectedService.value == 'human_doctor' ||
         selectedService.value == 'human_hospital') {
-      if (selectedSpecialization.value == null) {
+      final specialization = selectedSpecialization.value;
+      if (specialization == null || specialization.trim().isEmpty) {
         _showError('please_select_specialization'.tr);
         return false;
       }

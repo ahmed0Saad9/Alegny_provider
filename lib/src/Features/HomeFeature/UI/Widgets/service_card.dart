@@ -318,9 +318,12 @@ class ServiceCard extends StatelessWidget {
                             )),
                           )
                         else
-                          CustomTextR(
-                            '${e.value}',
-                            fontSize: 14.sp,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 5.0),
+                            child: CustomTextR(
+                              '${e.value}',
+                              fontSize: 14.sp,
+                            ),
                           ),
                       ],
                     ),

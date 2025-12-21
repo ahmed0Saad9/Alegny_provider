@@ -1,9 +1,10 @@
-// lib/src/Features/ComplaintsFeature/UI/screens/complaint_screen.dart
 import 'package:Alegny_provider/src/Features/ComplaintsFeature/Bloc/Controller/complaints_controller.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Appbars/app_bars.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/Text/custom_text.dart';
+import 'package:Alegny_provider/src/GeneralWidget/Widgets/TextFields/text_field_default.dart';
 import 'package:Alegny_provider/src/GeneralWidget/Widgets/buttons/button_default.dart';
 import 'package:Alegny_provider/src/core/constants/color_constants.dart';
+import 'package:Alegny_provider/src/core/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -32,25 +33,14 @@ class ComplaintScreen extends StatelessWidget {
                     fontSize: 16,
                     fontWeight: FW.bold,
                   ),
-                  const SizedBox(height: 8),
-                  TextFormField(
+                  8.ESH(),
+                  TextFieldDefault(
                     controller: controller.subjectController,
                     maxLines: 1,
-                    decoration: InputDecoration(
-                      hintText: 'enter_subject'.tr,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            16.r,
-                          ),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.all(12),
-                    ),
-                    validator: controller.validateSubject,
+                    hint: 'enter_subject'.tr,
+                    validation: controller.validateSubject,
                   ),
-                  const SizedBox(height: 16),
-
+                  16.ESH(),
                   // Message Field
                   CustomTextL(
                     'message'.tr,
@@ -58,58 +48,34 @@ class ComplaintScreen extends StatelessWidget {
                     fontWeight: FW.bold,
                   ),
 
-                  const SizedBox(height: 8),
-                  TextFormField(
+                  8.ESH(),
+                  TextFieldDefault(
                     controller: controller.messageController,
-                    maxLines: 4,
-                    decoration: InputDecoration(
-                      hintText: 'enter_message'.tr,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(
-                            16.r,
-                          ),
-                        ),
-                      ),
-                      contentPadding: const EdgeInsets.all(12),
-                    ),
-                    validator: controller.validateMessage,
+                    maxLines: 6,
+                    hint: 'enter_message'.tr,
+                    validation: controller.validateMessage,
                   ),
-                  const SizedBox(height: 24),
-
+                  24.ESH(),
                   // Image Upload Section
                   CustomTextL(
                     'attach_image'.tr,
                     fontSize: 16,
                     fontWeight: FW.bold,
                   ),
-                  const SizedBox(height: 8),
+                  8.ESH(),
                   _buildImageSection(controller),
-                  const SizedBox(height: 32),
-
+                  24.ESH(),
                   // Submit Button
                   SizedBox(
                     width: double.infinity,
                     child: ButtonDefault(
-                      onTap: controller.isSubmitting
-                          ? null
-                          : controller.submitComplaint,
-                      child: controller.isSubmitting
-                          ? const SizedBox(
-                              height: 20,
-                              width: 20,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
-                              ),
-                            )
-                          : const Center(
-                              child: CustomTextL(
-                                'submit_complaint',
-                                color: AppColors.titleWhite,
-                              ),
-                            ),
+                      onTap: controller.submitComplaint,
+                      child: const Center(
+                        child: CustomTextL(
+                          'submit_complaint',
+                          color: AppColors.titleWhite,
+                        ),
+                      ),
                     ),
                   ),
                 ],

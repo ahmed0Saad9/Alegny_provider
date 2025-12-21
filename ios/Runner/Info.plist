@@ -43,7 +43,14 @@
 
 	<!-- ADD URL SCHEMES HERE - Place it after permissions but before UI configurations -->
 	<key>LSApplicationQueriesSchemes</key>
+	<key>NSFaceIDUsageDescription</key>
+    <string>We need Face ID to autofill your credentials</string>
+    <key>com.apple.developer.associated-domains</key>
+
 	<array>
+
+	    <string>webcredentials:yourdomain.com</string>
+
 		<!-- WhatsApp -->
 		<string>whatsapp</string>
 		<string>whatsapp-business</string>

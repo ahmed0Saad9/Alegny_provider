@@ -24,12 +24,14 @@ class NotificationsController extends BaseController<NotificationsRepo> {
   Future<void> loadNotifications() async {
     try {
       isLoading.value = true;
+      update();
       final result = await repository.getNotifications();
 
       result.when(
         success: (List<NotificationModel> data) {
           notifications.value = data;
           _updateUnreadStatus();
+          update();
         },
         failure: (error) {
           Get.snackbar(
@@ -38,10 +40,12 @@ class NotificationsController extends BaseController<NotificationsRepo> {
             backgroundColor: Colors.red,
             colorText: Colors.white,
           );
+          update();
         },
       );
     } finally {
       isLoading.value = false;
+      update();
     }
   }
 
@@ -103,7 +107,7 @@ class NotificationsController extends BaseController<NotificationsRepo> {
   Future<void> markAllAsRead() async {
     try {
       final unreadNotifications =
-          notifications.where((n) => !n.isRead).toList();
+      notifications.where((n) => !n.isRead).toList();
 
       for (final notification in unreadNotifications) {
         await markAsRead(notification.id);
