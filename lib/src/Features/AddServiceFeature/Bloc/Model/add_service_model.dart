@@ -190,7 +190,7 @@ class ServiceData {
         'gym_month_12_sub_price_b': gymMonth12SubPriceB,
         'gym_month_12_sub_price_a': gymMonth12SubPriceA,
         'other_discount': otherDiscount,
-        //shared
+        //shared doctors
         'surgeries_other_services_discount': surgeriesOtherServicesDiscount,
         // branches
         'branches': branches,

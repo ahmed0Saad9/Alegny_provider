@@ -153,7 +153,6 @@ class _Step3Content extends StatelessWidget {
             controller: controller.branchPhoneControllers[index],
             keyboardType: TextInputType.phone,
             hint: 'enter_phone_number'.tr,
-            maxLength: 11,
             onChanged: (value) {
               // Trigger validation on every change
               controller.step3FormKey.currentState?.validate();
@@ -162,15 +161,7 @@ class _Step3Content extends StatelessWidget {
               if (value == null || value.trim().isEmpty) {
                 return 'phone_required'.tr;
               }
-              // Remove any spaces or special characters for validation
-              final cleanValue = value.replaceAll(RegExp(r'[^\d]'), '');
 
-              if (cleanValue.length != 11) {
-                return 'phone_must_be_11_digits'.tr;
-              }
-              if (!cleanValue.startsWith('01')) {
-                return 'phone_must_start_with_01'.tr;
-              }
               return null;
             },
           ),
@@ -530,18 +521,30 @@ class _Step3Content extends StatelessWidget {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: initialTime,
+      initialEntryMode: TimePickerEntryMode.dialOnly,
       builder: (BuildContext context, Widget? child) {
-        return Theme(
-          data: ThemeData.light().copyWith(
-            colorScheme: const ColorScheme.light(
-              primary: AppColors.main,
-              onPrimary: Colors.white,
-              surface: Colors.white,
-              onSurface: Colors.black,
-            ),
-            dialogBackgroundColor: Colors.white,
+        return MediaQuery(
+          // This forces 12-hour format
+          data: MediaQuery.of(context).copyWith(
+            alwaysUse24HourFormat: false,
           ),
-          child: child!,
+          child: Theme(
+            data: ThemeData.light().copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: AppColors.main,
+                onPrimary: Colors.white,
+                surface: Colors.white,
+                onSurface: Colors.black,
+              ),
+              dialogBackgroundColor: Colors.white,
+              timePickerTheme: TimePickerThemeData(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+              ),
+            ),
+            child: child!,
+          ),
         );
       },
     );

@@ -201,18 +201,35 @@ class AddServiceScreen extends StatelessWidget {
     );
   }
 
-  Widget _getStepWidget(
-    AddServiceController controller,
-  ) {
-    switch (controller.currentStep.value) {
-      case 0:
-        return _Step1Content(controller: controller);
-      case 1:
-        return _Step2Content(controller: controller);
-      case 2:
-        return _Step3Content(controller: controller);
-      default:
-        return const SizedBox.shrink();
+  Widget _getStepWidget(AddServiceController controller) {
+    try {
+      print('=== GET STEP WIDGET ===');
+      print('Current step: ${controller.currentStep.value}');
+
+      switch (controller.currentStep.value) {
+        case 0:
+          print('Returning Step 1 widget');
+          return _Step1Content(controller: controller);
+        case 1:
+          print('Returning Step 2 widget');
+          return _Step2Content(controller: controller);
+        case 2:
+          print('Returning Step 3 widget');
+          return _Step3Content(controller: controller);
+        default:
+          print('Invalid step, returning empty widget');
+          return const SizedBox.shrink();
+      }
+    } catch (e, stackTrace) {
+      print('=== ERROR IN GET STEP WIDGET ===');
+      print('Error: $e');
+      print('Stack trace: $stackTrace');
+      return Center(
+        child: CustomTextL(
+          'Error loading step: $e',
+          color: Colors.red,
+        ),
+      );
     }
   }
 }

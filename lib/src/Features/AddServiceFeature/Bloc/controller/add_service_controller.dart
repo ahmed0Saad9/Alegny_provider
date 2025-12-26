@@ -335,6 +335,7 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'mokattam',
       'nasr_city',
       'heliopolis',
+      'ain_shams',
       'zamalek',
       'downtown',
       'ramses',
@@ -903,127 +904,224 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     branches.add(newBranch);
   }
 
+  String _stripPercentage(dynamic value) {
+    if (value == null) return '';
+    final stringValue = value.toString();
+    return stringValue.replaceAll('%', '').trim();
+  }
+
   void _populateDiscountsFromModel(ServiceModel service) {
-    final discounts = service.discounts;
+    try {
+      print('=== POPULATE DISCOUNTS START ===');
+      print('Service Type: ${service.serviceType}');
 
-    // Gym fields
-    if (service.serviceType == 'gym') {
-      gymMonthSubPriceA.text =
-          discounts['gym_month_sub_price_a']?.toString() ?? '';
-      gymMonthSubPriceB.text =
-          discounts['gym_month_sub_price_b']?.toString() ?? '';
-      gymMonth3SubPriceA.text =
-          discounts['gym_month_3_sub_price_a']?.toString() ?? '';
-      gymMonth3SubPriceB.text =
-          discounts['gym_month_3_sub_price_b']?.toString() ?? '';
-      gymMonth6SubPriceA.text =
-          discounts['gym_month_6_sub_price_a']?.toString() ?? '';
-      gymMonth6SubPriceB.text =
-          discounts['gym_month_6_sub_price_b']?.toString() ?? '';
-      gymMonth12SubPriceA.text =
-          discounts['gym_month_12_sub_price_a']?.toString() ?? '';
-      gymMonth12SubPriceB.text =
-          discounts['gym_month_12_sub_price_b']?.toString() ?? '';
-      discountOther.text = discounts['other_discount']?.toString() ?? '';
-    }
+      final discounts = service.discounts;
+      print('Discounts map: $discounts');
 
-    // Human Doctor fields
-    if (service.serviceType == 'human_doctor') {
-      humanDoctorPriceBefore.text =
-          discounts['consultation_price_before']?.toString() ?? '';
-      humanDoctorPriceAfter.text =
-          discounts['consultation_price_after']?.toString() ?? '';
-      humanDoctorIsHome.value = discounts['is_home_visit'] == 'true';
-      humanDoctorIsCard.value = discounts['home_discount'] == 'true';
-    }
+      // Gym fields
+      if (service.serviceType == 'gym') {
+        print('Loading gym fields...');
+        try {
+          gymMonthSubPriceA.text =
+              discounts['gym_month_sub_price_a']?.toString() ?? '';
+          gymMonthSubPriceB.text =
+              discounts['gym_month_sub_price_b']?.toString() ?? '';
+          gymMonth3SubPriceA.text =
+              discounts['gym_month_3_sub_price_a']?.toString() ?? '';
+          gymMonth3SubPriceB.text =
+              discounts['gym_month_3_sub_price_b']?.toString() ?? '';
+          gymMonth6SubPriceA.text =
+              discounts['gym_month_6_sub_price_a']?.toString() ?? '';
+          gymMonth6SubPriceB.text =
+              discounts['gym_month_6_sub_price_b']?.toString() ?? '';
+          gymMonth12SubPriceA.text =
+              discounts['gym_month_12_sub_price_a']?.toString() ?? '';
+          gymMonth12SubPriceB.text =
+              discounts['gym_month_12_sub_price_b']?.toString() ?? '';
+          discountOther.text = _stripPercentage(discounts['other_discount']);
+          print('Gym fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading gym fields: $e');
+        }
+      }
 
-    // Veterinary Doctor fields
-    if (service.serviceType == 'veterinarian') {
-      veterinaryDoctorPriceBefore.text =
-          discounts['consultation_price_before']?.toString() ?? '';
-      veterinaryDoctorPriceAfter.text =
-          discounts['consultation_price_after']?.toString() ?? '';
-      veterinaryDoctorIsHome.value = discounts['is_home_visit'] == 'true';
-      veterinaryDoctorIsCard.value = discounts['home_discount'] == 'true';
-    }
+      // Human Doctor fields
+      if (service.serviceType == 'human_doctor') {
+        print('Loading human doctor fields...');
+        try {
+          humanDoctorPriceBefore.text =
+              discounts['consultation_price_before']?.toString() ?? '';
+          humanDoctorPriceAfter.text =
+              discounts['consultation_price_after']?.toString() ?? '';
+          humanDoctorIsHome.value = discounts['is_home_visit'] == 'true';
+          humanDoctorIsCard.value = discounts['home_discount'] == 'true';
+          surgeriesOtherServicesDiscount.text =
+              _stripPercentage(discounts['surgeries_other_services_discount']);
+          print('Human doctor fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading human doctor fields: $e');
+        }
+      }
 
-    // Hospital fields (Human)
-    if (service.serviceType == 'human_hospital') {
-      humanHospitalDiscountExaminations.text =
-          discounts['examinations_discount']?.toString() ?? '';
-      humanHospitalDiscountMedicalTest.text =
-          discounts['medical_tests_discount']?.toString() ?? '';
-      humanHospitalDiscountXRay.text =
-          discounts['hospital_xray_discount']?.toString() ?? '';
-      humanHospitalDiscountMedicines.text =
-          discounts['medicines_discount']?.toString() ?? '';
-    }
-    // Hospital fields (vet)
-    if (service.serviceType == 'veterinary_hospital') {
-      veterinaryHospitalDiscountExaminations.text =
-          discounts['examinations_discount']?.toString() ?? '';
-      veterinaryHospitalDiscountMedicalTest.text =
-          discounts['medical_tests_discount']?.toString() ?? '';
-      veterinaryHospitalDiscountXRay.text =
-          discounts['hospital_xray_discount']?.toString() ?? '';
-      veterinaryHospitalDiscountMedicines.text =
-          discounts['medicines_discount']?.toString() ?? '';
-    }
+      // Veterinary Doctor fields
+      if (service.serviceType == 'veterinarian') {
+        print('Loading veterinarian fields...');
+        try {
+          veterinaryDoctorPriceBefore.text =
+              discounts['consultation_price_before']?.toString() ?? '';
+          veterinaryDoctorPriceAfter.text =
+              discounts['consultation_price_after']?.toString() ?? '';
+          veterinaryDoctorIsHome.value = discounts['is_home_visit'] == 'true';
+          veterinaryDoctorIsCard.value = discounts['home_discount'] == 'true';
+          surgeriesOtherServicesDiscount.text =
+              _stripPercentage(discounts['surgeries_other_services_discount']);
+          print('Veterinarian fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading veterinarian fields: $e');
+        }
+      }
 
-    // Pharmacy fields (Human )
-    if (service.serviceType == 'human_pharmacy') {
-      humanPharmacyDiscountLocalMedicine.text =
-          discounts['local_medicines_discount']?.toString() ?? '';
-      humanPharmacyDiscountImportedMedicine.text =
-          discounts['imported_medicines_discount']?.toString() ?? '';
-      humanPharmacyDiscountMedicalSupplies.text =
-          discounts['medical_supplies_discount']?.toString() ?? '';
-      humanPharmacyIsHome.value = discounts['is_home_delivery'] == 'true';
-      humanPharmacyIsCard.value = discounts['pharmacy_is_home_card'] == 'true';
-    }
-    // Pharmacy fields (Veterinary)
-    if (service.serviceType == 'veterinary_pharmacy') {
-      veterinaryPharmacyDiscountLocalMedicine.text =
-          discounts['local_medicines_discount']?.toString() ?? '';
-      veterinaryPharmacyDiscountImportedMedicine.text =
-          discounts['imported_medicines_discount']?.toString() ?? '';
-      veterinaryPharmacyDiscountMedicalSupplies.text =
-          discounts['medical_supplies_discount']?.toString() ?? '';
-      veterinaryPharmacyIsHome.value = discounts['is_home_delivery'] == 'true';
-      veterinaryPharmacyIsCard.value =
-          discounts['pharmacy_is_home_card'] == 'true';
-    }
+      // Hospital fields (Human)
+      if (service.serviceType == 'human_hospital') {
+        print('Loading human hospital fields...');
+        try {
+          humanHospitalDiscountExaminations.text =
+              _stripPercentage(discounts['examinations_discount']);
+          print('  examinations: ${humanHospitalDiscountExaminations.text}');
 
-    // Lab Test fields
-    if (service.serviceType == 'lab') {
-      labTestDiscountAllTypes.text =
-          discounts['all_tests_discount']?.toString() ?? '';
-      labTestIsHome.value = discounts['is_home_service'] == 'true';
-      labTestIsCard.value = discounts['is_home_card'] == 'true';
-    }
+          humanHospitalDiscountMedicalTest.text =
+              _stripPercentage(discounts['medical_tests_discount']);
+          print('  medical tests: ${humanHospitalDiscountMedicalTest.text}');
 
-    // Radiology fields
-    if (service.serviceType == 'radiology_center') {
-      xRayDiscount.text = discounts['xray_discount']?.toString() ?? '';
-    }
+          humanHospitalDiscountXRay.text =
+              _stripPercentage(discounts['hospital_xray_discount']);
+          print('  xray: ${humanHospitalDiscountXRay.text}');
 
-    // Eye Care fields
-    if (service.serviceType == 'optics') {
-      eyeCareDiscountGlasses.text =
-          discounts['glasses_discount']?.toString() ?? '';
-      eyeCareDiscountSunGlasses.text =
-          discounts['sunglasses_discount']?.toString() ?? '';
-      contactLensesController.text =
-          discounts['contact_lenses_discount']?.toString() ?? '';
-      eyeCareDiscountEyeExam.text =
-          discounts['eye_exam_discount']?.toString() ?? '';
-      eyeCareIsDelivery.value = discounts['is_delivery'] == 'true';
-      eyeCareIsCard.value = discounts['eye_care_is_card'] == 'true';
-    }
+          humanHospitalDiscountMedicines.text =
+              _stripPercentage(discounts['medicines_discount']);
+          print('  medicines: ${humanHospitalDiscountMedicines.text}');
 
-    // Shared fields
-    surgeriesOtherServicesDiscount.text =
-        discounts['surgeries_other_services_discount']?.toString() ?? '';
+          surgeriesOtherServicesDiscount.text =
+              _stripPercentage(discounts['surgeries_other_services_discount']);
+          print('  surgeries: ${surgeriesOtherServicesDiscount.text}');
+
+          print('Human hospital fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading human hospital fields: $e');
+          print('Stack trace: ${StackTrace.current}');
+        }
+      }
+
+      // Hospital fields (Veterinary)
+      if (service.serviceType == 'veterinary_hospital') {
+        print('Loading veterinary hospital fields...');
+        try {
+          veterinaryHospitalDiscountExaminations.text =
+              _stripPercentage(discounts['examinations_discount']);
+          veterinaryHospitalDiscountMedicalTest.text =
+              _stripPercentage(discounts['medical_tests_discount']);
+          veterinaryHospitalDiscountXRay.text =
+              _stripPercentage(discounts['hospital_xray_discount']);
+          veterinaryHospitalDiscountMedicines.text =
+              _stripPercentage(discounts['medicines_discount']);
+          surgeriesOtherServicesDiscount.text =
+              _stripPercentage(discounts['surgeries_other_services_discount']);
+          print('Veterinary hospital fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading veterinary hospital fields: $e');
+        }
+      }
+
+      // Pharmacy fields (Human)
+      if (service.serviceType == 'human_pharmacy') {
+        print('Loading human pharmacy fields...');
+        try {
+          humanPharmacyDiscountLocalMedicine.text =
+              _stripPercentage(discounts['local_medicines_discount']);
+          humanPharmacyDiscountImportedMedicine.text =
+              _stripPercentage(discounts['imported_medicines_discount']);
+          humanPharmacyDiscountMedicalSupplies.text =
+              _stripPercentage(discounts['medical_supplies_discount']);
+          humanPharmacyIsHome.value = discounts['is_home_delivery'] == 'true';
+          humanPharmacyIsCard.value =
+              discounts['pharmacy_is_home_card'] == 'true';
+          print('Human pharmacy fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading human pharmacy fields: $e');
+        }
+      }
+
+      // Pharmacy fields (Veterinary)
+      if (service.serviceType == 'veterinary_pharmacy') {
+        print('Loading veterinary pharmacy fields...');
+        try {
+          veterinaryPharmacyDiscountLocalMedicine.text =
+              _stripPercentage(discounts['local_medicines_discount']);
+          veterinaryPharmacyDiscountImportedMedicine.text =
+              _stripPercentage(discounts['imported_medicines_discount']);
+          veterinaryPharmacyDiscountMedicalSupplies.text =
+              _stripPercentage(discounts['medical_supplies_discount']);
+          veterinaryPharmacyIsHome.value =
+              discounts['is_home_delivery'] == 'true';
+          veterinaryPharmacyIsCard.value =
+              discounts['pharmacy_is_home_card'] == 'true';
+          print('Veterinary pharmacy fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading veterinary pharmacy fields: $e');
+        }
+      }
+
+      // Lab Test fields
+      if (service.serviceType == 'lab') {
+        print('Loading lab fields...');
+        try {
+          labTestDiscountAllTypes.text =
+              _stripPercentage(discounts['all_tests_discount']);
+          labTestIsHome.value = discounts['is_home_service'] == 'true';
+          labTestIsCard.value = discounts['is_home_card'] == 'true';
+          print('Lab fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading lab fields: $e');
+        }
+      }
+
+      // Radiology fields
+      if (service.serviceType == 'radiology_center') {
+        print('Loading radiology fields...');
+        try {
+          xRayDiscount.text = _stripPercentage(discounts['xray_discount']);
+          print('Radiology fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading radiology fields: $e');
+        }
+      }
+
+      // Eye Care fields
+      if (service.serviceType == 'optics') {
+        print('Loading eye care fields...');
+        try {
+          eyeCareDiscountGlasses.text =
+              _stripPercentage(discounts['glasses_discount']);
+          eyeCareDiscountSunGlasses.text =
+              _stripPercentage(discounts['sunglasses_discount']);
+          contactLensesController.text =
+              _stripPercentage(discounts['contact_lenses_discount']);
+          eyeCareDiscountEyeExam.text =
+              _stripPercentage(discounts['eye_exam_discount']);
+          eyeCareIsDelivery.value = discounts['is_delivery'] == 'true';
+          eyeCareIsCard.value = discounts['eye_care_is_card'] == 'true';
+          print('Eye care fields loaded successfully');
+        } catch (e) {
+          print('ERROR loading eye care fields: $e');
+        }
+      }
+
+      print('=== POPULATE DISCOUNTS END ===');
+    } catch (e) {
+      print('=== CRITICAL ERROR IN POPULATE DISCOUNTS ===');
+      print('Error: $e');
+      print('Stack trace: ${StackTrace.current}');
+    }
   }
 
   void submitService() {
@@ -1329,42 +1427,69 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   }
 
   bool _validateStep1() {
-    if (step1FormKey.currentState != null &&
-        !step1FormKey.currentState!.validate()) {
-      return false;
-    }
-    // For editing: if we have an image URL, it's valid even if serviceImage.value is null
-    // For creating: we need an actual image file
-    // if (isEditingMode) {
-    //   // In edit mode, it's valid if we have either an existing image URL OR a new image file
-    //   if (serviceImageUrl.value.isEmpty && serviceImage.value == null) {
-    //     _showError('please_upload_picture'.tr);
-    //     return false;
-    //   }
-    // } else {
-    //   // In create mode, we must have an image file
-    //   if (serviceImage.value == null) {
-    //     _showError('please_upload_picture'.tr);
-    //     return false;
-    //   }
-    // }
-    if (selectedService.value == null) {
-      _showError('please_select_service'.tr);
-      return false;
-    }
-    if (selectedService.value == 'human_doctor' ||
-        selectedService.value == 'human_hospital') {
-      final specialization = selectedSpecialization.value;
-      if (specialization == null || specialization.trim().isEmpty) {
-        _showError('please_select_specialization'.tr);
+    try {
+      print('=== VALIDATE STEP 1 START ===');
+
+      // Check basic required fields first (without form validation)
+      print('Checking selected service...');
+      if (selectedService.value == null) {
+        print('Selected service is NULL');
+        _showError('please_select_service'.tr);
         return false;
       }
-    }
-    if (serviceNameController.text.trim().isEmpty) {
-      _showError('please_enter_service_name'.tr);
+      print('Selected service PASSED: ${selectedService.value}');
+
+      print('Checking specialization requirement...');
+      if (selectedService.value == 'human_doctor' ||
+          selectedService.value == 'human_hospital') {
+        final specialization = selectedSpecialization.value;
+        print(
+            'Service requires specialization. Current value: $specialization');
+        if (specialization == null || specialization.trim().isEmpty) {
+          print('Specialization validation FAILED');
+          _showError('please_select_specialization'.tr);
+          return false;
+        }
+        print('Specialization PASSED: $specialization');
+      }
+
+      print('Checking service name...');
+      if (serviceNameController.text.trim().isEmpty) {
+        print('Service name validation FAILED');
+        _showError('please_enter_service_name'.tr);
+        return false;
+      }
+      print('Service name PASSED');
+
+      // Now validate the form (text field validators)
+      print('Checking form validation...');
+      try {
+        if (step1FormKey.currentState != null) {
+          final isValid = step1FormKey.currentState!.validate();
+          if (!isValid) {
+            print('Form validation FAILED');
+            return false;
+          }
+          print('Form validation PASSED');
+        } else {
+          print(
+              'WARNING: Form key current state is null, skipping form validation');
+        }
+      } catch (e, stackTrace) {
+        print('ERROR during form validation: $e');
+        print('Stack trace: $stackTrace');
+        // Continue anyway - the error might be in a non-critical validator
+        return false;
+      }
+
+      print('=== VALIDATE STEP 1 PASSED ===');
+      return true;
+    } catch (e, stackTrace) {
+      print('=== ERROR IN VALIDATE STEP 1 ===');
+      print('Error: $e');
+      print('Stack trace: $stackTrace');
       return false;
     }
-    return true;
   }
 
   bool _validateStep2() {
@@ -1454,15 +1579,38 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   }
 
   void nextStep() {
-    if (currentStep.value < 2) {
-      if (_stepValidators[currentStep.value]()) {
-        currentStep.value++;
-        update();
+    try {
+      print('=== NEXT STEP CALLED ===');
+      print('Current step: ${currentStep.value}');
+
+      if (currentStep.value < 2) {
+        print('Validating current step...');
+        if (_stepValidators[currentStep.value]()) {
+          print('Validation passed, incrementing step...');
+          currentStep.value++;
+          print('New step value: ${currentStep.value}');
+
+          print('Calling update()...');
+          update();
+          print('Update() completed');
+        } else {
+          print('Validation failed');
+        }
+      } else {
+        print('Final step, validating step 3...');
+        if (_validateStep3()) {
+          print('Step 3 validated, submitting service...');
+          submitService();
+        } else {
+          print('Step 3 validation failed');
+        }
       }
-    } else {
-      if (_validateStep3()) {
-        submitService();
-      }
+      print('=== NEXT STEP COMPLETED ===');
+    } catch (e, stackTrace) {
+      print('=== ERROR IN NEXT STEP ===');
+      print('Error: $e');
+      print('Stack trace: $stackTrace');
+      _showError('An error occurred: $e');
     }
   }
 

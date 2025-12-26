@@ -21,51 +21,26 @@ class _Step1Content extends StatelessWidget {
   }
 
   String? _validateSocialMediaUrl(String? value, String platform) {
-    if (value == null || value.trim().isEmpty) {
-      return null; // Optional field
+    try {
+      // If empty, it's optional so return null (valid)
+      if (value == null || value.trim().isEmpty) {
+        return null;
+      }
+
+      final trimmedValue = value.trim();
+
+      // Just check if it's a valid URL format, don't be too strict
+      if (!trimmedValue.contains('http://') &&
+          !trimmedValue.contains('https://') &&
+          !trimmedValue.contains('://')) {
+        return 'invalid_url_format'.tr;
+      }
+
+      return null; // Valid
+    } catch (e) {
+      print('ERROR in URL validator: $e');
+      return null; // Don't block the user if validator crashes
     }
-
-    final trimmedValue = value.trim().toLowerCase();
-
-    switch (platform) {
-      case 'facebook':
-        if (!trimmedValue.contains('facebook.com') &&
-            !trimmedValue.contains('fb.com') &&
-            !trimmedValue.startsWith('fb://')) {
-          return 'invalid_facebook_link'.tr;
-        }
-        break;
-      case 'instagram':
-        if (!trimmedValue.contains('instagram.com') &&
-            !trimmedValue.startsWith('instagram://')) {
-          return 'invalid_instagram_link'.tr;
-        }
-        break;
-      case 'tiktok':
-        if (!trimmedValue.contains('tiktok.com') &&
-            !trimmedValue.startsWith('tiktok://')) {
-          return 'invalid_tiktok_link'.tr;
-        }
-        break;
-      case 'youtube':
-        if (!trimmedValue.contains('youtube.com') &&
-            !trimmedValue.contains('youtu.be') &&
-            !trimmedValue.startsWith('vnd.youtube://')) {
-          return 'invalid_youtube_link'.tr;
-        }
-        break;
-    }
-
-    final urlPattern = RegExp(
-      r'^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$',
-      caseSensitive: false,
-    );
-
-    if (!urlPattern.hasMatch(trimmedValue) && !trimmedValue.contains('://')) {
-      return 'invalid_url_format'.tr;
-    }
-
-    return null;
   }
 
   @override

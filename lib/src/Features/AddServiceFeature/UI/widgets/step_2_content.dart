@@ -7,50 +7,58 @@ class _Step2Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AddServiceController>(
-      builder: (controller) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CustomTextL(
-              'discounts',
-              fontSize: 20.sp,
-              fontWeight: FW.bold,
-              color: Colors.grey[800],
-            ),
-            24.ESH(),
-            _buildServiceSpecificFields(controller),
-          ],
-        );
-      },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CustomTextL(
+          'discounts',
+          fontSize: 20.sp,
+          fontWeight: FW.bold,
+          color: Colors.grey[800],
+        ),
+        24.ESH(),
+        _buildServiceSpecificFields(controller),
+      ],
     );
   }
 
   Widget _buildServiceSpecificFields(AddServiceController controller) {
-    switch (controller.selectedService.value) {
-      case 'human_doctor':
-        return _buildHumanDoctorFields();
-      case 'human_hospital':
-        return _buildHumanHospitalFields();
-      case 'human_pharmacy':
-        return _buildHumanPharmacyFields();
-      case 'lab':
-        return _buildLabTestFields();
-      case 'radiology_center':
-        return _buildRadiologyFields();
-      case 'optics':
-        return _buildEyeCareFields();
-      case 'gym':
-        return _buildGymFields();
-      case 'veterinarian':
-        return _buildVeterinaryDoctorFields();
-      case 'veterinary_hospital':
-        return _buildVeterinaryHospitalFields();
-      case 'veterinary_pharmacy':
-        return _buildVeterinaryPharmacyFields();
-      default:
-        return SizedBox();
-    }
+    // Use Obx instead of GetBuilder for reactive updates
+    return Obx(() {
+      final serviceType = controller.selectedService.value;
+      print('Building step 2 for service type: $serviceType');
+
+      switch (serviceType) {
+        case 'human_doctor':
+          return _buildHumanDoctorFields();
+        case 'human_hospital':
+          return _buildHumanHospitalFields();
+        case 'human_pharmacy':
+          return _buildHumanPharmacyFields();
+        case 'lab':
+          return _buildLabTestFields();
+        case 'radiology_center':
+          return _buildRadiologyFields();
+        case 'optics':
+          return _buildEyeCareFields();
+        case 'gym':
+          return _buildGymFields();
+        case 'veterinarian':
+          return _buildVeterinaryDoctorFields();
+        case 'veterinary_hospital':
+          return _buildVeterinaryHospitalFields();
+        case 'veterinary_pharmacy':
+          return _buildVeterinaryPharmacyFields();
+        default:
+          return Center(
+            child: CustomTextL(
+              'please_select_service_type',
+              fontSize: 16.sp,
+              color: Colors.grey[600],
+            ),
+          );
+      }
+    });
   }
 
   Widget _buildHumanDoctorFields() {
