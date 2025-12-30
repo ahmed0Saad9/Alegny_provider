@@ -295,42 +295,76 @@ class ServiceCard extends StatelessWidget {
                   ),
                   6.ESH(),
                   ...service.discounts.entries.map(
-                    (e) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(child: CustomTextL(e.key, fontSize: 14.sp)),
-                        10.ESW(),
-                        if (e.value == true || e.value == 'true')
-                          Container(
-                            margin: EdgeInsets.symmetric(
-                              vertical: 4.h,
+                    (e) {
+                      // Determine if this is a boolean, percentage, or price field
+                      final value = e.value;
+                      final key = e.key;
+
+                      if (value == true || value == 'true') {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CustomTextL(
+                                key.tr,
+                                fontSize: 14.sp,
+                              ),
                             ),
-                            padding: EdgeInsets.all(4.sp),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Colors.green,
+                            10.ESW(),
+                            Container(
+                              margin: EdgeInsets.symmetric(vertical: 4.h),
+                              padding: EdgeInsets.all(4.sp),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.green,
+                              ),
+                              child: Center(
+                                  child: Icon(
+                                Icons.check,
+                                color: Colors.white,
+                                size: 20.sp,
+                              )),
                             ),
-                            child: Center(
-                                child: Icon(
-                              Icons.check,
-                              color: Colors.white,
-                              size: 20.sp,
-                            )),
-                          )
-                        else
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 5.0),
-                            child: CustomTextR(
-                              '${e.value}',
-                              fontSize: 14.sp,
+                          ],
+                        );
+                      }
+                      // Handle boolean false values - don't show
+                      else if (value == false || value == 'false') {
+                        return const SizedBox.shrink();
+                      } else {
+                        // String values - format display
+                        final String displayValue =
+                            _formatDisplayValue(value.toString(), key);
+
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: CustomTextL(
+                                key.tr, // Translated key
+                                fontSize: 14.sp,
+                              ),
                             ),
-                          ),
-                      ],
-                    ),
+                            10.ESW(),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 5.0),
+                              child: CustomTextR(
+                                displayValue,
+                                fontSize: 14.sp,
+                                fontWeight: FW.medium,
+                                color: AppColors.main,
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
             ),
+
           // Branches Section
           Container(
             padding: EdgeInsets.all(16.w),
@@ -1542,5 +1576,62 @@ class ServiceCard extends StatelessWidget {
 
   void _navigateToAddBranch() {
     Get.to(() => AddBranchScreen(service: service));
+  }
+
+  // In ServiceCard class
+  String _formatDisplayValue(String value, String key) {
+    // First, check if the value already has a suffix
+    if (value.contains('L.E') || value.contains('%')) {
+      // If it has L.E, translate it
+      if (value.contains('L.E')) {
+        return value.replaceAll('L.E', 'L.E'.tr);
+      }
+      // If it has %, keep it as is
+      return value;
+    }
+
+    // If no suffix, determine based on the key
+    try {
+      final numValue = double.tryParse(value);
+      if (numValue != null) {
+        // Check key to determine if it's a price field
+        if (_isPriceField(key)) {
+          // Add translated L.E for price fields
+          return '$value ${'L.E'.tr}';
+        } else {
+          // Assume it's a percentage field and add %
+          return '$value%';
+        }
+      }
+    } catch (e) {
+      // If parsing fails, return as is
+      return value;
+    }
+
+    return value;
+  }
+
+// Helper to determine if a field key is a price field
+  bool _isPriceField(String key) {
+    final priceFieldKeys = [
+      'consultation_price_before',
+      'consultation_price_after',
+      'gym_month_sub_price_a',
+      'gym_month_sub_price_b',
+      'gym_month_3_sub_price_a',
+      'gym_month_3_sub_price_b',
+      'gym_month_6_sub_price_a',
+      'gym_month_6_sub_price_b',
+      'gym_month_12_sub_price_a',
+      'gym_month_12_sub_price_b',
+      'price_before',
+      'price_after',
+      'month_sub_price',
+      'sub_price',
+      // Add any other price field keys
+    ];
+
+    final keyLower = key.toLowerCase();
+    return priceFieldKeys.any((priceKey) => keyLower.contains(priceKey));
   }
 }

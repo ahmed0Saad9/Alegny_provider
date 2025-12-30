@@ -1054,6 +1054,9 @@ const Map<String, String> arAE = {
   "rehab_city": "الرحاب",
   "madinaty": "مدينتى",
   "gharbiya": "الغربيه",
+  "matoubes": "مطوبس",
+  "askout": "اسكوت",
+  "advina": "ادفينا",
   //-----------------------------------
   'view_location': 'عرض الموقع',
   'cannot_open_location': 'لا يمكن فتح الموقع',
@@ -1102,4 +1105,5 @@ const Map<String, String> arAE = {
   'invalid_url_format': 'صيغة الرابط غير صحيحة',
   'adding_branch_to': 'إضافة فرع إلى',
   'specialization_required': 'التخصص مطلوب',
+  "L.E": "جنية",
 };

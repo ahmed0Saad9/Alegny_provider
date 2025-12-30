@@ -1015,6 +1015,9 @@ const Map<String, String> enUS = {
   "كيلو 21": "km_21",
   "ابو قير": "abou_qir",
   "برج العرب": "borg_el_arab",
+  "matoubes": "Matoubes",
+  "askout": "Askout",
+  "advina": "Advina",
   // ------------------------------------
   'open_google_maps': 'Open Google Maps',
   'cannot_open_google_maps': 'Cannot open Google Maps',
@@ -1051,4 +1054,6 @@ const Map<String, String> enUS = {
   'invalid_youtube_link': 'Please enter a valid YouTube link',
   'invalid_url_format': 'Invalid URL format',
   'adding_branch_to': 'Adding Branch to',
+
+  "L.E": "L.E",
 };

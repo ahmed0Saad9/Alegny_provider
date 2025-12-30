@@ -494,7 +494,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'sporting',
       'mahatet_el_raml',
       'mostafa_kamel',
-      'mamoura'
+      'mamoura',
+      'matoubes',
+      'askout',
     ],
     'dakahlia': [
       'mansoura',
@@ -532,7 +534,8 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       'noubaria',
       'kom_hamada',
       'abu_el_matamir',
-      'wadi_el_natrun'
+      'wadi_el_natrun',
+      'advina',
     ],
     'faiyum': ['faiyum_city', 'sinnuris', 'etsa', 'abubakk', 'mosalla'],
     'gharbia': [
@@ -904,6 +907,13 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     branches.add(newBranch);
   }
 
+  String _stripCurrency(dynamic value) {
+    if (value == null) return '';
+    final stringValue = value.toString();
+    // Strip both L.E and جنية (Arabic) for loading into edit fields
+    return stringValue.replaceAll('L.E', '').replaceAll('جنية', '').trim();
+  }
+
   String _stripPercentage(dynamic value) {
     if (value == null) return '';
     final stringValue = value.toString();
@@ -915,29 +925,75 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
       print('=== POPULATE DISCOUNTS START ===');
       print('Service Type: ${service.serviceType}');
 
-      final discounts = service.discounts;
+      final discounts = Map<String, dynamic>.from(service.discounts);
       print('Discounts map: $discounts');
+
+      // Clean incoming data for all possible fields
+      final allPossibleFields = [
+        // Gym fields
+        'gym_month_sub_price_a',
+        'gym_month_sub_price_b',
+        'gym_month_3_sub_price_a',
+        'gym_month_3_sub_price_b',
+        'gym_month_6_sub_price_a',
+        'gym_month_6_sub_price_b',
+        'gym_month_12_sub_price_a',
+        'gym_month_12_sub_price_b',
+        'other_discount',
+
+        // Doctor fields
+        'consultation_price_before',
+        'consultation_price_after',
+        'surgeries_other_services_discount',
+
+        // Hospital fields
+        'examinations_discount',
+        'medical_tests_discount',
+        'hospital_xray_discount',
+        'medicines_discount',
+
+        // Pharmacy fields
+        'local_medicines_discount',
+        'imported_medicines_discount',
+        'medical_supplies_discount',
+
+        // Lab fields
+        'all_tests_discount',
+
+        // Radiology fields
+        'xray_discount',
+
+        // Eye care fields
+        'glasses_discount',
+        'sunglasses_discount',
+        'contact_lenses_discount',
+        'eye_exam_discount',
+      ];
+
+      for (final field in allPossibleFields) {
+        _cleanIncomingDiscountValue(discounts, field);
+      }
 
       // Gym fields
       if (service.serviceType == 'gym') {
         print('Loading gym fields...');
         try {
           gymMonthSubPriceA.text =
-              discounts['gym_month_sub_price_a']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_sub_price_a']);
           gymMonthSubPriceB.text =
-              discounts['gym_month_sub_price_b']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_sub_price_b']);
           gymMonth3SubPriceA.text =
-              discounts['gym_month_3_sub_price_a']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_3_sub_price_a']);
           gymMonth3SubPriceB.text =
-              discounts['gym_month_3_sub_price_b']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_3_sub_price_b']);
           gymMonth6SubPriceA.text =
-              discounts['gym_month_6_sub_price_a']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_6_sub_price_a']);
           gymMonth6SubPriceB.text =
-              discounts['gym_month_6_sub_price_b']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_6_sub_price_b']);
           gymMonth12SubPriceA.text =
-              discounts['gym_month_12_sub_price_a']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_12_sub_price_a']);
           gymMonth12SubPriceB.text =
-              discounts['gym_month_12_sub_price_b']?.toString() ?? '';
+              _stripCurrency(discounts['gym_month_12_sub_price_b']);
           discountOther.text = _stripPercentage(discounts['other_discount']);
           print('Gym fields loaded successfully');
         } catch (e) {
@@ -950,9 +1006,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         print('Loading human doctor fields...');
         try {
           humanDoctorPriceBefore.text =
-              discounts['consultation_price_before']?.toString() ?? '';
+              _stripCurrency(discounts['consultation_price_before']);
           humanDoctorPriceAfter.text =
-              discounts['consultation_price_after']?.toString() ?? '';
+              _stripCurrency(discounts['consultation_price_after']);
           humanDoctorIsHome.value = discounts['is_home_visit'] == 'true';
           humanDoctorIsCard.value = discounts['home_discount'] == 'true';
           surgeriesOtherServicesDiscount.text =
@@ -968,9 +1024,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         print('Loading veterinarian fields...');
         try {
           veterinaryDoctorPriceBefore.text =
-              discounts['consultation_price_before']?.toString() ?? '';
+              _stripCurrency(discounts['consultation_price_before']);
           veterinaryDoctorPriceAfter.text =
-              discounts['consultation_price_after']?.toString() ?? '';
+              _stripCurrency(discounts['consultation_price_after']);
           veterinaryDoctorIsHome.value = discounts['is_home_visit'] == 'true';
           veterinaryDoctorIsCard.value = discounts['home_discount'] == 'true';
           surgeriesOtherServicesDiscount.text =
@@ -1166,18 +1222,126 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     }
   }
 
+// Helper to determine if a field key is a price field
+  bool _isPriceField(String key) {
+    final priceFieldKeys = [
+      'consultation_price_before',
+      'consultation_price_after',
+      'gym_month_sub_price_a',
+      'gym_month_sub_price_b',
+      'gym_month_3_sub_price_a',
+      'gym_month_3_sub_price_b',
+      'gym_month_6_sub_price_a',
+      'gym_month_6_sub_price_b',
+      'gym_month_12_sub_price_a',
+      'gym_month_12_sub_price_b',
+      'price_before',
+      'price_after',
+      // Add any other price field keys
+    ];
+
+    final keyLower = key.toLowerCase();
+    return priceFieldKeys.any((priceKey) => keyLower.contains(priceKey));
+  }
+
+  bool _isPercentageField(String key) {
+    final percentageFieldKeys = [
+      'discount',
+      'examinations_discount',
+      'medical_tests_discount',
+      'hospital_xray_discount',
+      'medicines_discount',
+      'surgeries_other_services_discount',
+      'local_medicines_discount',
+      'imported_medicines_discount',
+      'medical_supplies_discount',
+      'all_tests_discount',
+      'xray_discount',
+      'glasses_discount',
+      'sunglasses_discount',
+      'contact_lenses_discount',
+      'eye_exam_discount',
+      'other_discount',
+      'tests_discount',
+      // Add any other percentage field keys
+    ];
+
+    final keyLower = key.toLowerCase();
+    return percentageFieldKeys
+        .any((percentKey) => keyLower.contains(percentKey));
+  }
+
+  void _cleanIncomingDiscountValue(Map<String, dynamic> discounts, String key) {
+    if (discounts.containsKey(key)) {
+      final value = discounts[key];
+      if (value is String && value.isNotEmpty) {
+        final stringValue = value.toString();
+        // Check if it already has a suffix
+        if (!stringValue.contains('%') &&
+            !stringValue.contains('L.E') &&
+            !stringValue.contains('جنية')) {
+          // Add appropriate suffix based on key
+          if (_isPriceField(key)) {
+            discounts[key] = '$stringValue L.E';
+          } else if (_isPercentageField(key)) {
+            discounts[key] = '$stringValue%';
+          }
+        }
+      }
+    }
+  }
+
   void _setServiceSpecificFields(ServiceData serviceData) {
     final currentService = selectedService.value;
+    final bool isArabic = Get.locale?.languageCode == 'ar';
+    final String currencySuffix = isArabic ? 'جنية' : 'L.E';
 
-    // Helper function to add % to percentage fields
     String? _formatPercentage(String value) {
       if (value.trim().isEmpty) return null;
-      // Remove any existing % and add it back
+
+      // Clean the value
       final cleanedValue = value.replaceAll('%', '').trim();
+
+      // Check if it's already a number with % at the end (from editing)
+      if (cleanedValue.endsWith('%')) {
+        // Already has %, return as is
+        return cleanedValue;
+      }
+
+      // Validate it's a valid number
+      if (double.tryParse(cleanedValue) == null) {
+        return null; // Or show error
+      }
+
       return '$cleanedValue%';
     }
 
-    // Helper function for regular fields
+// Helper function for price fields (always use "L.E" for backend)
+    String? _formatPrice(String value) {
+      if (value.trim().isEmpty) return null;
+
+      // Clean the value - remove any currency
+      String cleanedValue =
+          value.replaceAll('L.E', '').replaceAll('جنية', '').trim();
+
+      // Check if it's already a number with currency
+      if (value.contains('L.E') || value.contains('جنية')) {
+        // Already has currency, but we need to convert to "L.E"
+        final numValue = double.tryParse(cleanedValue);
+        if (numValue != null) {
+          return '$cleanedValue L.E';
+        }
+      }
+
+      // Validate it's a valid number
+      if (double.tryParse(cleanedValue) == null) {
+        return null; // Or show error
+      }
+
+      return '$cleanedValue L.E';
+    }
+
+    // Helper function for regular fields (no formatting)
     String? _getFieldValue(String value) {
       if (value.trim().isEmpty) return null;
       return value.trim();
@@ -1187,9 +1351,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
     switch (currentService) {
       case 'human_doctor':
         serviceData.consultationPriceBefore =
-            _getFieldValue(humanDoctorPriceBefore.text);
+            _formatPrice(humanDoctorPriceBefore.text);
         serviceData.consultationPriceAfter =
-            _getFieldValue(humanDoctorPriceAfter.text);
+            _formatPrice(humanDoctorPriceAfter.text);
         serviceData.isHomeVisit = humanDoctorIsHome.value;
         serviceData.homeDiscount = humanDoctorIsCard.value;
         serviceData.surgeriesOtherServicesDiscount =
@@ -1198,9 +1362,9 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
 
       case 'veterinarian':
         serviceData.consultationPriceBefore =
-            _getFieldValue(veterinaryDoctorPriceBefore.text);
+            _formatPrice(veterinaryDoctorPriceBefore.text);
         serviceData.consultationPriceAfter =
-            _getFieldValue(veterinaryDoctorPriceAfter.text);
+            _formatPrice(veterinaryDoctorPriceAfter.text);
         serviceData.isHomeVisit = veterinaryDoctorIsHome.value;
         serviceData.homeDiscount = veterinaryDoctorIsCard.value;
         serviceData.surgeriesOtherServicesDiscount =
@@ -1280,20 +1444,16 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         break;
 
       case 'gym':
-        serviceData.gymMonthSubPriceB = _getFieldValue(gymMonthSubPriceB.text);
-        serviceData.gymMonthSubPriceA = _getFieldValue(gymMonthSubPriceA.text);
-        serviceData.gymMonth3SubPriceB =
-            _getFieldValue(gymMonth3SubPriceB.text);
-        serviceData.gymMonth3SubPriceA =
-            _getFieldValue(gymMonth3SubPriceA.text);
-        serviceData.gymMonth6SubPriceB =
-            _getFieldValue(gymMonth6SubPriceB.text);
-        serviceData.gymMonth6SubPriceA =
-            _getFieldValue(gymMonth6SubPriceA.text);
+        serviceData.gymMonthSubPriceB = _formatPrice(gymMonthSubPriceB.text);
+        serviceData.gymMonthSubPriceA = _formatPrice(gymMonthSubPriceA.text);
+        serviceData.gymMonth3SubPriceB = _formatPrice(gymMonth3SubPriceB.text);
+        serviceData.gymMonth3SubPriceA = _formatPrice(gymMonth3SubPriceA.text);
+        serviceData.gymMonth6SubPriceB = _formatPrice(gymMonth6SubPriceB.text);
+        serviceData.gymMonth6SubPriceA = _formatPrice(gymMonth6SubPriceA.text);
         serviceData.gymMonth12SubPriceB =
-            _getFieldValue(gymMonth12SubPriceB.text);
+            _formatPrice(gymMonth12SubPriceB.text);
         serviceData.gymMonth12SubPriceA =
-            _getFieldValue(gymMonth12SubPriceA.text);
+            _formatPrice(gymMonth12SubPriceA.text);
         serviceData.otherDiscount = _formatPercentage(discountOther.text);
         break;
 
