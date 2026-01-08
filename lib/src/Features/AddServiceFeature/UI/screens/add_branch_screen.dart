@@ -783,21 +783,6 @@ class _AddBranchScreenState extends State<AddBranchScreen> {
                       controller: _phoneController,
                       keyboardType: TextInputType.phone,
                       hint: 'enter_phone_number'.tr,
-                      maxLength: 11,
-                      validation: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'phone_required'.tr;
-                        }
-                        final cleanValue =
-                            value.replaceAll(RegExp(r'[^\d]'), '');
-                        if (cleanValue.length != 11) {
-                          return 'phone_must_be_11_digits'.tr;
-                        }
-                        if (!cleanValue.startsWith('01')) {
-                          return 'phone_must_start_with_01'.tr;
-                        }
-                        return null;
-                      },
                     ),
                     24.ESH(),
 

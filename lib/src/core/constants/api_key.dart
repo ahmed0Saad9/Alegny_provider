@@ -1,6 +1,6 @@
 mixin ApiKey {
   static const String apiBaseUrl =
-      'https://alegny-provider.premiumasp.net/api/v1/';
+      'https://provider-alligny.premiumasp.net/api/v1/';
 
   static const String account = 'account/';
   static const String providerAuth = 'provider-auth/';
