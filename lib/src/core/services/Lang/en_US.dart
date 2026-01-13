@@ -1056,4 +1056,5 @@ const Map<String, String> enUS = {
   'adding_branch_to': 'Adding Branch to',
 
   "L.E": "L.E",
+  "please_select_service_image": "Please select a service image"
 };

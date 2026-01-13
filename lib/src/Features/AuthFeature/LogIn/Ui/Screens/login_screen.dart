@@ -162,7 +162,9 @@ class ButtonForgetPassword extends StatelessWidget {
             onPressed: () {
               controller.moveToForgetPassword();
             },
-            style: TextButton.styleFrom(padding: EdgeInsets.zero),
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+            ),
             child: CustomTextL(
               'Forget_password',
               fontSize: 16.sp,

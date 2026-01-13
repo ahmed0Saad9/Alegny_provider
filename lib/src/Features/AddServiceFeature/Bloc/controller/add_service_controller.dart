@@ -1589,6 +1589,39 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
   bool _validateStep1() {
     try {
       print('=== VALIDATE STEP 1 START ===');
+      print('Checking image requirement...');
+      final isEditingMode = serviceToEdit != null;
+
+      // In edit mode, we need either an existing image URL OR a new selected image
+      if (isEditingMode) {
+        final hasExistingImage = serviceImageUrl.value.isNotEmpty;
+        final hasNewImage = serviceImage.value != null;
+
+        if (!hasExistingImage && !hasNewImage) {
+          print(
+              'Image validation FAILED (edit mode): No image selected or existing');
+          _showError('please_select_service_image'.tr);
+          return false;
+        }
+        print(
+            'Image validation PASSED (edit mode): ${hasExistingImage ? "Existing image" : "New image"}');
+      } else {
+        // In create mode, a new image is required
+        if (serviceImage.value == null) {
+          print('Image validation FAILED (create mode): No image selected');
+          _showError('please_select_service_image'.tr);
+          return false;
+        }
+        print('Image validation PASSED (create mode)');
+      }
+
+      print('Checking service name...');
+      if (serviceNameController.text.trim().isEmpty) {
+        print('Service name validation FAILED');
+        _showError('please_enter_service_name'.tr);
+        return false;
+      }
+      print('Service name PASSED');
 
       // Check basic required fields first (without form validation)
       print('Checking selected service...');
@@ -1612,14 +1645,6 @@ class AddServiceController extends BaseController<CreateServiceRepository> {
         }
         print('Specialization PASSED: $specialization');
       }
-
-      print('Checking service name...');
-      if (serviceNameController.text.trim().isEmpty) {
-        print('Service name validation FAILED');
-        _showError('please_enter_service_name'.tr);
-        return false;
-      }
-      print('Service name PASSED');
 
       // Now validate the form (text field validators)
       print('Checking form validation...');

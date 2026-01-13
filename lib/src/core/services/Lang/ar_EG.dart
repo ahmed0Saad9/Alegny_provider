@@ -1106,4 +1106,5 @@ const Map<String, String> arAE = {
   'adding_branch_to': 'إضافة فرع إلى',
   'specialization_required': 'التخصص مطلوب',
   "L.E": "جنية",
+  "please_select_service_image": "يرجى اختيار صورة للخدمة"
 };

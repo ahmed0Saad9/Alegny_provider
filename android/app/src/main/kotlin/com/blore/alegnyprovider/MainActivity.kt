@@ -1,4 +1,4 @@
-package com.blore.alegnyprovider
+package com.blore.allignyprovider
 
 import io.flutter.embedding.android.FlutterActivity
 
