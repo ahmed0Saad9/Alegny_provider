@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>We need microphone access to record audio if required by the app or third-party SDKs.</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -24,59 +26,34 @@
 	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>LSRequiresIPhoneOS</key>
-	<true/>
-
-	<!-- Add location permission here with other permissions -->
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs location access to set branch locations on the map</string>
-
-
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>This app needs location access to set branch locations on the map</string>
-
-	<key>NSCameraUsageDescription</key>
-	<string>Camera permission is required for barcode scanning.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need camera or gallery access in order to get a photo for your profile</string>
-
-
-	<!-- ADD URL SCHEMES HERE - Place it after permissions but before UI configurations -->
 	<key>LSApplicationQueriesSchemes</key>
-	<key>NSFaceIDUsageDescription</key>
-    <string>We need Face ID to autofill your credentials</string>
-    <key>com.apple.developer.associated-domains</key>
-
 	<array>
-
-	    <string>webcredentials:yourdomain.com</string>
-
-		<!-- WhatsApp -->
 		<string>whatsapp</string>
 		<string>whatsapp-business</string>
-
-		<!-- Facebook -->
 		<string>fb</string>
 		<string>facebook</string>
 		<string>fbauth2</string>
-
-		<!-- Instagram -->
 		<string>instagram</string>
 		<string>instagram-stories</string>
-
-		<!-- TikTok -->
 		<string>tiktok</string>
 		<string>musically</string>
-
-		<!-- YouTube -->
 		<string>youtube</string>
 		<string>youtubemusic</string>
-
-		<!-- General -->
 		<string>https</string>
 		<string>http</string>
 	</array>
-
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera permission is required for barcode scanning.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>We need Face ID to autofill your credentials</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>This app needs location access to set branch locations on the map</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This app needs location access to set branch locations on the map</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need camera or gallery access in order to get a photo for your profile</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -86,15 +63,18 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>com.apple.developer.associated-domains</key>
+	<array>
+		<string>webcredentials:yourdomain.com</string>
 	</array>
 </dict>
 </plist>
