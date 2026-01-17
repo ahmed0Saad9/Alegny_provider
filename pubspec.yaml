@@ -146,9 +146,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/
-    - assets/icons/
     - assets/fonts/
+    - assets/icons/
+    - assets/images/
+    - assets/images/apk_icon.png
     - assets/lottie/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -161,21 +162,18 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. ForRepresentativeOnly
   fonts:
-    - family: Regular
-      fonts:
-        - asset: assets/fonts/Inter_28pt-Regular.ttf
-    #        - asset: assets/fonts/Cairo-Regular.ttf
-    - family: Light
-      fonts:
-        - asset: assets/fonts/Inter_28pt-Light.ttf
-    #        - asset: assets/fonts/Cairo-Light.ttf
-    - family: Medium
-      fonts:
-        - asset: assets/fonts/Inter_28pt-Medium.ttf
-    #        - asset: assets/fonts/Cairo-Medium.ttf
-    - family: Bold
+    - family: Inter_28pt-Bold
       fonts:
         - asset: assets/fonts/Inter_28pt-Bold.ttf
+    - family: Inter_28pt-Light
+      fonts:
+        - asset: assets/fonts/Inter_28pt-Light.ttf
+    - family: Inter_28pt-Medium
+      fonts:
+        - asset: assets/fonts/Inter_28pt-Medium.ttf
+    - family: Inter_28pt-Regular
+      fonts:
+        - asset: assets/fonts/Inter_28pt-Regular.ttf
   #        - asset: assets/fonts/Cairo-Bold.ttf
 
 

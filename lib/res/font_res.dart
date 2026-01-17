@@ -7,9 +7,9 @@ class FontRes {
   FontRes._();
 
   static const String PROJECT_NAME = 'Alegny_provider';
-  static const String PROJECT_VERSION = '1.0.0+1';
-  static const String CAIRO_BOLD = 'Cairo-Bold';
-  static const String CAIRO_LIGHT = 'Cairo-Light';
-  static const String CAIRO_MEDIUM = 'Cairo-Medium';
-  static const String CAIRO_REGULAR = 'Cairo-Regular';
+  static const String PROJECT_VERSION = '0.0.0+1';
+  static const String INTER_28PT_BOLD = 'Inter_28pt-Bold';
+  static const String INTER_28PT_LIGHT = 'Inter_28pt-Light';
+  static const String INTER_28PT_MEDIUM = 'Inter_28pt-Medium';
+  static const String INTER_28PT_REGULAR = 'Inter_28pt-Regular';
 }

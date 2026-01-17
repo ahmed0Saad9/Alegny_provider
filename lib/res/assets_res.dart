@@ -7,5 +7,6 @@ class AssetsRes {
   AssetsRes._();
 
   static const String PROJECT_NAME = 'Alegny_provider';
-  static const String PROJECT_VERSION = '1.0.0+1';
+  static const String PROJECT_VERSION = '0.0.0+1';
+  static const String APK_ICON = 'assets/images/apk_icon.png';
 }
