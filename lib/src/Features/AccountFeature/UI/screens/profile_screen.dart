@@ -34,6 +34,8 @@ class ProfileScreen extends StatelessWidget {
       'https://youtube.com/@alligny?si=pFRYpDddSR42brNW';
   static const String facebookUrl =
       'https://www.facebook.com/share/177aXA1NHb/';
+  static const String deleteAccountUrl =
+      'https://provider-alligny.premiumasp.net/delete-account.html';
 
   // Method to launch phone call
   Future<void> _makePhoneCall(String phoneNumber) async {
@@ -297,6 +299,13 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () => Get.to(
                           () => const TermsConditionsScreen(),
                         ),
+                      ),
+                      _buildMenuItem(
+                        icon: Icons.delete_outline,
+                        title: 'delete_account',
+                        iconColor: Colors.red,
+                        onTap: () => _openSocialMedia(
+                            deleteAccountUrl, 'Delete Account Page'),
                       ),
 
                       16.ESH(),

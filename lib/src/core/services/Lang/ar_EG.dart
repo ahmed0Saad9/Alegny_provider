@@ -231,6 +231,7 @@ const Map<String, String> arAE = {
   "Select_another_subject": "اختر موضوعًا آخر",
   //new
   "terms_conditions": "الشروط والأحكام",
+  "delete_account": "حذف الحساب",
   "terms_header_title": "شروط وأحكام تطبيق عالجني",
   "terms_header_subtitle":
       "يرجى قراءة الشروط والأحكام بعناية قبل استخدام الخدمة",

@@ -427,6 +427,7 @@ const Map<String, String> enUS = {
   "contact_phone_2": "Contact us via Phone 2",
   "contact_whatsapp_1": "Contact us via WhatsApp 1",
   "contact_whatsapp_2": "Contact us via WhatsApp 2",
+  "delete_account": "Delete Account",
   "error": "Error",
   "cannot_open_phone": "Cannot open phone app",
   "whatsapp_not_installed": "WhatsApp is not installed on this device",
